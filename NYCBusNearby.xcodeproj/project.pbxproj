@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		90504D652973556700BDE429 /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90504D642973556700BDE429 /* LocationHelper.swift */; };
 		90836552297217AD0070A354 /* NYCBusNearbyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90836551297217AD0070A354 /* NYCBusNearbyApp.swift */; };
 		90836554297217AD0070A354 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90836553297217AD0070A354 /* ContentView.swift */; };
 		90836556297217AE0070A354 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90836555297217AE0070A354 /* Assets.xcassets */; };
@@ -32,6 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		90504D642973556700BDE429 /* LocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelper.swift; sourceTree = "<group>"; };
 		9083654E297217AD0070A354 /* NYCBusNearby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYCBusNearby.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90836551297217AD0070A354 /* NYCBusNearbyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NYCBusNearbyApp.swift; sourceTree = "<group>"; };
 		90836553297217AD0070A354 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 				9083657F29721C0B0070A354 /* MTATripReplacementPeriod.swift */,
 				9083658129721C250070A354 /* MTAAlert.swift */,
 				9083658329721C430070A354 /* MTAVehicleStatus.swift */,
+				90504D642973556700BDE429 /* LocationHelper.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90504D652973556700BDE429 /* LocationHelper.swift in Sources */,
 				90836554297217AD0070A354 /* ContentView.swift in Sources */,
 				90836565297218B20070A354 /* MTAFeedConstant.swift in Sources */,
 				90836560297218000070A354 /* ViewModel.swift in Sources */,
@@ -353,6 +357,7 @@
 				DEVELOPMENT_TEAM = RWVTTVMWBE;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to provide bus schedule at the nearby stops";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -382,6 +387,7 @@
 				DEVELOPMENT_TEAM = RWVTTVMWBE;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to provide bus schedule at the nearby stops";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
