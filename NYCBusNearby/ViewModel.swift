@@ -14,7 +14,7 @@ import CodableCSV
 class ViewModel: NSObject, ObservableObject {
     private static let logger = Logger()
     
-    static var mtaStops: [MTABusStop] = ViewModel.read(from: "stops", type: MTABusStop.self)
+    static var mtaStops: [MTABusStop] = Array(Set(ViewModel.read(from: "stops", type: MTABusStop.self)))
     
     private static func read<T>(from resource: String, type: T.Type) -> [T] where T: Decodable {
         guard let stopsURL = Bundle.main.url(forResource: resource, withExtension: "txt") else {
@@ -37,10 +37,15 @@ class ViewModel: NSObject, ObservableObject {
         return result
     }
     
+    static var stopsById: [String: MTABusStop] = Dictionary(uniqueKeysWithValues: mtaStops.map { ($0.id, $0) })
     
     var feedDownloader = MTAFeedDownloader()
     
     @Published var feedAvailable = true
+    
+    var vehiclesByStopId = [String: [MTAVehicle]]()
+    var tripUpdatesByTripId = [String: [MTATripUpdate]]()
+    var tripUpdatesByStopId = [String: [MTATripUpdate]]()
     
     let locationHelper = LocationHelper()
     var userLocality: String = "Unknown"
@@ -103,24 +108,53 @@ class ViewModel: NSObject, ObservableObject {
         feedDownloader.download(from: MTABusFeedURL.vehiclePositions) { wrapper, error in
             guard let wrapper = wrapper else {
                 ViewModel.logger.log("Failed to download MTA feeds from REST, trying mta.info: error = \(String(describing: error?.localizedDescription), privacy: .public)")
+                if let error = error {
+                    completionHandler(.failure(error))
+                } else {
+                    completionHandler(.success(false))
+                }
                 return
             }
             
             ViewModel.logger.log("url = \(MTABusFeedURL.vehiclePositions.url()?.absoluteString ?? "", privacy: .public)")
             ViewModel.logger.log("tripUpdatesByTripId.count = \(String(describing: wrapper.tripUpdatesByTripId.count), privacy: .public)")
             ViewModel.logger.log("vehicle.count = \(String(describing: wrapper.vehiclesByStopId.count), privacy: .public)")
+            
+            DispatchQueue.main.async {
+                if !wrapper.vehiclesByStopId.isEmpty {
+                    wrapper.vehiclesByStopId.forEach { key, vehicles in
+                        self.vehiclesByStopId[key] = vehicles
+                    }
+                }
+                
+                self.feedDownloader.download(from: MTABusFeedURL.tripUpdates) { wrapper, error in
+                    guard let wrapper = wrapper else {
+                        ViewModel.logger.log("Failed to download MTA feeds from REST, trying mta.info: error = \(String(describing: error?.localizedDescription), privacy: .public)")
+                        if let error = error {
+                            completionHandler(.failure(error))
+                        } else {
+                            completionHandler(.success(false))
+                        }
+                        return
+                    }
+                    
+                    ViewModel.logger.log("url = \(MTABusFeedURL.tripUpdates.url()?.absoluteString ?? "", privacy: .public)")
+                    ViewModel.logger.log("tripUpdatesByTripId.count = \(String(describing: wrapper.tripUpdatesByTripId.count), privacy: .public)")
+                    ViewModel.logger.log("vehicle.count = \(String(describing: wrapper.vehiclesByStopId.count), privacy: .public)")
+                    
+                    DispatchQueue.main.async {
+                        if !wrapper.tripUpdatesByTripId.isEmpty {
+                            wrapper.tripUpdatesByTripId.forEach { key, updates in
+                                self.tripUpdatesByTripId[key] = updates
+                            }
+                        }
+                        ViewModel.logger.log("tripUpdatesByTripId.count = \(String(describing: self.tripUpdatesByTripId.count), privacy: .public)")
+                        completionHandler(.success(true))
+                    }
+                }
+            }
         }
         
-        feedDownloader.download(from: MTABusFeedURL.tripUpdates) { wrapper, error in
-            guard let wrapper = wrapper else {
-                ViewModel.logger.log("Failed to download MTA feeds from REST, trying mta.info: error = \(String(describing: error?.localizedDescription), privacy: .public)")
-                return
-            }
-            
-            ViewModel.logger.log("url = \(MTABusFeedURL.tripUpdates.url()?.absoluteString ?? "", privacy: .public)")
-            ViewModel.logger.log("tripUpdatesByTripId.count = \(String(describing: wrapper.tripUpdatesByTripId.count), privacy: .public)")
-            ViewModel.logger.log("vehicle.count = \(String(describing: wrapper.vehiclesByStopId.count), privacy: .public)")
-        }
     }
     
     func updateRegion(center coordinate: CLLocationCoordinate2D) -> Void {
@@ -142,6 +176,58 @@ class ViewModel: NSObject, ObservableObject {
             
             return location1.distance(from: location) < location2.distance(from: location)
         }
+    }
+    
+    func buses(within distance: Double, from center: CLLocationCoordinate2D) -> [MTABusStop: [MTABus]] {
+        var trains = [MTABusStop: [MTABus]]()
+        
+        let radius = CLLocationDistance(distance)
+        let circularRegion = CLCircularRegion(center: center, radius: radius, identifier: "\(center)")
+        
+        let stopsNearby = ViewModel.mtaStops.filter { mtaStop in
+            circularRegion.contains(CLLocationCoordinate2D(latitude: mtaStop.latitude, longitude: mtaStop.longitude))
+        }
+        
+        let stopIds = stopsNearby.map { $0.id }
+        //ViewModel.logger.info("stopIds=\(stopIds, privacy: .public)")
+        //ViewModel.logger.info("tripUpdatesByTripId=\(self.tripUpdatesByTripId, privacy: .public)")
+        for tripId in tripUpdatesByTripId.keys {
+            if let tripUpdates = tripUpdatesByTripId[tripId] {
+                for tripUpdate in tripUpdates {
+                    for stopTimeUpdate in tripUpdate.stopTimeUpdates {
+                        if let stopId = stopTimeUpdate.stopId, stopIds.contains(stopId) {
+                            let vehiclesAtStop = vehiclesByStopId[stopId]?.first(where: { tripId == $0.trip?.tripId })
+                            
+                            let mtaTrain = MTABus(trip: tripUpdate.trip,
+                                                    status: vehiclesAtStop?.status,
+                                                    stopId: stopId,
+                                                    arrivalTime: stopTimeUpdate.arrivalTime,
+                                                    departureTime: stopTimeUpdate.departureTime)
+                            
+                            var stopIdWithoutDirection: String
+                            if let last = stopId.last, last == "N" || last == "S" {
+                                stopIdWithoutDirection = String(stopId.dropLast(1))
+                            } else {
+                                stopIdWithoutDirection = stopId
+                            }
+                            
+                            if let stop = ViewModel.stopsById[stopIdWithoutDirection], trains[stop] != nil {
+                                trains[stop]!.append(mtaTrain)
+                            } else if let stop = ViewModel.stopsById[stopIdWithoutDirection], trains[stop] == nil {
+                                trains[stop] = Array(arrayLiteral: mtaTrain)
+                            } else {
+                                ViewModel.logger.info("Can't find a stop with stopId=\(stopId), privacy: .public)")
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
+            
+        // ViewModel.logger.info("trains=\(trains, privacy: .public) near (\(center.longitude, privacy: .public), \(center.latitude, privacy: .public))")
+        
+        return trains
     }
 }
 

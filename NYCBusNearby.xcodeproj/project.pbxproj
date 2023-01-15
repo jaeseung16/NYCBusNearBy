@@ -13,6 +13,8 @@
 		90504D6E29735F8600BDE429 /* MTABusStop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90504D6D29735F8600BDE429 /* MTABusStop.swift */; };
 		90504D712973601100BDE429 /* CodableCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 90504D702973601100BDE429 /* CodableCSV */; };
 		906AA4CC29745534000841BD /* DistanceUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4CB29745534000841BD /* DistanceUnit.swift */; };
+		906AA4CE29745974000841BD /* MTABus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4CD29745974000841BD /* MTABus.swift */; };
+		906AA4D229745B65000841BD /* BusesAtStopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4D129745B65000841BD /* BusesAtStopView.swift */; };
 		90836552297217AD0070A354 /* NYCBusNearbyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90836551297217AD0070A354 /* NYCBusNearbyApp.swift */; };
 		90836554297217AD0070A354 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90836553297217AD0070A354 /* ContentView.swift */; };
 		90836556297217AE0070A354 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90836555297217AE0070A354 /* Assets.xcassets */; };
@@ -43,6 +45,8 @@
 		90504D6B29735EE300BDE429 /* stops.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stops.txt; sourceTree = "<group>"; };
 		90504D6D29735F8600BDE429 /* MTABusStop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusStop.swift; sourceTree = "<group>"; };
 		906AA4CB29745534000841BD /* DistanceUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceUnit.swift; sourceTree = "<group>"; };
+		906AA4CD29745974000841BD /* MTABus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABus.swift; sourceTree = "<group>"; };
+		906AA4D129745B65000841BD /* BusesAtStopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusesAtStopView.swift; sourceTree = "<group>"; };
 		9083654E297217AD0070A354 /* NYCBusNearby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYCBusNearby.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90836551297217AD0070A354 /* NYCBusNearbyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NYCBusNearbyApp.swift; sourceTree = "<group>"; };
 		90836553297217AD0070A354 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -115,6 +119,7 @@
 				90836555297217AE0070A354 /* Assets.xcassets */,
 				90836557297217AE0070A354 /* Preview Content */,
 				9083655F297218000070A354 /* ViewModel.swift */,
+				906AA4D129745B65000841BD /* BusesAtStopView.swift */,
 			);
 			path = NYCBusNearby;
 			sourceTree = "<group>";
@@ -148,6 +153,7 @@
 				90504D642973556700BDE429 /* LocationHelper.swift */,
 				90504D6D29735F8600BDE429 /* MTABusStop.swift */,
 				906AA4CB29745534000841BD /* DistanceUnit.swift */,
+				906AA4CD29745974000841BD /* MTABus.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -240,6 +246,7 @@
 				90504D6E29735F8600BDE429 /* MTABusStop.swift in Sources */,
 				9083658429721C430070A354 /* MTAVehicleStatus.swift in Sources */,
 				9083657529721A870070A354 /* MTAVehicle.swift in Sources */,
+				906AA4CE29745974000841BD /* MTABus.swift in Sources */,
 				90836567297218CB0070A354 /* MTAFeedDownloadError.swift in Sources */,
 				908365692972191F0070A354 /* MTABusFeedURL.swift in Sources */,
 				9083657129721A4F0070A354 /* MTATrip.swift in Sources */,
@@ -251,6 +258,7 @@
 				9083656B29721A120070A354 /* MTAFeedWrapper.swift in Sources */,
 				9083658029721C0B0070A354 /* MTATripReplacementPeriod.swift in Sources */,
 				90836563297218600070A354 /* MTAFeedDownloader.swift in Sources */,
+				906AA4D229745B65000841BD /* BusesAtStopView.swift in Sources */,
 				9083657E29721B970070A354 /* gtfs-realtime.pb.swift in Sources */,
 				9083658229721C250070A354 /* MTAAlert.swift in Sources */,
 				906AA4CC29745534000841BD /* DistanceUnit.swift in Sources */,
