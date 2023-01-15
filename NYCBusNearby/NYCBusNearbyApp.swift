@@ -15,6 +15,7 @@ struct NYCBusNearbyApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(viewModel)
         }
     }
 }

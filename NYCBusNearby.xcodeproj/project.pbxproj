@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		90504D652973556700BDE429 /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90504D642973556700BDE429 /* LocationHelper.swift */; };
+		90504D68297357C200BDE429 /* routes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 90504D67297357C200BDE429 /* routes.txt */; };
+		90504D6C29735EE300BDE429 /* stops.txt in Resources */ = {isa = PBXBuildFile; fileRef = 90504D6B29735EE300BDE429 /* stops.txt */; };
+		90504D6E29735F8600BDE429 /* MTABusStop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90504D6D29735F8600BDE429 /* MTABusStop.swift */; };
+		90504D712973601100BDE429 /* CodableCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 90504D702973601100BDE429 /* CodableCSV */; };
+		906AA4CC29745534000841BD /* DistanceUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4CB29745534000841BD /* DistanceUnit.swift */; };
 		90836552297217AD0070A354 /* NYCBusNearbyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90836551297217AD0070A354 /* NYCBusNearbyApp.swift */; };
 		90836554297217AD0070A354 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90836553297217AD0070A354 /* ContentView.swift */; };
 		90836556297217AE0070A354 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90836555297217AE0070A354 /* Assets.xcassets */; };
@@ -34,6 +39,10 @@
 
 /* Begin PBXFileReference section */
 		90504D642973556700BDE429 /* LocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelper.swift; sourceTree = "<group>"; };
+		90504D67297357C200BDE429 /* routes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = routes.txt; sourceTree = "<group>"; };
+		90504D6B29735EE300BDE429 /* stops.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stops.txt; sourceTree = "<group>"; };
+		90504D6D29735F8600BDE429 /* MTABusStop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusStop.swift; sourceTree = "<group>"; };
+		906AA4CB29745534000841BD /* DistanceUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceUnit.swift; sourceTree = "<group>"; };
 		9083654E297217AD0070A354 /* NYCBusNearby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYCBusNearby.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90836551297217AD0070A354 /* NYCBusNearbyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NYCBusNearbyApp.swift; sourceTree = "<group>"; };
 		90836553297217AD0070A354 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -63,6 +72,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9083657A29721B520070A354 /* SwiftProtobufPluginLibrary in Frameworks */,
+				90504D712973601100BDE429 /* CodableCSV in Frameworks */,
 				9083657829721B520070A354 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -70,6 +80,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		90504D662973577D00BDE429 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				90504D6B29735EE300BDE429 /* stops.txt */,
+				90504D67297357C200BDE429 /* routes.txt */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		90836545297217AD0070A354 = {
 			isa = PBXGroup;
 			children = (
@@ -89,6 +108,7 @@
 		90836550297217AD0070A354 /* NYCBusNearby */ = {
 			isa = PBXGroup;
 			children = (
+				90504D662973577D00BDE429 /* Resources */,
 				90836561297218240070A354 /* Model */,
 				90836551297217AD0070A354 /* NYCBusNearbyApp.swift */,
 				90836553297217AD0070A354 /* ContentView.swift */,
@@ -126,6 +146,8 @@
 				9083658129721C250070A354 /* MTAAlert.swift */,
 				9083658329721C430070A354 /* MTAVehicleStatus.swift */,
 				90504D642973556700BDE429 /* LocationHelper.swift */,
+				90504D6D29735F8600BDE429 /* MTABusStop.swift */,
+				906AA4CB29745534000841BD /* DistanceUnit.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -149,6 +171,7 @@
 			packageProductDependencies = (
 				9083657729721B520070A354 /* SwiftProtobuf */,
 				9083657929721B520070A354 /* SwiftProtobufPluginLibrary */,
+				90504D702973601100BDE429 /* CodableCSV */,
 			);
 			productName = NYCBusNearby;
 			productReference = 9083654E297217AD0070A354 /* NYCBusNearby.app */;
@@ -180,6 +203,7 @@
 			mainGroup = 90836545297217AD0070A354;
 			packageReferences = (
 				9083657629721B520070A354 /* XCRemoteSwiftPackageReference "swift-protobuf" */,
+				90504D6F2973601100BDE429 /* XCRemoteSwiftPackageReference "CodableCSV" */,
 			);
 			productRefGroup = 9083654F297217AD0070A354 /* Products */;
 			projectDirPath = "";
@@ -195,8 +219,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90504D6C29735EE300BDE429 /* stops.txt in Resources */,
 				90836559297217AE0070A354 /* Preview Assets.xcassets in Resources */,
 				90836556297217AE0070A354 /* Assets.xcassets in Resources */,
+				90504D68297357C200BDE429 /* routes.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,6 +237,7 @@
 				90836554297217AD0070A354 /* ContentView.swift in Sources */,
 				90836565297218B20070A354 /* MTAFeedConstant.swift in Sources */,
 				90836560297218000070A354 /* ViewModel.swift in Sources */,
+				90504D6E29735F8600BDE429 /* MTABusStop.swift in Sources */,
 				9083658429721C430070A354 /* MTAVehicleStatus.swift in Sources */,
 				9083657529721A870070A354 /* MTAVehicle.swift in Sources */,
 				90836567297218CB0070A354 /* MTAFeedDownloadError.swift in Sources */,
@@ -226,6 +253,7 @@
 				90836563297218600070A354 /* MTAFeedDownloader.swift in Sources */,
 				9083657E29721B970070A354 /* gtfs-realtime.pb.swift in Sources */,
 				9083658229721C250070A354 /* MTAAlert.swift in Sources */,
+				906AA4CC29745534000841BD /* DistanceUnit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,6 +458,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		90504D6F2973601100BDE429 /* XCRemoteSwiftPackageReference "CodableCSV" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dehesa/CodableCSV";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.7;
+			};
+		};
 		9083657629721B520070A354 /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-protobuf.git";
@@ -441,6 +477,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		90504D702973601100BDE429 /* CodableCSV */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 90504D6F2973601100BDE429 /* XCRemoteSwiftPackageReference "CodableCSV" */;
+			productName = CodableCSV;
+		};
 		9083657729721B520070A354 /* SwiftProtobuf */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9083657629721B520070A354 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
