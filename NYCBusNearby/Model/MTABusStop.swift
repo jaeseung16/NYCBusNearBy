@@ -14,10 +14,6 @@ struct MTABusStop: Identifiable, Codable, Hashable {
     var desc: String
     var latitude: Double
     var longitude: Double
-    var zoneId: String
-    var url: String
-    var locationType: Int
-    var parentStation: String
     
     enum CodingKeys: Int, CodingKey {
         case id = 0
@@ -25,10 +21,6 @@ struct MTABusStop: Identifiable, Codable, Hashable {
         case desc = 2
         case latitude = 3
         case longitude = 4
-        case zoneId = 5
-        case url = 6
-        case locationType = 7
-        case parentStation = 8
     }
     
     func getCLLocationCoordinate2D() -> CLLocationCoordinate2D {

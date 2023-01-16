@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct TripUpdatesView: View {
+    @EnvironmentObject private var viewModel: ViewModel
+    
     var tripUpdate: MTATripUpdate
     
     var body: some View {
         List {
             ForEach(tripUpdate.stopTimeUpdates) { stopTimeUpdate in
                 HStack {
-                    Text("\(ViewModel.stopsById[stopTimeUpdate.id]?.name ?? stopTimeUpdate.id)")
+                    Text("\(viewModel.stopsById[stopTimeUpdate.id]?.name ?? stopTimeUpdate.id)")
                     
                     Spacer()
                     

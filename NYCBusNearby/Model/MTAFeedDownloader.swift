@@ -42,7 +42,7 @@ class MTAFeedDownloader {
             return
         }
         
-        var urlRequest = URLRequest(url: url)
+        let urlRequest = URLRequest(url: url)
         
         let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
             let start = Date()
@@ -86,10 +86,16 @@ class MTAFeedDownloader {
             let _ = getAlert(from: entity, at: date)
             
             if let mtaVehicle = getVehicle(from: entity) {
+                if let routeId = mtaVehicle.trip?.routeId, "Q38" == routeId {
+                    MTAFeedDownloader.logger.log("mtaVehicle = \(String(describing: mtaVehicle), privacy: .public)")
+                }
                 vehicles.append(mtaVehicle)
             }
             
             if let tripUpdate = getTripUpdate(from: entity) {
+                if let routeId = tripUpdate.trip?.routeId, "Q38" == routeId {
+                    MTAFeedDownloader.logger.log("tripUpdate = \(String(describing: tripUpdate), privacy: .public)")
+                }
                 tripUpdates.append(tripUpdate)
             }
             

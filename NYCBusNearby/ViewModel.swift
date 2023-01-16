@@ -16,7 +16,7 @@ import Persistence
 class ViewModel: NSObject, ObservableObject {
     private static let logger = Logger()
     
-    static var mtaStops: [MTABusStop] = Array(Set(ViewModel.read(from: "stops", type: MTABusStop.self)))
+    var mtaStops = [MTABusStop]()
     
     private static func read<T>(from resource: String, type: T.Type) -> [T] where T: Decodable {
         guard let stopsURL = Bundle.main.url(forResource: resource, withExtension: "txt") else {
@@ -39,7 +39,7 @@ class ViewModel: NSObject, ObservableObject {
         return result
     }
     
-    static var stopsById: [String: MTABusStop] = Dictionary(uniqueKeysWithValues: mtaStops.map { ($0.id, $0) })
+    var stopsById = [String: MTABusStop]()
     
     var headsignByTripId = [String: String]()
     
@@ -105,7 +105,7 @@ class ViewModel: NSObject, ObservableObject {
             } else {
                 ViewModel.logger.log("persistenceStore=\(container.persistentStoreDescriptions.first?.url?.absoluteString ?? "")")
                 ViewModel.logger.log("bundle=\(Bundle.main.url(forResource: "NYCBusNearby", withExtension: "sqlite")?.absoluteString ?? "")")
-                fatalError("Cannot unwrap URLs!")
+                //fatalError("Cannot unwrap URLs!")
             }
         }
         
@@ -136,6 +136,7 @@ class ViewModel: NSObject, ObservableObject {
         }
         
         let start = Date()
+        populateBusStops()
         populateHeadsignByTripId()
         ViewModel.logger.log("It took \(DateInterval(start: start, end: Date()).duration) sec to populate headsignByTripId")
         
@@ -148,8 +149,74 @@ class ViewModel: NSObject, ObservableObject {
             }
         }
         
-        ViewModel.logger.log("# of stops = \(ViewModel.mtaStops.count)")
+        ViewModel.logger.log("# of stops = \(self.mtaStops.count)")
     }
+    
+    func populateBusStops() -> Void {
+        let fetchRequest = NSFetchRequest<MTABusStopEntity>(entityName: "MTABusStopEntity")
+        
+        var fetchedEntities = [MTABusStopEntity]()
+        do {
+            fetchedEntities = try persistenceContainer.viewContext.fetch(fetchRequest)
+        } catch {
+            ViewModel.logger.error("Failed to fetch: \(error.localizedDescription)")
+        }
+        
+        if fetchedEntities.isEmpty {
+            var count = 0
+            let viewContext = persistenceContainer.viewContext
+            
+            mtaStops = Array(Set(ViewModel.read(from: "stops", type: MTABusStop.self)))
+            
+            mtaStops.forEach { stop in
+                let entity = MTABusStopEntity(context: viewContext)
+                entity.stop_id = stop.id
+                entity.name = stop.name
+                entity.desc = stop.desc
+                entity.latitude = stop.latitude
+                entity.longitude = stop.longitude
+                
+                count += 1
+                
+                do {
+                    try viewContext.save()
+                } catch {
+                    ViewModel.logger.error("Failed to save \(entity): \(error.localizedDescription)")
+                }
+            }
+            
+        } else {
+            mtaStops = getMTABusStops(from: fetchedEntities)
+        }
+        
+        stopsById = Dictionary(uniqueKeysWithValues: mtaStops.map { ($0.id, $0) })
+    }
+    
+    
+    func getMTABusStops(from entities: [MTABusStopEntity]) -> [MTABusStop] {
+        var count = 0
+
+        var mtaBusStops = [MTABusStop]()
+        
+        entities.forEach { entity in
+            if let id = entity.stop_id {
+                let mtaBusTrip = MTABusStop(id: id,
+                                            name: entity.name ?? "",
+                                            desc: entity.desc ?? "",
+                                            latitude: entity.latitude,
+                                            longitude: entity.longitude)
+                
+                mtaBusStops.append(mtaBusTrip)
+                
+                count += 1
+            }
+        }
+        
+        ViewModel.logger.log("Loaded \(count) entities")
+        
+        return Array(Set(mtaBusStops))
+    }
+    
     
     func populateHeadsignByTripId() -> Void {
         let fetchRequest = NSFetchRequest<MTABusTripEntity>(entityName: "MTABusTripEntity")
@@ -161,39 +228,41 @@ class ViewModel: NSObject, ObservableObject {
             ViewModel.logger.error("Failed to fetch: \(error.localizedDescription)")
         }
         
-        let mtaBusTrips = getMTABusTrips(from: fetchedEntities)
+        
+        var mtaBusTrips = [MTABusTrip]()
+        if fetchedEntities.isEmpty {
+            let viewContext = persistenceContainer.viewContext
+            
+            mtaBusTrips = Array(Set(ViewModel.read(from: "trips", type: MTABusTrip.self)))
+            
+            mtaBusTrips.forEach { trip in
+                let entity = MTABusTripEntity(context: viewContext)
+                entity.route_id = trip.routeId
+                entity.service_id = trip.serviceId
+                entity.trip_id = trip.tripId
+                entity.trip_headsign = trip.tripHeadsign
+                entity.direction_id = trip.directionId
+                entity.block_id = trip.blockId
+                entity.shape_id = trip.shapeId
+                
+                do {
+                    try viewContext.save()
+                } catch {
+                    ViewModel.logger.error("Failed to save \(entity): \(error.localizedDescription)")
+                }
+                
+            }
+            
+        } else {
+            mtaBusTrips = getMTABusTrips(from: fetchedEntities)
+        }
         
         self.headsignByTripId = Dictionary(uniqueKeysWithValues: mtaBusTrips.map { ($0.id, $0.tripHeadsign) })
     }
     
     /*
     func populatePersistenceStore() -> [MTABusTrip] {
-        var count = 0
-        let viewContext = persistenceContainer.viewContext
         
-        let mtaBusTrips = Array(Set(ViewModel.read(from: "trips", type: MTABusTrip.self)))
-        
-        mtaBusTrips.forEach { trip in
-            let entity = MTABusTripEntity(context: viewContext)
-            entity.route_id = trip.routeId
-            entity.service_id = trip.serviceId
-            entity.trip_id = trip.tripId
-            entity.trip_headsign = trip.tripHeadsign
-            entity.direction_id = trip.directionId
-            entity.block_id = trip.blockId
-            entity.shape_id = trip.shapeId
-            
-            persistence.save { result in
-                switch result {
-                case .success(()):
-                    count += 1
-                case .failure(let error):
-                    let nsError = error as NSError
-                    ViewModel.logger.error("While saving a new bus trip, occured an unresolved error \(nsError), \(nsError.userInfo)")
-                }
-            }
-            
-        }
         
         ViewModel.logger.log("Save \(count) entities")
         
@@ -289,7 +358,7 @@ class ViewModel: NSObject, ObservableObject {
         let radius = CLLocationDistance(distance)
         let circularRegion = CLCircularRegion(center: center, radius: radius, identifier: "\(center)")
         
-        return ViewModel.mtaStops.filter { mtaStop in
+        return mtaStops.filter { mtaStop in
             circularRegion.contains(CLLocationCoordinate2D(latitude: mtaStop.latitude, longitude: mtaStop.longitude))
         }.sorted { mtaStop1, mtaStop2 in
             let location1 = CLLocation(latitude: mtaStop1.latitude, longitude: mtaStop1.longitude)
@@ -305,7 +374,7 @@ class ViewModel: NSObject, ObservableObject {
         let radius = CLLocationDistance(distance)
         let circularRegion = CLCircularRegion(center: center, radius: radius, identifier: "\(center)")
         
-        let stopsNearby = ViewModel.mtaStops.filter { mtaStop in
+        let stopsNearby = mtaStops.filter { mtaStop in
             circularRegion.contains(CLLocationCoordinate2D(latitude: mtaStop.latitude, longitude: mtaStop.longitude))
         }
         
@@ -333,9 +402,9 @@ class ViewModel: NSObject, ObservableObject {
                                 stopIdWithoutDirection = stopId
                             }
                             
-                            if let stop = ViewModel.stopsById[stopIdWithoutDirection], buses[stop] != nil {
+                            if let stop = self.stopsById[stopIdWithoutDirection], buses[stop] != nil {
                                 buses[stop]!.append(mtaBus)
-                            } else if let stop = ViewModel.stopsById[stopIdWithoutDirection], buses[stop] == nil {
+                            } else if let stop = self.stopsById[stopIdWithoutDirection], buses[stop] == nil {
                                 buses[stop] = Array(arrayLiteral: mtaBus)
                             } else {
                                 ViewModel.logger.info("Can't find a stop with stopId=\(stopId), privacy: .public)")
