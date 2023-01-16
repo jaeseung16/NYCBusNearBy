@@ -10,13 +10,13 @@ import os
 import CoreLocation
 import MapKit
 import CodableCSV
+import CoreData
+import Persistence
 
 class ViewModel: NSObject, ObservableObject {
     private static let logger = Logger()
     
     static var mtaStops: [MTABusStop] = Array(Set(ViewModel.read(from: "stops", type: MTABusStop.self)))
-    
-    static var mtaBusTrips: [MTABusTrip] = Array(Set(ViewModel.read(from: "trips", type: MTABusTrip.self)))
     
     private static func read<T>(from resource: String, type: T.Type) -> [T] where T: Decodable {
         guard let stopsURL = Bundle.main.url(forResource: resource, withExtension: "txt") else {
@@ -41,7 +41,7 @@ class ViewModel: NSObject, ObservableObject {
     
     static var stopsById: [String: MTABusStop] = Dictionary(uniqueKeysWithValues: mtaStops.map { ($0.id, $0) })
     
-    static var headsignByTripId: [String: String] = Dictionary(uniqueKeysWithValues: mtaBusTrips.map { ($0.id, $0.tripHeadsign) })
+    var headsignByTripId = [String: String]()
     
     var feedDownloader = MTAFeedDownloader()
     
@@ -83,10 +83,49 @@ class ViewModel: NSObject, ObservableObject {
         }
     }
     
+    //private let persistence = Persistence(name: "NYCBusNearby", identifier: "com.resonance.jlee.NYCBusNearby", isCloud: false)
+    
+    private lazy var persistenceContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "NYCBusNearby")
+            
+        if !self.launchedBefore {
+            if let storeUrl = container.persistentStoreDescriptions.first?.url,
+               let seededDataUrl = Bundle.main.url(forResource: "NYCBusNearby", withExtension: "sqlite") {
+                do {
+                    try container.persistentStoreCoordinator.replacePersistentStore(at: storeUrl,
+                                                                                    destinationOptions: nil,
+                                                                                    withPersistentStoreFrom: seededDataUrl,
+                                                                                    sourceOptions: nil,
+                                                                                    type: .sqlite)
+                    
+                    UserDefaults.standard.setValue(true, forKey: "launchedBefore")
+                } catch {
+                    ViewModel.logger.error("Couln't replace: \(error.localizedDescription, privacy: .public)")
+                }
+            } else {
+                ViewModel.logger.log("persistenceStore=\(container.persistentStoreDescriptions.first?.url?.absoluteString ?? "")")
+                ViewModel.logger.log("bundle=\(Bundle.main.url(forResource: "NYCBusNearby", withExtension: "sqlite")?.absoluteString ?? "")")
+                fatalError("Cannot unwrap URLs!")
+            }
+        }
+        
+        container.loadPersistentStores { storeDescription, error in
+            if let error = error as NSError? {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+        }
+        ViewModel.logger.log("container=\(container.persistentStoreDescriptions.first?.url?.absoluteString ?? "")")
+        return container
+    }()
+
+    private var launchedBefore = false
+    
     override init() {
         super.init()
         
         locationHelper.delegate = self
+        
+        let launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
         
         if let _ = UserDefaults.standard.object(forKey: "maxDistance") {
             self.maxDistance = UserDefaults.standard.double(forKey: "maxDistance")
@@ -95,6 +134,10 @@ class ViewModel: NSObject, ObservableObject {
         if let _ = UserDefaults.standard.object(forKey: "maxComing") {
             self.maxComing = UserDefaults.standard.double(forKey: "maxComing")
         }
+        
+        let start = Date()
+        populateHeadsignByTripId()
+        ViewModel.logger.log("It took \(DateInterval(start: start, end: Date()).duration) sec to populate headsignByTripId")
         
         getAllData() { result in
             switch result {
@@ -106,6 +149,82 @@ class ViewModel: NSObject, ObservableObject {
         }
         
         ViewModel.logger.log("# of stops = \(ViewModel.mtaStops.count)")
+    }
+    
+    func populateHeadsignByTripId() -> Void {
+        let fetchRequest = NSFetchRequest<MTABusTripEntity>(entityName: "MTABusTripEntity")
+        
+        var fetchedEntities = [MTABusTripEntity]()
+        do {
+            fetchedEntities = try persistenceContainer.viewContext.fetch(fetchRequest)
+        } catch {
+            ViewModel.logger.error("Failed to fetch: \(error.localizedDescription)")
+        }
+        
+        let mtaBusTrips = getMTABusTrips(from: fetchedEntities)
+        
+        self.headsignByTripId = Dictionary(uniqueKeysWithValues: mtaBusTrips.map { ($0.id, $0.tripHeadsign) })
+    }
+    
+    /*
+    func populatePersistenceStore() -> [MTABusTrip] {
+        var count = 0
+        let viewContext = persistenceContainer.viewContext
+        
+        let mtaBusTrips = Array(Set(ViewModel.read(from: "trips", type: MTABusTrip.self)))
+        
+        mtaBusTrips.forEach { trip in
+            let entity = MTABusTripEntity(context: viewContext)
+            entity.route_id = trip.routeId
+            entity.service_id = trip.serviceId
+            entity.trip_id = trip.tripId
+            entity.trip_headsign = trip.tripHeadsign
+            entity.direction_id = trip.directionId
+            entity.block_id = trip.blockId
+            entity.shape_id = trip.shapeId
+            
+            persistence.save { result in
+                switch result {
+                case .success(()):
+                    count += 1
+                case .failure(let error):
+                    let nsError = error as NSError
+                    ViewModel.logger.error("While saving a new bus trip, occured an unresolved error \(nsError), \(nsError.userInfo)")
+                }
+            }
+            
+        }
+        
+        ViewModel.logger.log("Save \(count) entities")
+        
+        return mtaBusTrips
+    }
+    */
+    
+    func getMTABusTrips(from entities: [MTABusTripEntity]) -> [MTABusTrip] {
+        var count = 0
+
+        var mtaBusTrips = [MTABusTrip]()
+        
+        entities.forEach { entity in
+            if let tripId = entity.trip_id {
+                let mtaBusTrip = MTABusTrip(routeId: entity.route_id ?? "",
+                                            serviceId: entity.service_id ?? "",
+                                            tripId: tripId,
+                                            tripHeadsign: entity.trip_headsign ?? "",
+                                            directionId: entity.direction_id ?? "",
+                                            blockId: entity.block_id ?? "",
+                                            shapeId: entity.shape_id ?? "")
+                
+                mtaBusTrips.append(mtaBusTrip)
+                
+                count += 1
+            }
+        }
+        
+        ViewModel.logger.log("Loaded \(count) entities")
+        
+        return Array(Set(mtaBusTrips))
     }
     
     func getAllData(completionHandler: @escaping (Result<Bool, Error>) -> Void) -> Void {
@@ -207,7 +326,7 @@ class ViewModel: NSObject, ObservableObject {
                                                 stopId: stopId,
                                                 arrivalTime: stopTimeUpdate.arrivalTime,
                                                 departureTime: stopTimeUpdate.departureTime,
-                                                headsign: ViewModel.headsignByTripId[tripId])
+                                                headsign: headsignByTripId[tripId])
                             
                             var stopIdWithoutDirection: String
                             if let last = stopId.last, last == "N" || last == "S" {

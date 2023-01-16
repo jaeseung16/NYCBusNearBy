@@ -18,6 +18,9 @@
 		906AA4D42974A496000841BD /* TripUpdatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4D32974A496000841BD /* TripUpdatesView.swift */; };
 		906AA4D62974B132000841BD /* trips.txt in Resources */ = {isa = PBXBuildFile; fileRef = 906AA4D52974B132000841BD /* trips.txt */; };
 		906AA4D82974B167000841BD /* MTABusTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4D72974B167000841BD /* MTABusTrip.swift */; };
+		9082C1CE2975908F004D7130 /* Persistence in Frameworks */ = {isa = PBXBuildFile; productRef = 9082C1CD2975908F004D7130 /* Persistence */; };
+		9082C1D2297590D7004D7130 /* NYCBusNearby.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9082C1D0297590D7004D7130 /* NYCBusNearby.xcdatamodeld */; };
+		9082C1D42975A6BF004D7130 /* NYCBusNearby.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 9082C1D32975A329004D7130 /* NYCBusNearby.sqlite */; };
 		90836552297217AD0070A354 /* NYCBusNearbyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90836551297217AD0070A354 /* NYCBusNearbyApp.swift */; };
 		90836554297217AD0070A354 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90836553297217AD0070A354 /* ContentView.swift */; };
 		90836556297217AE0070A354 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90836555297217AE0070A354 /* Assets.xcassets */; };
@@ -53,6 +56,9 @@
 		906AA4D32974A496000841BD /* TripUpdatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripUpdatesView.swift; sourceTree = "<group>"; };
 		906AA4D52974B132000841BD /* trips.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trips.txt; sourceTree = "<group>"; };
 		906AA4D72974B167000841BD /* MTABusTrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusTrip.swift; sourceTree = "<group>"; };
+		9082C1D1297590D7004D7130 /* NYCBusTrips.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NYCBusTrips.xcdatamodel; sourceTree = "<group>"; };
+		9082C1D32975A329004D7130 /* NYCBusNearby.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = NYCBusNearby.sqlite; sourceTree = "<group>"; };
+		9082C1D52975BA96004D7130 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9083654E297217AD0070A354 /* NYCBusNearby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYCBusNearby.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90836551297217AD0070A354 /* NYCBusNearbyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NYCBusNearbyApp.swift; sourceTree = "<group>"; };
 		90836553297217AD0070A354 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -81,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9082C1CE2975908F004D7130 /* Persistence in Frameworks */,
 				9083657A29721B520070A354 /* SwiftProtobufPluginLibrary in Frameworks */,
 				90504D712973601100BDE429 /* CodableCSV in Frameworks */,
 				9083657829721B520070A354 /* SwiftProtobuf in Frameworks */,
@@ -93,11 +100,20 @@
 		90504D662973577D00BDE429 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9082C1D32975A329004D7130 /* NYCBusNearby.sqlite */,
 				90504D67297357C200BDE429 /* routes.txt */,
 				90504D6B29735EE300BDE429 /* stops.txt */,
 				906AA4D52974B132000841BD /* trips.txt */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		9082C1CF297590B2004D7130 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				9082C1D0297590D7004D7130 /* NYCBusNearby.xcdatamodeld */,
+			);
+			path = CoreData;
 			sourceTree = "<group>";
 		};
 		90836545297217AD0070A354 = {
@@ -119,6 +135,8 @@
 		90836550297217AD0070A354 /* NYCBusNearby */ = {
 			isa = PBXGroup;
 			children = (
+				9082C1D52975BA96004D7130 /* Info.plist */,
+				9082C1CF297590B2004D7130 /* CoreData */,
 				90504D662973577D00BDE429 /* Resources */,
 				90836561297218240070A354 /* Model */,
 				90836551297217AD0070A354 /* NYCBusNearbyApp.swift */,
@@ -187,6 +205,7 @@
 				9083657729721B520070A354 /* SwiftProtobuf */,
 				9083657929721B520070A354 /* SwiftProtobufPluginLibrary */,
 				90504D702973601100BDE429 /* CodableCSV */,
+				9082C1CD2975908F004D7130 /* Persistence */,
 			);
 			productName = NYCBusNearby;
 			productReference = 9083654E297217AD0070A354 /* NYCBusNearby.app */;
@@ -219,6 +238,7 @@
 			packageReferences = (
 				9083657629721B520070A354 /* XCRemoteSwiftPackageReference "swift-protobuf" */,
 				90504D6F2973601100BDE429 /* XCRemoteSwiftPackageReference "CodableCSV" */,
+				9082C1CC2975908F004D7130 /* XCRemoteSwiftPackageReference "PersistenceSwift" */,
 			);
 			productRefGroup = 9083654F297217AD0070A354 /* Products */;
 			projectDirPath = "";
@@ -234,6 +254,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9082C1D42975A6BF004D7130 /* NYCBusNearby.sqlite in Resources */,
 				90504D6C29735EE300BDE429 /* stops.txt in Resources */,
 				90836559297217AE0070A354 /* Preview Assets.xcassets in Resources */,
 				90836556297217AE0070A354 /* Assets.xcassets in Resources */,
@@ -255,6 +276,7 @@
 				90836560297218000070A354 /* ViewModel.swift in Sources */,
 				90504D6E29735F8600BDE429 /* MTABusStop.swift in Sources */,
 				9083658429721C430070A354 /* MTAVehicleStatus.swift in Sources */,
+				9082C1D2297590D7004D7130 /* NYCBusNearby.xcdatamodeld in Sources */,
 				9083657529721A870070A354 /* MTAVehicle.swift in Sources */,
 				906AA4CE29745974000841BD /* MTABus.swift in Sources */,
 				906AA4D42974A496000841BD /* TripUpdatesView.swift in Sources */,
@@ -405,8 +427,8 @@
 				DEVELOPMENT_TEAM = RWVTTVMWBE;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NYCBusNearby/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to provide bus schedule at the nearby stops";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -435,8 +457,8 @@
 				DEVELOPMENT_TEAM = RWVTTVMWBE;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NYCBusNearby/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to provide bus schedule at the nearby stops";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -486,6 +508,14 @@
 				minimumVersion = 0.6.7;
 			};
 		};
+		9082C1CC2975908F004D7130 /* XCRemoteSwiftPackageReference "PersistenceSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jaeseung16/PersistenceSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.4;
+			};
+		};
 		9083657629721B520070A354 /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-protobuf.git";
@@ -502,6 +532,11 @@
 			package = 90504D6F2973601100BDE429 /* XCRemoteSwiftPackageReference "CodableCSV" */;
 			productName = CodableCSV;
 		};
+		9082C1CD2975908F004D7130 /* Persistence */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9082C1CC2975908F004D7130 /* XCRemoteSwiftPackageReference "PersistenceSwift" */;
+			productName = Persistence;
+		};
 		9083657729721B520070A354 /* SwiftProtobuf */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9083657629721B520070A354 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
@@ -513,6 +548,19 @@
 			productName = SwiftProtobufPluginLibrary;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		9082C1D0297590D7004D7130 /* NYCBusNearby.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				9082C1D1297590D7004D7130 /* NYCBusTrips.xcdatamodel */,
+			);
+			currentVersion = 9082C1D1297590D7004D7130 /* NYCBusTrips.xcdatamodel */;
+			path = NYCBusNearby.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 90836546297217AD0070A354 /* Project object */;
 }
