@@ -12,6 +12,7 @@ struct ContentView: View {
     @EnvironmentObject private var viewModel: ViewModel
     @AppStorage("maxDistance") private var maxDistance = 1000.0
     @AppStorage("distanceUnit") private var distanceUnit = DistanceUnit.mile
+    @AppStorage("maxComing") private var maxComing: TimeInterval = 30 * 60
     
     private let distanceFormatStyle = Measurement<UnitLength>.FormatStyle(width: .abbreviated,
                                                                           usage: .asProvided,
@@ -23,9 +24,17 @@ struct ContentView: View {
     @State private var userLocality = "Unknown"
     @State private var stopsNearby = [MTABusStop]()
     @State private var busesNearby = [MTABusStop: [MTABus]]()
+    @State private var lastRefresh = Date()
     
     @State private var presentAlertNotInNYC = false
     @State private var presentedAlertNotInNYC = false
+    @State private var presentUpdateMaxDistance = false
+    @State private var presentAlertLocationUnkown = false
+    @State private var presentAlertFeedUnavailable = false
+    @State private var timer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
+    @State private var refreshable = false
+    
+    @State private var showProgress = false
     
     private var kmSelected: Bool {
         distanceUnit == .km
@@ -59,8 +68,20 @@ struct ContentView: View {
                 .navigationViewStyle(.stack)
             }
             
+            Spacer()
+            
+            bottomView
+            
         }
         .padding()
+        .overlay {
+            ProgressView("Please wait...")
+                .progressViewStyle(.circular)
+                .opacity(showProgress ? 1 : 0)
+        }
+        .sheet(isPresented: $presentUpdateMaxDistance) {
+            SettingsView(distanceUnit: $distanceUnit, distance: $maxDistance, maxComing: $maxComing)
+        }
         .onReceive(viewModel.$feedAvailable) { _ in
             if viewModel.feedAvailable {
                 updateStopsAndTrainsNearby()
@@ -72,9 +93,31 @@ struct ContentView: View {
         .onReceive(viewModel.$locationUpdated) { _ in
             updateStopsAndTrainsNearby()
         }
+        .onReceive(timer) { _ in
+            refreshable = lastRefresh.distance(to: Date()) > 60
+        }
+        .onChange(of: maxComing) { newValue in
+            viewModel.maxComing = newValue
+        }
+        .onChange(of: presentUpdateMaxDistance) { _ in
+            if viewModel.maxDistance != maxDistance {
+                viewModel.maxDistance = maxDistance
+                updateStopsAndTrainsNearby()
+            }
+        }
         .alert(Text("There are no nearby subway stations"), isPresented: $presentAlertNotInNYC) {
             Button("OK") {
                 presentedAlertNotInNYC = true
+            }
+        }
+        .alert(Text("Can't determine your current location"), isPresented: $presentAlertLocationUnkown) {
+            Button("OK") {
+                
+            }
+        }
+        .alert(Text("Can't access MTA feed"), isPresented: $presentAlertFeedUnavailable) {
+            Button("OK") {
+                
             }
         }
     }
@@ -138,5 +181,70 @@ struct ContentView: View {
             }
         }
         return result
+    }
+    
+    private var bottomView: some View {
+        VStack {
+            HStack {
+                Spacer()
+                
+                Button {
+                    presentUpdateMaxDistance = true
+                } label: {
+                    Label("Settings", systemImage: "gear")
+                }
+                
+                Spacer()
+
+                Button {
+                    downloadAllDataByButton()
+                } label: {
+                    Label("Refresh", systemImage: "arrow.clockwise.circle")
+                }
+                .disabled(!refreshable)
+                
+                Spacer()
+            }
+            .disabled(showProgress)
+            
+            HStack {
+                Spacer()
+                Text("Refreshed:")
+                Text(lastRefresh, style: .time)
+            }
+            /*
+            #if os(iOS)
+            BannerAd()
+                .frame(height: 50)
+            #endif
+            */
+        }
+    }
+    
+    private func downloadAllDataByButton() -> Void {
+        refreshable = false
+        if !showProgress {
+            showProgress = true
+            downloadAllData()
+        }
+    }
+    
+    private func downloadAllData() -> Void {
+        lastRefresh = Date()
+        if (viewModel.location?.coordinate) != nil {
+            viewModel.getAllData() { result in
+                switch result {
+                case .success(let success):
+                    presentAlertFeedUnavailable = !success
+                case .failure:
+                    presentAlertFeedUnavailable.toggle()
+                }
+                showProgress = false
+                updateStopsAndTrainsNearby()
+            }
+        } else if showProgress {
+            presentAlertLocationUnkown.toggle()
+            showProgress = false
+        }
     }
 }

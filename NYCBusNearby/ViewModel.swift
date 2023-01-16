@@ -125,7 +125,7 @@ class ViewModel: NSObject, ObservableObject {
         
         locationHelper.delegate = self
         
-        let launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
+        launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
         
         if let _ = UserDefaults.standard.object(forKey: "maxDistance") {
             self.maxDistance = UserDefaults.standard.double(forKey: "maxDistance")
@@ -240,7 +240,6 @@ class ViewModel: NSObject, ObservableObject {
             }
             
             ViewModel.logger.log("url = \(MTABusFeedURL.vehiclePositions.url()?.absoluteString ?? "", privacy: .public)")
-            ViewModel.logger.log("tripUpdatesByTripId.count = \(String(describing: wrapper.tripUpdatesByTripId.count), privacy: .public)")
             ViewModel.logger.log("vehicle.count = \(String(describing: wrapper.vehiclesByStopId.count), privacy: .public)")
             
             DispatchQueue.main.async {
@@ -263,7 +262,6 @@ class ViewModel: NSObject, ObservableObject {
                     
                     ViewModel.logger.log("url = \(MTABusFeedURL.tripUpdates.url()?.absoluteString ?? "", privacy: .public)")
                     ViewModel.logger.log("tripUpdatesByTripId.count = \(String(describing: wrapper.tripUpdatesByTripId.count), privacy: .public)")
-                    ViewModel.logger.log("vehicle.count = \(String(describing: wrapper.vehiclesByStopId.count), privacy: .public)")
                     
                     DispatchQueue.main.async {
                         if !wrapper.tripUpdatesByTripId.isEmpty {
