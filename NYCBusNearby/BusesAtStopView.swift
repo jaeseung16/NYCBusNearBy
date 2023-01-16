@@ -37,20 +37,17 @@ struct BusesAtStopView: View {
             List {
                 ForEach(buses, id: \.self) { bus in
                     if let trip = bus.trip, let eventTime = bus.eventTime, isValid(eventTime) {
-                        label(for: bus, trip: trip, arrivalTime: eventTime)
-                        
-                        /*
+                        //label(for: bus, trip: trip, arrivalTime: eventTime)
                         NavigationLink {
                             if let tripId = trip.tripId, let tripUpdate = tripUpdateByTripId[tripId] {
                                 TripUpdatesView(tripUpdate: tripUpdate)
-                                    .navigationTitle(trip.getRouteId()?.rawValue ?? "")
+                                    .navigationTitle(trip.routeId ?? "")
                             } else {
                                 EmptyView()
                             }
                         } label: {
-                                label(for: train, trip: trip, arrivalTime: eventTime)
+                                label(for: bus, trip: trip, arrivalTime: eventTime)
                         }
-                         */
                     }
                 }
             }
@@ -60,17 +57,18 @@ struct BusesAtStopView: View {
     }
     
     private func label(for bus: MTABus, trip: MTATrip, arrivalTime: Date) -> some View {
-        HStack {
-            if let systemName = bus.getDirection()?.systemName {
-                Image(systemName: systemName)
+        VStack(alignment: .trailing) {
+            HStack {
+                Text(bus.trip?.routeId ?? "")
+                
+                Spacer()
+                
+                Text(bus.headsign ?? "")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                Spacer()
             }
-            
-            Text(bus.trip?.routeId ?? "")
-                //.frame(width: 30, height: 30)
-            
-            Text(bus.getDirection()?.rawValue ?? "")
-            
-            Spacer()
             
             if Date().distance(to: arrivalTime) > 15*60 {
                 Text(arrivalTime, style: .time)

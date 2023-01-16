@@ -39,11 +39,11 @@ struct ContentView: View {
                 NavigationView {
                     List {
                         ForEach(stopsNearby, id:\.self) { stop in
-                            if let trains = getBuses(at: stop) {
+                            if let buses = getBuses(at: stop) {
                                 NavigationLink {
                                     BusesAtStopView(stop: stop,
-                                                    buses: getSortedBuses(from: trains),
-                                                    tripUpdateByTripId: getTripUpdateByTripId(from: trains))
+                                                    buses: getSortedBuses(from: buses),
+                                                    tripUpdateByTripId: getTripUpdateByTripId(from: buses))
                                         .navigationTitle(stop.name)
                                 } label: {
                                     if kmSelected {
@@ -93,7 +93,12 @@ struct ContentView: View {
             
             Spacer()
             
-            Text(distance(to: stop).converted(to: distanceUnit.unitLength), format: distanceFormatStyle)
+            VStack(alignment: .leading) {
+                Text("\(stop.id)")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Text(distance(to: stop).converted(to: distanceUnit.unitLength), format: distanceFormatStyle)
+            }
         }
     }
     
@@ -122,7 +127,6 @@ struct ContentView: View {
     }
     
     private func getSortedBuses(from buses: [MTABus]) -> [MTABus] {
-        print("buses=\(buses)")
         return buses.sorted(by: { $0.eventTime! < $1.eventTime! })
     }
     

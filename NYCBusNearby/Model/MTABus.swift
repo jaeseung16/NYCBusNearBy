@@ -15,6 +15,8 @@ struct MTABus: Hashable {
     let arrivalTime: Date?
     let departureTime: Date?
     
+    let headsign: String?
+    
     var eventTime: Date? {
         return arrivalTime ?? departureTime
     }

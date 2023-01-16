@@ -16,6 +16,8 @@ class ViewModel: NSObject, ObservableObject {
     
     static var mtaStops: [MTABusStop] = Array(Set(ViewModel.read(from: "stops", type: MTABusStop.self)))
     
+    static var mtaBusTrips: [MTABusTrip] = Array(Set(ViewModel.read(from: "trips", type: MTABusTrip.self)))
+    
     private static func read<T>(from resource: String, type: T.Type) -> [T] where T: Decodable {
         guard let stopsURL = Bundle.main.url(forResource: resource, withExtension: "txt") else {
             ViewModel.logger.error("No file named \(resource).txt")
@@ -38,6 +40,8 @@ class ViewModel: NSObject, ObservableObject {
     }
     
     static var stopsById: [String: MTABusStop] = Dictionary(uniqueKeysWithValues: mtaStops.map { ($0.id, $0) })
+    
+    static var headsignByTripId: [String: String] = Dictionary(uniqueKeysWithValues: mtaBusTrips.map { ($0.id, $0.tripHeadsign) })
     
     var feedDownloader = MTAFeedDownloader()
     
@@ -179,7 +183,7 @@ class ViewModel: NSObject, ObservableObject {
     }
     
     func buses(within distance: Double, from center: CLLocationCoordinate2D) -> [MTABusStop: [MTABus]] {
-        var trains = [MTABusStop: [MTABus]]()
+        var buses = [MTABusStop: [MTABus]]()
         
         let radius = CLLocationDistance(distance)
         let circularRegion = CLCircularRegion(center: center, radius: radius, identifier: "\(center)")
@@ -198,11 +202,12 @@ class ViewModel: NSObject, ObservableObject {
                         if let stopId = stopTimeUpdate.stopId, stopIds.contains(stopId) {
                             let vehiclesAtStop = vehiclesByStopId[stopId]?.first(where: { tripId == $0.trip?.tripId })
                             
-                            let mtaTrain = MTABus(trip: tripUpdate.trip,
-                                                    status: vehiclesAtStop?.status,
-                                                    stopId: stopId,
-                                                    arrivalTime: stopTimeUpdate.arrivalTime,
-                                                    departureTime: stopTimeUpdate.departureTime)
+                            let mtaBus = MTABus(trip: tripUpdate.trip,
+                                                status: vehiclesAtStop?.status,
+                                                stopId: stopId,
+                                                arrivalTime: stopTimeUpdate.arrivalTime,
+                                                departureTime: stopTimeUpdate.departureTime,
+                                                headsign: ViewModel.headsignByTripId[tripId])
                             
                             var stopIdWithoutDirection: String
                             if let last = stopId.last, last == "N" || last == "S" {
@@ -211,10 +216,10 @@ class ViewModel: NSObject, ObservableObject {
                                 stopIdWithoutDirection = stopId
                             }
                             
-                            if let stop = ViewModel.stopsById[stopIdWithoutDirection], trains[stop] != nil {
-                                trains[stop]!.append(mtaTrain)
-                            } else if let stop = ViewModel.stopsById[stopIdWithoutDirection], trains[stop] == nil {
-                                trains[stop] = Array(arrayLiteral: mtaTrain)
+                            if let stop = ViewModel.stopsById[stopIdWithoutDirection], buses[stop] != nil {
+                                buses[stop]!.append(mtaBus)
+                            } else if let stop = ViewModel.stopsById[stopIdWithoutDirection], buses[stop] == nil {
+                                buses[stop] = Array(arrayLiteral: mtaBus)
                             } else {
                                 ViewModel.logger.info("Can't find a stop with stopId=\(stopId), privacy: .public)")
                             }
@@ -227,7 +232,7 @@ class ViewModel: NSObject, ObservableObject {
             
         // ViewModel.logger.info("trains=\(trains, privacy: .public) near (\(center.longitude, privacy: .public), \(center.latitude, privacy: .public))")
         
-        return trains
+        return buses
     }
 }
 
