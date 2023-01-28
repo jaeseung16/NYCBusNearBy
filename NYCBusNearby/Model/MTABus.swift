@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MTAFeed
 
 struct MTABus: Hashable {
     let trip: MTATrip?

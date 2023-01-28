@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import MTAFeed
 
 struct ContentView: View {
     @EnvironmentObject private var viewModel: ViewModel

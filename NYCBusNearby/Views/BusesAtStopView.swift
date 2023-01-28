@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import MTAFeed
 
 struct BusesAtStopView: View {
     @EnvironmentObject private var viewModel: ViewModel

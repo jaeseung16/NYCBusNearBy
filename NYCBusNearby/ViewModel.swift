@@ -12,6 +12,7 @@ import MapKit
 import CodableCSV
 import CoreData
 import Persistence
+import MTAFeed
 
 class ViewModel: NSObject, ObservableObject {
     private static let logger = Logger()
@@ -43,7 +44,7 @@ class ViewModel: NSObject, ObservableObject {
     
     var headsignByTripId = [String: String]()
     
-    var feedDownloader = MTAFeedDownloader()
+    var feedDownloader = BusFeedDownloader(apiKey: MTAFeedConstant.apiKey)
     
     @Published var feedAvailable = true
     
@@ -297,7 +298,7 @@ class ViewModel: NSObject, ObservableObject {
     }
     
     func getAllData(completionHandler: @escaping (Result<Bool, Error>) -> Void) -> Void {
-        feedDownloader.download(from: MTABusFeedURL.vehiclePositions) { wrapper, error in
+        feedDownloader.download(from: BusFeedURL.vehiclePositions) { wrapper, error in
             guard let wrapper = wrapper else {
                 ViewModel.logger.log("Failed to download MTA feeds from REST, trying mta.info: error = \(String(describing: error?.localizedDescription), privacy: .public)")
                 if let error = error {
@@ -308,7 +309,7 @@ class ViewModel: NSObject, ObservableObject {
                 return
             }
             
-            ViewModel.logger.log("url = \(MTABusFeedURL.vehiclePositions.url()?.absoluteString ?? "", privacy: .public)")
+            ViewModel.logger.log("url = \(BusFeedURL.vehiclePositions.url(with: "")?.absoluteString ?? "", privacy: .public)")
             ViewModel.logger.log("vehicle.count = \(String(describing: wrapper.vehiclesByStopId.count), privacy: .public)")
             
             DispatchQueue.main.async {
@@ -318,7 +319,7 @@ class ViewModel: NSObject, ObservableObject {
                     }
                 }
                 
-                self.feedDownloader.download(from: MTABusFeedURL.tripUpdates) { wrapper, error in
+                self.feedDownloader.download(from: BusFeedURL.tripUpdates) { wrapper, error in
                     guard let wrapper = wrapper else {
                         ViewModel.logger.log("Failed to download MTA feeds from REST, trying mta.info: error = \(String(describing: error?.localizedDescription), privacy: .public)")
                         if let error = error {
@@ -329,7 +330,7 @@ class ViewModel: NSObject, ObservableObject {
                         return
                     }
                     
-                    ViewModel.logger.log("url = \(MTABusFeedURL.tripUpdates.url()?.absoluteString ?? "", privacy: .public)")
+                    ViewModel.logger.log("url = \(BusFeedURL.tripUpdates.url(with: "")?.absoluteString ?? "", privacy: .public)")
                     ViewModel.logger.log("tripUpdatesByTripId.count = \(String(describing: wrapper.tripUpdatesByTripId.count), privacy: .public)")
                     
                     DispatchQueue.main.async {

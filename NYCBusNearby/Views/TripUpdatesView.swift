@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MTAFeed
 
 struct TripUpdatesView: View {
     @EnvironmentObject private var viewModel: ViewModel
