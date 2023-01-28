@@ -7,14 +7,13 @@
 
 import SwiftUI
 import MapKit
-import MTAFeed
 
 struct BusesAtStopView: View {
     @EnvironmentObject private var viewModel: ViewModel
     
     var stop: MTABusStop
     var buses: [MTABus]
-    var tripUpdateByTripId: [String: MTATripUpdate]
+    var tripUpdateByTripId: [String: MTABusTripUpdate]
     
     private var region : Binding<MKCoordinateRegion> {
         Binding {
@@ -37,17 +36,16 @@ struct BusesAtStopView: View {
             
             List {
                 ForEach(buses, id: \.self) { bus in
-                    if let trip = bus.trip, let eventTime = bus.eventTime, isValid(eventTime) {
-                        //label(for: bus, trip: trip, arrivalTime: eventTime)
+                    if bus.trip != nil, let eventTime = bus.eventTime, isValid(eventTime) {
                         NavigationLink {
-                            if let tripId = trip.tripId, let tripUpdate = tripUpdateByTripId[tripId] {
-                                TripUpdatesView(tripUpdate: tripUpdate)
-                                    .navigationTitle(trip.routeId ?? "")
+                            if let tripId = bus.tripId, let tripUpdate = tripUpdateByTripId[tripId] {
+                                BusTripUpdateView(tripUpdate: tripUpdate)
+                                    .navigationTitle(bus.routeId ?? "")
                             } else {
                                 EmptyView()
                             }
                         } label: {
-                                label(for: bus, trip: trip, arrivalTime: eventTime)
+                                label(for: bus, arrivalTime: eventTime)
                         }
                     }
                 }
@@ -57,10 +55,10 @@ struct BusesAtStopView: View {
         }
     }
     
-    private func label(for bus: MTABus, trip: MTATrip, arrivalTime: Date) -> some View {
+    private func label(for bus: MTABus, arrivalTime: Date) -> some View {
         VStack(alignment: .trailing) {
             HStack {
-                Text(bus.trip?.routeId ?? "")
+                Text(bus.routeId ?? "")
                 
                 Spacer()
                 

@@ -136,10 +136,8 @@ class ViewModel: NSObject, ObservableObject {
             self.maxComing = UserDefaults.standard.double(forKey: "maxComing")
         }
         
-        let start = Date()
         populateBusStops()
         populateHeadsignByTripId()
-        ViewModel.logger.log("It took \(DateInterval(start: start, end: Date()).duration) sec to populate headsignByTripId")
         
         getAllData() { result in
             switch result {
@@ -420,6 +418,20 @@ class ViewModel: NSObject, ObservableObject {
         // ViewModel.logger.info("trains=\(trains, privacy: .public) near (\(center.longitude, privacy: .public), \(center.latitude, privacy: .public))")
         
         return buses
+    }
+    
+    func getTripUpdateByTripId(from buses: [MTABus]) -> [String: MTABusTripUpdate] {
+        var result = [String: MTABusTripUpdate]()
+        for bus in buses {
+            if let trip = bus.trip, let tripId = trip.tripId, let tripUpdates = tripUpdatesByTripId[tripId], !tripUpdates.isEmpty {
+                let stopTimeUpdates = tripUpdates[0].stopTimeUpdates.filter { $0.stopId != nil }
+                    .map {
+                        MTABusStopTimeUpdate(stopId: $0.stopId, eventTime: $0.eventTime)
+                    }
+                result[tripId] = MTABusTripUpdate(tripId: tripId, stopTimeUpdates: stopTimeUpdates)
+            }
+        }
+        return result
     }
 }
 

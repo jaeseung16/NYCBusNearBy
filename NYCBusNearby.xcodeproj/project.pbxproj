@@ -14,7 +14,7 @@
 		906AA4CC29745534000841BD /* DistanceUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4CB29745534000841BD /* DistanceUnit.swift */; };
 		906AA4CE29745974000841BD /* MTABus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4CD29745974000841BD /* MTABus.swift */; };
 		906AA4D229745B65000841BD /* BusesAtStopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4D129745B65000841BD /* BusesAtStopView.swift */; };
-		906AA4D42974A496000841BD /* TripUpdatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4D32974A496000841BD /* TripUpdatesView.swift */; };
+		906AA4D42974A496000841BD /* BusTripUpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4D32974A496000841BD /* BusTripUpdateView.swift */; };
 		906AA4D82974B167000841BD /* MTABusTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4D72974B167000841BD /* MTABusTrip.swift */; };
 		9082C1CE2975908F004D7130 /* Persistence in Frameworks */ = {isa = PBXBuildFile; productRef = 9082C1CD2975908F004D7130 /* Persistence */; };
 		9082C1D2297590D7004D7130 /* NYCBusNearby.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9082C1D0297590D7004D7130 /* NYCBusNearby.xcdatamodeld */; };
@@ -30,6 +30,8 @@
 		9083657829721B520070A354 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 9083657729721B520070A354 /* SwiftProtobuf */; };
 		9083657A29721B520070A354 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 9083657929721B520070A354 /* SwiftProtobufPluginLibrary */; };
 		908B780029857A0500445E12 /* MTAFeed in Frameworks */ = {isa = PBXBuildFile; productRef = 908B77FF29857A0500445E12 /* MTAFeed */; };
+		908B78022985BAF500445E12 /* MTABusTripUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908B78012985BAF500445E12 /* MTABusTripUpdate.swift */; };
+		908B78042985BEB700445E12 /* MTABusStopTimeUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908B78032985BEB700445E12 /* MTABusStopTimeUpdate.swift */; };
 		90F9B07C2976064D000CED11 /* NYCBusNearby.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 9082C1E1297605D9004D7130 /* NYCBusNearby.sqlite */; };
 /* End PBXBuildFile section */
 
@@ -40,7 +42,7 @@
 		906AA4CB29745534000841BD /* DistanceUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceUnit.swift; sourceTree = "<group>"; };
 		906AA4CD29745974000841BD /* MTABus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABus.swift; sourceTree = "<group>"; };
 		906AA4D129745B65000841BD /* BusesAtStopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusesAtStopView.swift; sourceTree = "<group>"; };
-		906AA4D32974A496000841BD /* TripUpdatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripUpdatesView.swift; sourceTree = "<group>"; };
+		906AA4D32974A496000841BD /* BusTripUpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusTripUpdateView.swift; sourceTree = "<group>"; };
 		906AA4D72974B167000841BD /* MTABusTrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusTrip.swift; sourceTree = "<group>"; };
 		9082C1D1297590D7004D7130 /* NYCBusTrips.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NYCBusTrips.xcdatamodel; sourceTree = "<group>"; };
 		9082C1D52975BA96004D7130 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -55,6 +57,8 @@
 		90836558297217AE0070A354 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9083655F297218000070A354 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		90836564297218B20070A354 /* MTAFeedConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTAFeedConstant.swift; sourceTree = "<group>"; };
+		908B78012985BAF500445E12 /* MTABusTripUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusTripUpdate.swift; sourceTree = "<group>"; };
+		908B78032985BEB700445E12 /* MTABusStopTimeUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusStopTimeUpdate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,7 +101,7 @@
 			children = (
 				9082C1D62975BE95004D7130 /* SettingsView.swift */,
 				906AA4D129745B65000841BD /* BusesAtStopView.swift */,
-				906AA4D32974A496000841BD /* TripUpdatesView.swift */,
+				906AA4D32974A496000841BD /* BusTripUpdateView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -146,12 +150,14 @@
 		90836561297218240070A354 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				90836564297218B20070A354 /* MTAFeedConstant.swift */,
-				90504D642973556700BDE429 /* LocationHelper.swift */,
-				90504D6D29735F8600BDE429 /* MTABusStop.swift */,
 				906AA4CB29745534000841BD /* DistanceUnit.swift */,
+				90504D642973556700BDE429 /* LocationHelper.swift */,
 				906AA4CD29745974000841BD /* MTABus.swift */,
+				90504D6D29735F8600BDE429 /* MTABusStop.swift */,
 				906AA4D72974B167000841BD /* MTABusTrip.swift */,
+				90836564297218B20070A354 /* MTAFeedConstant.swift */,
+				908B78012985BAF500445E12 /* MTABusTripUpdate.swift */,
+				908B78032985BEB700445E12 /* MTABusStopTimeUpdate.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -244,14 +250,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				90504D652973556700BDE429 /* LocationHelper.swift in Sources */,
+				908B78042985BEB700445E12 /* MTABusStopTimeUpdate.swift in Sources */,
 				90836554297217AD0070A354 /* ContentView.swift in Sources */,
 				90836565297218B20070A354 /* MTAFeedConstant.swift in Sources */,
 				90836560297218000070A354 /* ViewModel.swift in Sources */,
 				90504D6E29735F8600BDE429 /* MTABusStop.swift in Sources */,
 				9082C1D2297590D7004D7130 /* NYCBusNearby.xcdatamodeld in Sources */,
 				906AA4CE29745974000841BD /* MTABus.swift in Sources */,
-				906AA4D42974A496000841BD /* TripUpdatesView.swift in Sources */,
+				906AA4D42974A496000841BD /* BusTripUpdateView.swift in Sources */,
 				90836552297217AD0070A354 /* NYCBusNearbyApp.swift in Sources */,
+				908B78022985BAF500445E12 /* MTABusTripUpdate.swift in Sources */,
 				906AA4D82974B167000841BD /* MTABusTrip.swift in Sources */,
 				906AA4D229745B65000841BD /* BusesAtStopView.swift in Sources */,
 				9082C1D72975BE95004D7130 /* SettingsView.swift in Sources */,

@@ -22,16 +22,11 @@ struct MTABus: Hashable {
         return arrivalTime ?? departureTime
     }
     
-    func getDirection() -> MTADirection? {
-        if let trip = trip, let direction = trip.getDirection() {
-             return direction
-        } else if let last = stopId?.last {
-            if last == "N" {
-                return .north
-            } else if last == "S" {
-                return .south
-            }
-        }
-        return nil
+    var routeId: String? {
+        return trip?.routeId ?? ""
+    }
+    
+    var tripId: String? {
+        return trip?.tripId ?? ""
     }
 }

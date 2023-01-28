@@ -6,12 +6,11 @@
 //
 
 import SwiftUI
-import MTAFeed
 
-struct TripUpdatesView: View {
+struct BusTripUpdateView: View {
     @EnvironmentObject private var viewModel: ViewModel
     
-    var tripUpdate: MTATripUpdate
+    var tripUpdate: MTABusTripUpdate
     
     var body: some View {
         List {

@@ -7,7 +7,6 @@
 
 import SwiftUI
 import MapKit
-import MTAFeed
 
 struct ContentView: View {
     @EnvironmentObject private var viewModel: ViewModel
@@ -53,7 +52,7 @@ struct ContentView: View {
                                 NavigationLink {
                                     BusesAtStopView(stop: stop,
                                                     buses: getSortedBuses(from: buses),
-                                                    tripUpdateByTripId: getTripUpdateByTripId(from: buses))
+                                                    tripUpdateByTripId: viewModel.getTripUpdateByTripId(from: buses))
                                         .navigationTitle(stop.name)
                                 } label: {
                                     if kmSelected {
@@ -172,16 +171,6 @@ struct ContentView: View {
     
     private func getSortedBuses(from buses: [MTABus]) -> [MTABus] {
         return buses.sorted(by: { $0.eventTime! < $1.eventTime! })
-    }
-    
-    private func getTripUpdateByTripId(from buses: [MTABus]) -> [String: MTATripUpdate] {
-        var result = [String: MTATripUpdate]()
-        for bus in buses {
-            if let trip = bus.trip, let tripId = trip.tripId, let tripUpdates = viewModel.tripUpdatesByTripId[tripId], !tripUpdates.isEmpty {
-                result[tripId] = tripUpdates[0]
-            }
-        }
-        return result
     }
     
     private var bottomView: some View {
