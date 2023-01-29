@@ -51,7 +51,12 @@ class ViewModel: NSObject, ObservableObject {
     var alerts = [MTAAlert]()
     var vehiclesByStopId = [String: [MTAVehicle]]()
     var tripUpdatesByTripId = [String: [MTATripUpdate]]()
-    var tripUpdatesByStopId = [String: [MTATripUpdate]]()
+    
+    func resetData() {
+        alerts = [MTAAlert]()
+        vehiclesByStopId = [String: [MTAVehicle]]()
+        tripUpdatesByTripId = [String: [MTATripUpdate]]()
+    }
     
     let locationHelper = LocationHelper()
     var userLocality: String = "Unknown"
@@ -297,6 +302,9 @@ class ViewModel: NSObject, ObservableObject {
     }
     
     func getAllData(completionHandler: @escaping (Result<Bool, Error>) -> Void) -> Void {
+        resetData()
+        
+        let start = Date()
         let dispatchGroup = DispatchGroup()
         var errors = [Error]()
         var success = [Bool]()
@@ -322,7 +330,7 @@ class ViewModel: NSObject, ObservableObject {
                 
                 DispatchQueue.main.async {
                     if !wrapper.alerts.isEmpty {
-                        self.alerts = wrapper.alerts
+                        self.alerts.append(contentsOf: wrapper.alerts)
                     }
                     if !wrapper.tripUpdatesByTripId.isEmpty {
                         wrapper.tripUpdatesByTripId.forEach { key, updates in
@@ -348,6 +356,7 @@ class ViewModel: NSObject, ObservableObject {
             } else {
                 completionHandler(.success(true))
             }
+            ViewModel.logger.log("It took \(DateInterval(start: start, end: Date()).duration) sec to finish all feed downloads")
         }
     }
     
