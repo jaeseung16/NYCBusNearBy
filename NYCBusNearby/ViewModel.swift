@@ -44,10 +44,11 @@ class ViewModel: NSObject, ObservableObject {
     
     var headsignByTripId = [String: String]()
     
-    var feedDownloader = BusFeedDownloader(apiKey: MTAFeedConstant.apiKey)
+    var feedDownloader = MTAFeedDownloader<BusFeedURL>(apiKey: MTAFeedConstant.apiKey)
     
     @Published var feedAvailable = true
     
+    var alerts = [MTAAlert]()
     var vehiclesByStopId = [String: [MTAVehicle]]()
     var tripUpdatesByTripId = [String: [MTATripUpdate]]()
     var tripUpdatesByStopId = [String: [MTATripUpdate]]()
@@ -296,54 +297,58 @@ class ViewModel: NSObject, ObservableObject {
     }
     
     func getAllData(completionHandler: @escaping (Result<Bool, Error>) -> Void) -> Void {
-        feedDownloader.download(from: BusFeedURL.vehiclePositions) { wrapper, error in
-            guard let wrapper = wrapper else {
-                ViewModel.logger.log("Failed to download MTA feeds from REST, trying mta.info: error = \(String(describing: error?.localizedDescription), privacy: .public)")
-                if let error = error {
-                    completionHandler(.failure(error))
-                } else {
-                    completionHandler(.success(false))
-                }
-                return
-            }
-            
-            ViewModel.logger.log("url = \(BusFeedURL.vehiclePositions.url(with: "")?.absoluteString ?? "", privacy: .public)")
-            ViewModel.logger.log("vehicle.count = \(String(describing: wrapper.vehiclesByStopId.count), privacy: .public)")
-            
-            DispatchQueue.main.async {
-                if !wrapper.vehiclesByStopId.isEmpty {
-                    wrapper.vehiclesByStopId.forEach { key, vehicles in
-                        self.vehiclesByStopId[key] = vehicles
+        let dispatchGroup = DispatchGroup()
+        var errors = [Error]()
+        var success = [Bool]()
+        
+        for busFeedURL in BusFeedURL.allCases {
+            dispatchGroup.enter()
+            feedDownloader.download(from: busFeedURL) { wrapper, error in
+                guard let wrapper = wrapper else {
+                    ViewModel.logger.log("Failed to download for \(busFeedURL.rawValue, privacy: .public): error = \(String(describing: error?.localizedDescription), privacy: .public)")
+                    DispatchQueue.main.async {
+                        if let error = error {
+                            errors.append(error)
+                        } else {
+                            success.append(false)
+                        }
                     }
+                    dispatchGroup.leave()
+                    return
                 }
                 
-                self.feedDownloader.download(from: BusFeedURL.tripUpdates) { wrapper, error in
-                    guard let wrapper = wrapper else {
-                        ViewModel.logger.log("Failed to download MTA feeds from REST, trying mta.info: error = \(String(describing: error?.localizedDescription), privacy: .public)")
-                        if let error = error {
-                            completionHandler(.failure(error))
-                        } else {
-                            completionHandler(.success(false))
-                        }
-                        return
+                ViewModel.logger.log("BusFeedURL=\(BusFeedURL.vehiclePositions.rawValue, privacy: .public)")
+                ViewModel.logger.log("vehicle.count = \(String(describing: wrapper.vehiclesByStopId.count), privacy: .public)")
+                
+                DispatchQueue.main.async {
+                    if !wrapper.alerts.isEmpty {
+                        self.alerts = wrapper.alerts
                     }
-                    
-                    ViewModel.logger.log("url = \(BusFeedURL.tripUpdates.url(with: "")?.absoluteString ?? "", privacy: .public)")
-                    ViewModel.logger.log("tripUpdatesByTripId.count = \(String(describing: wrapper.tripUpdatesByTripId.count), privacy: .public)")
-                    
-                    DispatchQueue.main.async {
-                        if !wrapper.tripUpdatesByTripId.isEmpty {
-                            wrapper.tripUpdatesByTripId.forEach { key, updates in
-                                self.tripUpdatesByTripId[key] = updates
-                            }
+                    if !wrapper.tripUpdatesByTripId.isEmpty {
+                        wrapper.tripUpdatesByTripId.forEach { key, updates in
+                            self.tripUpdatesByTripId[key] = updates
                         }
-                        ViewModel.logger.log("tripUpdatesByTripId.count = \(String(describing: self.tripUpdatesByTripId.count), privacy: .public)")
-                        completionHandler(.success(true))
                     }
+                    if !wrapper.vehiclesByStopId.isEmpty {
+                        wrapper.vehiclesByStopId.forEach { key, vehicles in
+                            self.vehiclesByStopId[key] = vehicles
+                        }
+                    }
+                    success.append(true)
                 }
+                dispatchGroup.leave()
             }
         }
         
+        dispatchGroup.notify(queue: .main) {
+            if !errors.isEmpty {
+                completionHandler(.failure(errors[0]))
+            } else if success.filter({$0}).count != BusFeedURL.allCases.count {
+                completionHandler(.success(false))
+            } else {
+                completionHandler(.success(true))
+            }
+        }
     }
     
     func updateRegion(center coordinate: CLLocationCoordinate2D) -> Void {
