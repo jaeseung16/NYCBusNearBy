@@ -36,7 +36,7 @@ struct BusesAtStopView: View {
             
             List {
                 ForEach(buses, id: \.self) { bus in
-                    if bus.trip != nil, let eventTime = bus.eventTime, isValid(eventTime) {
+                    if bus.trip != nil, let eventTime = bus.eventTime, viewModel.isValid(eventTime) {
                         NavigationLink {
                             if let tripId = bus.tripId, let tripUpdate = tripUpdateByTripId[tripId] {
                                 BusTripUpdateView(tripUpdate: tripUpdate)
@@ -77,10 +77,6 @@ struct BusesAtStopView: View {
                     .foregroundColor(arrivalTime < Date() ? .secondary : .primary)
             }
         }
-    }
-    
-    private func isValid(_ eventTime: Date) -> Bool {
-        return eventTime.timeIntervalSinceNow > viewModel.maxAgo && eventTime.timeIntervalSinceNow < viewModel.maxComing
     }
     
     private func timeInterval(to arrivalTime: Date) -> String {

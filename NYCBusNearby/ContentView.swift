@@ -48,7 +48,7 @@ struct ContentView: View {
                 NavigationView {
                     List {
                         ForEach(stopsNearby, id:\.self) { stop in
-                            if let buses = getBuses(at: stop) {
+                            if let buses = getBuses(at: stop), !buses.isEmpty {
                                 NavigationLink {
                                     BusesAtStopView(stop: stop,
                                                     buses: getSortedBuses(from: buses),
@@ -166,7 +166,7 @@ struct ContentView: View {
     }
     
     private func getBuses(at stop: MTABusStop) -> [MTABus]? {
-        return busesNearby[stop]?.filter { $0.eventTime != nil }
+        return busesNearby[stop]?.filter { $0.eventTime != nil  && viewModel.isValid($0.eventTime!)}
     }
     
     private func getSortedBuses(from buses: [MTABus]) -> [MTABus] {

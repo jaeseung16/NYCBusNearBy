@@ -438,6 +438,10 @@ class ViewModel: NSObject, ObservableObject {
         }
         return result
     }
+    
+    func isValid(_ eventTime: Date) -> Bool {
+        return eventTime.timeIntervalSinceNow > maxAgo && eventTime.timeIntervalSinceNow < maxComing
+    }
 }
 
 extension ViewModel: CLLocationManagerDelegate {
