@@ -16,6 +16,14 @@
 		906AA4D229745B65000841BD /* BusesAtStopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4D129745B65000841BD /* BusesAtStopView.swift */; };
 		906AA4D42974A496000841BD /* BusTripUpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4D32974A496000841BD /* BusTripUpdateView.swift */; };
 		906AA4D82974B167000841BD /* MTABusTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4D72974B167000841BD /* MTABusTrip.swift */; };
+		906D0E23298870A000FA1287 /* RestResponseWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D0E22298870A000FA1287 /* RestResponseWrapper.swift */; };
+		906D0E25298870A700FA1287 /* RestVehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D0E24298870A700FA1287 /* RestVehicle.swift */; };
+		906D0E27298870AC00FA1287 /* RestVehicleStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D0E26298870AC00FA1287 /* RestVehicleStatus.swift */; };
+		906D0E29298870B000FA1287 /* RestDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D0E28298870B000FA1287 /* RestDirection.swift */; };
+		906D0E2B298870B500FA1287 /* RestTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D0E2A298870B500FA1287 /* RestTrip.swift */; };
+		906D0E2D298870BA00FA1287 /* RestTripUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D0E2C298870BA00FA1287 /* RestTripUpdate.swift */; };
+		906D0E2F298870BE00FA1287 /* RestStopTimeUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D0E2E298870BE00FA1287 /* RestStopTimeUpdate.swift */; };
+		906D0E312988723B00FA1287 /* RestDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D0E302988723B00FA1287 /* RestDownloader.swift */; };
 		9082C1CE2975908F004D7130 /* Persistence in Frameworks */ = {isa = PBXBuildFile; productRef = 9082C1CD2975908F004D7130 /* Persistence */; };
 		9082C1D2297590D7004D7130 /* NYCBusNearby.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9082C1D0297590D7004D7130 /* NYCBusNearby.xcdatamodeld */; };
 		9082C1D72975BE95004D7130 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9082C1D62975BE95004D7130 /* SettingsView.swift */; };
@@ -44,6 +52,14 @@
 		906AA4D129745B65000841BD /* BusesAtStopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusesAtStopView.swift; sourceTree = "<group>"; };
 		906AA4D32974A496000841BD /* BusTripUpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusTripUpdateView.swift; sourceTree = "<group>"; };
 		906AA4D72974B167000841BD /* MTABusTrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusTrip.swift; sourceTree = "<group>"; };
+		906D0E22298870A000FA1287 /* RestResponseWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestResponseWrapper.swift; sourceTree = "<group>"; };
+		906D0E24298870A700FA1287 /* RestVehicle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestVehicle.swift; sourceTree = "<group>"; };
+		906D0E26298870AC00FA1287 /* RestVehicleStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestVehicleStatus.swift; sourceTree = "<group>"; };
+		906D0E28298870B000FA1287 /* RestDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestDirection.swift; sourceTree = "<group>"; };
+		906D0E2A298870B500FA1287 /* RestTrip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestTrip.swift; sourceTree = "<group>"; };
+		906D0E2C298870BA00FA1287 /* RestTripUpdate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestTripUpdate.swift; sourceTree = "<group>"; };
+		906D0E2E298870BE00FA1287 /* RestStopTimeUpdate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestStopTimeUpdate.swift; sourceTree = "<group>"; };
+		906D0E302988723B00FA1287 /* RestDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestDownloader.swift; sourceTree = "<group>"; };
 		9082C1D1297590D7004D7130 /* NYCBusTrips.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NYCBusTrips.xcdatamodel; sourceTree = "<group>"; };
 		9082C1D52975BA96004D7130 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9082C1D62975BE95004D7130 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -86,6 +102,21 @@
 				9082C1DF29760565004D7130 /* trips.txt */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		906D0E2129886FF500FA1287 /* REST */ = {
+			isa = PBXGroup;
+			children = (
+				906D0E302988723B00FA1287 /* RestDownloader.swift */,
+				906D0E2E298870BE00FA1287 /* RestStopTimeUpdate.swift */,
+				906D0E2C298870BA00FA1287 /* RestTripUpdate.swift */,
+				906D0E2A298870B500FA1287 /* RestTrip.swift */,
+				906D0E28298870B000FA1287 /* RestDirection.swift */,
+				906D0E26298870AC00FA1287 /* RestVehicleStatus.swift */,
+				906D0E24298870A700FA1287 /* RestVehicle.swift */,
+				906D0E22298870A000FA1287 /* RestResponseWrapper.swift */,
+			);
+			path = REST;
 			sourceTree = "<group>";
 		};
 		9082C1CF297590B2004D7130 /* CoreData */ = {
@@ -150,6 +181,7 @@
 		90836561297218240070A354 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				906D0E2129886FF500FA1287 /* REST */,
 				906AA4CB29745534000841BD /* DistanceUnit.swift */,
 				90504D642973556700BDE429 /* LocationHelper.swift */,
 				906AA4CD29745974000841BD /* MTABus.swift */,
@@ -250,17 +282,25 @@
 			buildActionMask = 2147483647;
 			files = (
 				90504D652973556700BDE429 /* LocationHelper.swift in Sources */,
+				906D0E2D298870BA00FA1287 /* RestTripUpdate.swift in Sources */,
 				908B78042985BEB700445E12 /* MTABusStopTimeUpdate.swift in Sources */,
+				906D0E2F298870BE00FA1287 /* RestStopTimeUpdate.swift in Sources */,
+				906D0E25298870A700FA1287 /* RestVehicle.swift in Sources */,
+				906D0E23298870A000FA1287 /* RestResponseWrapper.swift in Sources */,
 				90836554297217AD0070A354 /* ContentView.swift in Sources */,
 				90836565297218B20070A354 /* MTAFeedConstant.swift in Sources */,
 				90836560297218000070A354 /* ViewModel.swift in Sources */,
 				90504D6E29735F8600BDE429 /* MTABusStop.swift in Sources */,
+				906D0E29298870B000FA1287 /* RestDirection.swift in Sources */,
+				906D0E27298870AC00FA1287 /* RestVehicleStatus.swift in Sources */,
 				9082C1D2297590D7004D7130 /* NYCBusNearby.xcdatamodeld in Sources */,
 				906AA4CE29745974000841BD /* MTABus.swift in Sources */,
 				906AA4D42974A496000841BD /* BusTripUpdateView.swift in Sources */,
 				90836552297217AD0070A354 /* NYCBusNearbyApp.swift in Sources */,
+				906D0E2B298870B500FA1287 /* RestTrip.swift in Sources */,
 				908B78022985BAF500445E12 /* MTABusTripUpdate.swift in Sources */,
 				906AA4D82974B167000841BD /* MTABusTrip.swift in Sources */,
+				906D0E312988723B00FA1287 /* RestDownloader.swift in Sources */,
 				906AA4D229745B65000841BD /* BusesAtStopView.swift in Sources */,
 				9082C1D72975BE95004D7130 /* SettingsView.swift in Sources */,
 				906AA4CC29745534000841BD /* DistanceUnit.swift in Sources */,

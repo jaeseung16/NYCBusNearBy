@@ -45,6 +45,7 @@ class ViewModel: NSObject, ObservableObject {
     var headsignByTripId = [String: String]()
     
     var feedDownloader = MTAFeedDownloader<BusFeedURL>(apiKey: MTAFeedConstant.apiKey)
+    var restDownloader = RestDownloader()
     
     @Published var feedAvailable = true
     
@@ -303,7 +304,43 @@ class ViewModel: NSObject, ObservableObject {
     
     func getAllData(completionHandler: @escaping (Result<Bool, Error>) -> Void) -> Void {
         resetData()
+        let start = Date()
         
+        restDownloader.download(from: location) { wrapper, error in
+            guard let wrapper = wrapper else {
+                ViewModel.logger.log("Failed to download Bus feeds from REST, trying mta.info: error = \(String(describing: error?.localizedDescription), privacy: .public)")
+                self.downloadFromMTAInfo() { result in
+                    completionHandler(result)
+                }
+                return
+            }
+            
+            //ViewModel.logger.log("wrapper=\(String(describing: wrapper), privacy: .public)")
+            
+            DispatchQueue.main.async {
+                //ViewModel.logger.log("wrapper.tripUpdatesByTripId.count = \(wrapper.tripUpdatesByTripId.count, privacy: .public)")
+                if !wrapper.tripUpdatesByTripId.isEmpty {
+                    wrapper.tripUpdatesByTripId.forEach { key, updates in
+                        self.tripUpdatesByTripId[key] = updates
+                        //ViewModel.logger.log("tripUpdatesByTripId.key = \(key, privacy: .public)")
+                    }
+                }
+                //ViewModel.logger.log("wrapper.vehiclesByStopId.count = \(wrapper.vehiclesByStopId.count, privacy: .public)")
+                if !wrapper.vehiclesByStopId.isEmpty {
+                    wrapper.vehiclesByStopId.forEach { key, vehicles in
+                        self.vehiclesByStopId[key] = vehicles
+                        //ViewModel.logger.log("vehiclesByStopId.key = \(key, privacy: .public)")
+                    }
+                }
+                ViewModel.logger.log("It took \(DateInterval(start: start, end: Date()).duration) sec to finish a bus feed download")
+                
+                completionHandler(.success(true))
+            }
+        }
+        
+    }
+    
+    private func downloadFromMTAInfo(completionHandler: @escaping (Result<Bool, Error>) -> Void) -> Void {
         let start = Date()
         let dispatchGroup = DispatchGroup()
         var errors = [Error]()

@@ -16,4 +16,5 @@ struct MTAFeedConstant {
     static let applicationXWWWFormUrlencoded = "application/x-www-form-urlencoded"
     static let post = "POST"
     
+    static let restUrlString = "http://localhost:8080/busfeedmonitor/json"
 }
