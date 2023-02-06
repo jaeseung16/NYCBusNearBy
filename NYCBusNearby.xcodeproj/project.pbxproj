@@ -37,6 +37,9 @@
 		90836565297218B20070A354 /* MTAFeedConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90836564297218B20070A354 /* MTAFeedConstant.swift */; };
 		9083657829721B520070A354 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 9083657729721B520070A354 /* SwiftProtobuf */; };
 		9083657A29721B520070A354 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 9083657929721B520070A354 /* SwiftProtobufPluginLibrary */; };
+		90857EEE2991BA2E0052309B /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 90857EED2991BA2E0052309B /* GoogleMobileAds */; };
+		90857EF42991BB1E0052309B /* BannerAd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90857EF32991BB1E0052309B /* BannerAd.swift */; };
+		90857EF62991BB3E0052309B /* BannerAdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90857EF52991BB3E0052309B /* BannerAdViewController.swift */; };
 		908B780029857A0500445E12 /* MTAFeed in Frameworks */ = {isa = PBXBuildFile; productRef = 908B77FF29857A0500445E12 /* MTAFeed */; };
 		908B78022985BAF500445E12 /* MTABusTripUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908B78012985BAF500445E12 /* MTABusTripUpdate.swift */; };
 		908B78042985BEB700445E12 /* MTABusStopTimeUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908B78032985BEB700445E12 /* MTABusStopTimeUpdate.swift */; };
@@ -73,6 +76,8 @@
 		90836558297217AE0070A354 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9083655F297218000070A354 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		90836564297218B20070A354 /* MTAFeedConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTAFeedConstant.swift; sourceTree = "<group>"; };
+		90857EF32991BB1E0052309B /* BannerAd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAd.swift; sourceTree = "<group>"; };
+		90857EF52991BB3E0052309B /* BannerAdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAdViewController.swift; sourceTree = "<group>"; };
 		908B78012985BAF500445E12 /* MTABusTripUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusTripUpdate.swift; sourceTree = "<group>"; };
 		908B78032985BEB700445E12 /* MTABusStopTimeUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusStopTimeUpdate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -82,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90857EEE2991BA2E0052309B /* GoogleMobileAds in Frameworks */,
 				9082C1CE2975908F004D7130 /* Persistence in Frameworks */,
 				9083657A29721B520070A354 /* SwiftProtobufPluginLibrary in Frameworks */,
 				90504D712973601100BDE429 /* CodableCSV in Frameworks */,
@@ -156,6 +162,7 @@
 		90836550297217AD0070A354 /* NYCBusNearby */ = {
 			isa = PBXGroup;
 			children = (
+				90857EF22991BB0E0052309B /* AdMob */,
 				9082C1D82975BEA1004D7130 /* Views */,
 				9082C1D52975BA96004D7130 /* Info.plist */,
 				9082C1CF297590B2004D7130 /* CoreData */,
@@ -194,6 +201,15 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		90857EF22991BB0E0052309B /* AdMob */ = {
+			isa = PBXGroup;
+			children = (
+				90857EF32991BB1E0052309B /* BannerAd.swift */,
+				90857EF52991BB3E0052309B /* BannerAdViewController.swift */,
+			);
+			path = AdMob;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -216,6 +232,7 @@
 				90504D702973601100BDE429 /* CodableCSV */,
 				9082C1CD2975908F004D7130 /* Persistence */,
 				908B77FF29857A0500445E12 /* MTAFeed */,
+				90857EED2991BA2E0052309B /* GoogleMobileAds */,
 			);
 			productName = NYCBusNearby;
 			productReference = 9083654E297217AD0070A354 /* NYCBusNearby.app */;
@@ -250,6 +267,7 @@
 				90504D6F2973601100BDE429 /* XCRemoteSwiftPackageReference "CodableCSV" */,
 				9082C1CC2975908F004D7130 /* XCRemoteSwiftPackageReference "PersistenceSwift" */,
 				908B77FE29857A0500445E12 /* XCRemoteSwiftPackageReference "MTAFeed-Swift" */,
+				90857EEC2991BA2E0052309B /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 			);
 			productRefGroup = 9083654F297217AD0070A354 /* Products */;
 			projectDirPath = "";
@@ -282,9 +300,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				90504D652973556700BDE429 /* LocationHelper.swift in Sources */,
+				90857EF62991BB3E0052309B /* BannerAdViewController.swift in Sources */,
 				906D0E2D298870BA00FA1287 /* RestTripUpdate.swift in Sources */,
 				908B78042985BEB700445E12 /* MTABusStopTimeUpdate.swift in Sources */,
 				906D0E2F298870BE00FA1287 /* RestStopTimeUpdate.swift in Sources */,
+				90857EF42991BB1E0052309B /* BannerAd.swift in Sources */,
 				906D0E25298870A700FA1287 /* RestVehicle.swift in Sources */,
 				906D0E23298870A000FA1287 /* RestResponseWrapper.swift in Sources */,
 				90836554297217AD0070A354 /* ContentView.swift in Sources */,
@@ -364,6 +384,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -417,6 +438,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -536,6 +558,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		90857EEC2991BA2E0052309B /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
 		908B77FE29857A0500445E12 /* XCRemoteSwiftPackageReference "MTAFeed-Swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jaeseung16/MTAFeed-Swift";
@@ -566,6 +596,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9083657629721B520070A354 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
 			productName = SwiftProtobufPluginLibrary;
+		};
+		90857EED2991BA2E0052309B /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 90857EEC2991BA2E0052309B /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
 		};
 		908B77FF29857A0500445E12 /* MTAFeed */ = {
 			isa = XCSwiftPackageProductDependency;
