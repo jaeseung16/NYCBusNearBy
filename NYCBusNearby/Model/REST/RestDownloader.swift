@@ -44,6 +44,12 @@ class RestDownloader {
             //RestDownloader.logger.info("response = \(String(describing: response))")
             //RestDownloader.logger.info("error = \(String(describing: error?.localizedDescription))")
             
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                RestDownloader.logger.log("No data downloaded from mtaSubwayFeedURL = \(self.url, privacy: .public): response= \(String(describing: response))")
+                completionHandler(.failure(.noData))
+                return
+            }
+            
             guard let data = data else {
                 RestDownloader.logger.log("No data downloaded from mtaSubwayFeedURL = \(self.url, privacy: .public)")
                 completionHandler(.failure(.noData))
@@ -61,10 +67,12 @@ class RestDownloader {
                 feed = try decoder.decode(RestResponseWrapper.self, from: data)
             } catch {
                 RestDownloader.logger.error("\(error, privacy: .public)")
+                completionHandler(.failure(.cannotParse))
+                return
             }
             
             guard let feed = feed else {
-                RestDownloader.logger.error("Cannot parse feed data from \(self.url, privacy: .public)")
+                RestDownloader.logger.error("Cannot parse feed data from \(self.url, privacy: .public): data=\(data)")
                 completionHandler(.failure(.cannotParse))
                 return
             }
