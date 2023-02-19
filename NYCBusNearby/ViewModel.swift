@@ -304,8 +304,13 @@ class ViewModel: NSObject, ObservableObject {
     
     func getAllData(completionHandler: @escaping (Result<Bool, Error>) -> Void) -> Void {
         resetData()
-        let start = Date()
+        //let start = Date()
         
+        downloadFromMTAInfo() { result in
+            completionHandler(result)
+        }
+        
+        /*
         restDownloader.download(from: location) { wrapper, error in
             guard let wrapper = wrapper else {
                 ViewModel.logger.log("Failed to download Bus feeds from REST, trying mta.info: error = \(String(describing: error?.localizedDescription), privacy: .public)")
@@ -337,6 +342,7 @@ class ViewModel: NSObject, ObservableObject {
                 completionHandler(.success(true))
             }
         }
+        */
         
     }
     
