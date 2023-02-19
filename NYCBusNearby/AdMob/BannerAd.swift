@@ -10,7 +10,7 @@ import SwiftUI
 
 struct BannerAd: UIViewControllerRepresentable {
     // For testing, check the demo ad unit ID in https://developers.google.com/admob/ios/test-ads
-    let adUnitId = "ca-app-pub-3940256099942544/2934735716"
+    let adUnitId = "ca-app-pub-6771077591139198/7386863365"
         
     init() {
     }
