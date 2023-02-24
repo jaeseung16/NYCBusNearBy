@@ -368,8 +368,10 @@ class ViewModel: NSObject, ObservableObject {
                     return
                 }
                 
-                ViewModel.logger.log("BusFeedURL=\(BusFeedURL.vehiclePositions.rawValue, privacy: .public)")
-                ViewModel.logger.log("vehicle.count = \(String(describing: wrapper.vehiclesByStopId.count), privacy: .public)")
+                ViewModel.logger.log("BusFeedURL=\(busFeedURL.rawValue, privacy: .public)")
+                //ViewModel.logger.log("alerts.count = \(String(describing: wrapper.alerts.count), privacy: .public)")
+                //ViewModel.logger.log("tripUpdatesByTripId.count = \(String(describing: wrapper.tripUpdatesByTripId.count), privacy: .public)")
+                //ViewModel.logger.log("vehicle.count = \(String(describing: wrapper.vehiclesByStopId.count), privacy: .public)")
                 
                 DispatchQueue.main.async {
                     if !wrapper.alerts.isEmpty {
