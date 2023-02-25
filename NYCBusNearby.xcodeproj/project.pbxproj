@@ -63,7 +63,6 @@
 		906D0E2C298870BA00FA1287 /* RestTripUpdate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestTripUpdate.swift; sourceTree = "<group>"; };
 		906D0E2E298870BE00FA1287 /* RestStopTimeUpdate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestStopTimeUpdate.swift; sourceTree = "<group>"; };
 		906D0E302988723B00FA1287 /* RestDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestDownloader.swift; sourceTree = "<group>"; };
-		9071626729AAAF5200B8781F /* NYCBusNearby.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NYCBusNearby.entitlements; sourceTree = "<group>"; };
 		9082C1D1297590D7004D7130 /* NYCBusTrips.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NYCBusTrips.xcdatamodel; sourceTree = "<group>"; };
 		9082C1D52975BA96004D7130 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9082C1D62975BE95004D7130 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -163,7 +162,6 @@
 		90836550297217AD0070A354 /* NYCBusNearby */ = {
 			isa = PBXGroup;
 			children = (
-				9071626729AAAF5200B8781F /* NYCBusNearby.entitlements */,
 				90857EF22991BB0E0052309B /* AdMob */,
 				9082C1D82975BEA1004D7130 /* Views */,
 				9082C1D52975BA96004D7130 /* Info.plist */,
@@ -455,7 +453,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = NYCBusNearby/NYCBusNearby.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"NYCBusNearby/Preview Content\"";
 				DEVELOPMENT_TEAM = U8VSJXRJTQ;
 				ENABLE_PREVIEWS = YES;
@@ -476,8 +474,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.NYCBusNearby;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = YES;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -491,7 +489,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = NYCBusNearby/NYCBusNearby.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"NYCBusNearby/Preview Content\"";
 				DEVELOPMENT_TEAM = U8VSJXRJTQ;
 				ENABLE_PREVIEWS = YES;
@@ -512,8 +510,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.NYCBusNearby;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = YES;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
