@@ -2,6 +2,10 @@
 
 The app provides the information on train schedules at the subway stations in New York City near a user.
 
+# How to Use
+
+[Demo video](https://www.youtube.com/watch?v=aqaZNByjI2c)
+
 ## NYC bus stops near a user
   - A list of NYC bus stops sorted by the distance from a user
   - A user can set the maximum distance (up to 3 km or 1.9 miles) to control the list
