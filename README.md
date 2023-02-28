@@ -2,6 +2,8 @@
 
 The app provides the information on train schedules at the subway stations in New York City near a user.
 
+[<img src="https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg">](https://apps.apple.com/app/nyc-buses-near-me/id1665731412)
+
 # How to Use
 
 [Demo video](https://www.youtube.com/watch?v=aqaZNByjI2c)
