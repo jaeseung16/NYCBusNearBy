@@ -126,7 +126,7 @@ struct ContentView: View {
         if !userLocality.isEmpty && userLocality != "Unknown" {
             return Label(userLocality, systemImage: "mappin.and.ellipse")
         } else {
-            return Label("Nearby Subway Stations", systemImage: "tram.fill.tunnel")
+            return Label("Nearby Bus Stops", systemImage: "bus")
         }
     }
     
