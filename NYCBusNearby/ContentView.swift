@@ -36,6 +36,8 @@ struct ContentView: View {
     
     @State private var showProgress = false
     
+    @State private var selectedStop: MTABusStop?
+    
     private var kmSelected: Bool {
         distanceUnit == .km
     }
@@ -45,27 +47,20 @@ struct ContentView: View {
             locationLabel
             
             if !busesNearby.isEmpty {
-                NavigationView {
-                    List {
-                        ForEach(stopsNearby, id:\.self) { stop in
-                            if let buses = getBuses(at: stop), !buses.isEmpty {
-                                NavigationLink {
-                                    BusesAtStopView(stop: stop,
-                                                    buses: getSortedBuses(from: buses),
-                                                    tripUpdateByTripId: viewModel.getTripUpdateByTripId(from: buses))
-                                        .navigationTitle(stop.name)
-                                } label: {
-                                    if kmSelected {
-                                        label(for: stop, distanceUnit: .km)
-                                    } else {
-                                        label(for: stop, distanceUnit: .mile)
-                                    }
-                                }
-                            }
+                NavigationSplitView {
+                    List(stopsNearby, id: \.self, selection: $selectedStop) { stop in
+                        NavigationLink(value: stop) {
+                            BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: distanceUnit)
                         }
                     }
+                } detail: {
+                    if let stop = selectedStop, let buses = getBuses(at: stop), !buses.isEmpty {
+                        BusesAtStopView(stop: stop,
+                                        buses: getSortedBuses(from: buses),
+                                        tripUpdateByTripId: viewModel.getTripUpdateByTripId(from: buses))
+                        .navigationTitle(stop.name)
+                    }
                 }
-                .navigationViewStyle(.stack)
             }
             
             Spacer()
@@ -127,21 +122,6 @@ struct ContentView: View {
             return Label(userLocality, systemImage: "mappin.and.ellipse")
         } else {
             return Label("Nearby Bus Stops", systemImage: "bus")
-        }
-    }
-    
-    private func label(for stop: MTABusStop, distanceUnit: DistanceUnit) -> some View {
-        HStack {
-            Text("\(stop.name)")
-            
-            Spacer()
-            
-            VStack(alignment: .leading) {
-                Text("\(stop.id)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                Text(distance(to: stop).converted(to: distanceUnit.unitLength), format: distanceFormatStyle)
-            }
         }
     }
     

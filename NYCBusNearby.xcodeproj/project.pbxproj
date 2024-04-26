@@ -43,6 +43,7 @@
 		908B78022985BAF500445E12 /* MTABusTripUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908B78012985BAF500445E12 /* MTABusTripUpdate.swift */; };
 		908B78042985BEB700445E12 /* MTABusStopTimeUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908B78032985BEB700445E12 /* MTABusStopTimeUpdate.swift */; };
 		90A1EDE52BDC5E02001533FA /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 90A1EDE42BDC5E02001533FA /* GoogleMobileAds */; };
+		90A1EDE72BDC616E001533FA /* BusStopRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A1EDE62BDC616E001533FA /* BusStopRowView.swift */; };
 		90F9B07C2976064D000CED11 /* NYCBusNearby.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 9082C1E1297605D9004D7130 /* NYCBusNearby.sqlite */; };
 /* End PBXBuildFile section */
 
@@ -80,6 +81,7 @@
 		90857EF52991BB3E0052309B /* BannerAdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAdViewController.swift; sourceTree = "<group>"; };
 		908B78012985BAF500445E12 /* MTABusTripUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusTripUpdate.swift; sourceTree = "<group>"; };
 		908B78032985BEB700445E12 /* MTABusStopTimeUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusStopTimeUpdate.swift; sourceTree = "<group>"; };
+		90A1EDE62BDC616E001533FA /* BusStopRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopRowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +138,7 @@
 		9082C1D82975BEA1004D7130 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				90A1EDE62BDC616E001533FA /* BusStopRowView.swift */,
 				9082C1D62975BE95004D7130 /* SettingsView.swift */,
 				906AA4D129745B65000841BD /* BusesAtStopView.swift */,
 				906AA4D32974A496000841BD /* BusTripUpdateView.swift */,
@@ -314,6 +317,7 @@
 				906D0E29298870B000FA1287 /* RestDirection.swift in Sources */,
 				906D0E27298870AC00FA1287 /* RestVehicleStatus.swift in Sources */,
 				9082C1D2297590D7004D7130 /* NYCBusNearby.xcdatamodeld in Sources */,
+				90A1EDE72BDC616E001533FA /* BusStopRowView.swift in Sources */,
 				906AA4CE29745974000841BD /* MTABus.swift in Sources */,
 				906AA4D42974A496000841BD /* BusTripUpdateView.swift in Sources */,
 				90836552297217AD0070A354 /* NYCBusNearbyApp.swift in Sources */,
