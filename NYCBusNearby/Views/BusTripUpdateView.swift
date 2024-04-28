@@ -67,7 +67,8 @@ struct BusTripUpdateView: View {
         .foregroundColor(eventTime < Date() ? .secondary : .primary)
         .background {
             if name == stop.name && eventTime > Date() {
-                RoundedRectangle(cornerRadius: 1.0).foregroundStyle(.yellow)
+                RoundedRectangle(cornerRadius: 1.0)
+                    .foregroundStyle(.orange)
             }
         }
     }
