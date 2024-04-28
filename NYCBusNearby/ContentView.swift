@@ -59,22 +59,16 @@ struct ContentView: View {
                         }
                     }
                 } content: {
-                    if let stop = selectedStop, let buses = getBuses(at: stop), !buses.isEmpty {
-                        BusesAtStopView(stop: stop,
-                                        buses: getSortedBuses(from: buses),
-                                        selectedBus: $selectedBus)
+                    if let stop = selectedStop, let buses = getSortedBuses(at: stop) {
+                        BusesAtStopView(stop: stop, buses: buses, selectedBus: $selectedBus)
                         .navigationTitle(stop.name)
                     }
                 } detail: {
-                    if let stop = selectedStop, let bus = selectedBus {
-                        if let buses = getBuses(at: stop), !buses.isEmpty {
-                            if let tripId = bus.tripId, let tripUpdate = viewModel.getTripUpdateByTripId(from: buses)[tripId] {
-                                BusTripUpdateView(tripUpdate: tripUpdate)
-                                    .navigationTitle(bus.routeId ?? "")
-                            } else {
-                                EmptyView()
-                            }
-                        }
+                    if let bus = selectedBus, let tripUpdate = getTripUpdates(for: bus) {
+                        BusTripUpdateView(tripUpdate: tripUpdate)
+                            .navigationTitle(bus.routeId ?? "")
+                    } else {
+                        EmptyView()
                     }
                 }
                 .navigationSplitViewStyle(.balanced)
@@ -166,8 +160,32 @@ struct ContentView: View {
         return busesNearby[stop]?.filter { $0.eventTime != nil  && viewModel.isValid($0.eventTime!)}
     }
     
+    private func getSortedBuses(at stop: MTABusStop) -> [MTABus]? {
+        guard let buses = getBuses(at: stop), !buses.isEmpty else {
+            return nil
+        }
+        
+        return getSortedBuses(from: buses)
+    }
+    
     private func getSortedBuses(from buses: [MTABus]) -> [MTABus] {
         return buses.sorted(by: { $0.eventTime! < $1.eventTime! })
+    }
+    
+    private func getTripUpdates(for bus: MTABus) -> MTABusTripUpdate? {
+        guard let stop = selectedStop else {
+            return nil
+        }
+        
+        guard let buses = getBuses(at: stop), !buses.isEmpty else {
+            return nil
+        }
+            
+        guard let tripId = bus.tripId else {
+            return nil
+        }
+          
+        return viewModel.getTripUpdateByTripId(from: buses)[tripId]
     }
     
     private var bottomView: some View {
