@@ -29,10 +29,20 @@ struct BusesAtStopView: View {
     
     var body: some View {
         VStack {
-            Map(coordinateRegion: region, interactionModes: .zoom, showsUserLocation: true, annotationItems: [stop]) { place in
-                MapMarker(coordinate: place.getCLLocationCoordinate2D())
+            if #available(iOS 17.0, *) {
+                Map(initialPosition: MapCameraPosition.region(region.wrappedValue), bounds: MapCameraBounds(centerCoordinateBounds: region.wrappedValue), interactionModes: .zoom) {
+                    UserAnnotation()
+                    
+                    Marker("", coordinate: stop.getCLLocationCoordinate2D())
+                }
+                .aspectRatio(CGSize(width: 1.0, height: 1.0), contentMode: .fit)
+            } else {
+                Map(coordinateRegion: region, interactionModes: .zoom, showsUserLocation: true, annotationItems: [stop]) { place in
+                    MapMarker(coordinate: place.getCLLocationCoordinate2D())
+                }
+                .aspectRatio(CGSize(width: 1.0, height: 1.0), contentMode: .fit)
             }
-            .aspectRatio(CGSize(width: 1.0, height: 1.0), contentMode: .fit)
+            
             
             List(buses, selection: $selectedBus) { bus in
                 if bus.trip != nil, let eventTime = bus.eventTime, viewModel.isValid(eventTime) {

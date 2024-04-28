@@ -34,16 +34,27 @@ struct BusTripUpdateView: View {
     
     var body: some View {
         VStack {
-            Map(coordinateRegion: region, interactionModes: .zoom, showsUserLocation: true, annotationItems: stopTimeUpdates) { stopTimeUpdate in
-                MapAnnotation(coordinate: viewModel.stopsById[stopTimeUpdate.id]!.getCLLocationCoordinate2D()) {
-                    Text(stopTimeUpdate.eventTime!, style: .time)
-                        .padding(2.0)
-                        .font(.caption)
-                        .foregroundColor(.black)
-                        .background(RoundedRectangle(cornerRadius: 4.0).foregroundColor(.teal))
+            if #available(iOS 17.0, *) {
+                Map(initialPosition: MapCameraPosition.region(region.wrappedValue), bounds: MapCameraBounds(centerCoordinateBounds: region.wrappedValue), interactionModes: .zoom) {
+                    UserAnnotation()
+                    
+                    ForEach(stopTimeUpdates) { stopTimeUpdate in
+                        if let stop = viewModel.stopsById[stopTimeUpdate.id], let eventTime = stopTimeUpdate.eventTime {
+                            Annotation("", coordinate: stop.getCLLocationCoordinate2D()) {
+                                annotationLabel(stop.name, at: eventTime)
+                            }
+                        }
+                    }
                 }
+                .aspectRatio(CGSize(width: 1.0, height: 1.0), contentMode: .fit)
+            } else {
+                Map(coordinateRegion: region, interactionModes: .zoom, showsUserLocation: true, annotationItems: stopTimeUpdates) { stopTimeUpdate in
+                    MapAnnotation(coordinate: viewModel.stopsById[stopTimeUpdate.id]!.getCLLocationCoordinate2D()) {
+                        annotationLabel(viewModel.stopsById[stopTimeUpdate.id]!.name, at: stopTimeUpdate.eventTime!)
+                    }
+                }
+                .aspectRatio(CGSize(width: 1.0, height: 1.0), contentMode: .fit)
             }
-            .aspectRatio(CGSize(width: 1.0, height: 1.0), contentMode: .fit)
             
             List {
                 ForEach(stopTimeUpdates) { stopTimeUpdate in
@@ -71,6 +82,22 @@ struct BusTripUpdateView: View {
                     .foregroundStyle(.orange)
             }
         }
+    }
+    
+    private func annotationLabel(_ name: String, at eventTime: Date) -> some View {
+        Text(eventTime, style: .time)
+            .padding(2.0)
+            .font(.caption)
+            .foregroundColor(.black)
+            .background {
+                if name == stop.name {
+                    RoundedRectangle(cornerRadius: 4.0)
+                        .foregroundColor(.orange)
+                } else {
+                    RoundedRectangle(cornerRadius: 4.0)
+                        .foregroundColor(.teal)
+                }
+            }
     }
     
 }
