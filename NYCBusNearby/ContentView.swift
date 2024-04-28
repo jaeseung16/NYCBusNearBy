@@ -28,7 +28,7 @@ struct ContentView: View {
     
     @State private var presentAlertNotInNYC = false
     @State private var presentedAlertNotInNYC = false
-    @State private var presentUpdateMaxDistance = false
+    @State private var presentSettings = false
     @State private var presentAlertLocationUnkown = false
     @State private var presentAlertFeedUnavailable = false
     @State private var timer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
@@ -78,7 +78,7 @@ struct ContentView: View {
                 .progressViewStyle(.circular)
                 .opacity(showProgress ? 1 : 0)
         }
-        .sheet(isPresented: $presentUpdateMaxDistance) {
+        .sheet(isPresented: $presentSettings) {
             SettingsView(distanceUnit: $distanceUnit, distance: $maxDistance, maxComing: $maxComing)
         }
         .onReceive(viewModel.$feedAvailable) { _ in
@@ -98,7 +98,7 @@ struct ContentView: View {
         .onChange(of: maxComing) { newValue in
             viewModel.maxComing = newValue
         }
-        .onChange(of: presentUpdateMaxDistance) { _ in
+        .onChange(of: presentSettings) { _ in
             if viewModel.maxDistance != maxDistance {
                 viewModel.maxDistance = maxDistance
                 updateStopsAndTrainsNearby()
@@ -163,7 +163,7 @@ struct ContentView: View {
                 Spacer()
                 
                 Button {
-                    presentUpdateMaxDistance = true
+                    presentSettings = true
                 } label: {
                     Label("Settings", systemImage: "gear")
                 }
@@ -205,7 +205,7 @@ struct ContentView: View {
     
     private func downloadAllData() -> Void {
         lastRefresh = Date()
-        if (viewModel.location?.coordinate) != nil {
+        if viewModel.location?.coordinate != nil {
             viewModel.getAllData() { result in
                 switch result {
                 case .success(let success):
