@@ -50,7 +50,11 @@ struct ContentView: View {
                 NavigationSplitView {
                     List(stopsNearby, id: \.self, selection: $selectedStop) { stop in
                         NavigationLink(value: stop) {
-                            BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: distanceUnit)
+                            if kmSelected {
+                                BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .km)
+                            } else {
+                                BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .mile)
+                            }
                         }
                     }
                 } detail: {
