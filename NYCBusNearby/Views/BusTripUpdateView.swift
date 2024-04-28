@@ -30,6 +30,7 @@ struct BusTripUpdateView: View {
     }
     
     var tripUpdate: MTABusTripUpdate
+    var stop: MTABusStop
     
     var body: some View {
         VStack {
@@ -46,19 +47,29 @@ struct BusTripUpdateView: View {
             
             List {
                 ForEach(stopTimeUpdates) { stopTimeUpdate in
-                    HStack {
-                        Text("\(viewModel.stopsById[stopTimeUpdate.id]?.name ?? stopTimeUpdate.id)")
-                        
-                        Spacer()
-                        
-                        if let eventTime = stopTimeUpdate.eventTime {
-                            Text(eventTime, style: .time)
-                                .foregroundColor(eventTime < Date() ? .secondary : .primary)
-                        }
+                    if let name = viewModel.stopsById[stopTimeUpdate.id]?.name,
+                        let eventTime = stopTimeUpdate.eventTime {
+                        stopTimeView(name, eventTime: eventTime)
                     }
                 }
             }
         }
-        
     }
+    
+    private func stopTimeView(_ name: String, eventTime: Date) -> some View {
+        HStack {
+            Text("\(name)")
+            
+            Spacer()
+            
+            Text(eventTime, style: .time)
+        }
+        .foregroundColor(eventTime < Date() ? .secondary : .primary)
+        .background {
+            if name == stop.name && eventTime > Date() {
+                RoundedRectangle(cornerRadius: 1.0).foregroundStyle(.yellow)
+            }
+        }
+    }
+    
 }

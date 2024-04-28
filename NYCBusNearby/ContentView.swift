@@ -64,8 +64,8 @@ struct ContentView: View {
                         .navigationTitle(stop.name)
                     }
                 } detail: {
-                    if let bus = selectedBus, let tripUpdate = getTripUpdates(for: bus) {
-                        BusTripUpdateView(tripUpdate: tripUpdate)
+                    if let stop = selectedStop, let bus = selectedBus, let tripUpdate = getTripUpdates(for: bus, near: stop) {
+                        BusTripUpdateView(tripUpdate: tripUpdate, stop: stop)
                             .navigationTitle(bus.routeId ?? "")
                     } else {
                         EmptyView()
@@ -165,18 +165,10 @@ struct ContentView: View {
             return nil
         }
         
-        return getSortedBuses(from: buses)
-    }
-    
-    private func getSortedBuses(from buses: [MTABus]) -> [MTABus] {
         return buses.sorted(by: { $0.eventTime! < $1.eventTime! })
     }
     
-    private func getTripUpdates(for bus: MTABus) -> MTABusTripUpdate? {
-        guard let stop = selectedStop else {
-            return nil
-        }
-        
+    private func getTripUpdates(for bus: MTABus, near stop: MTABusStop) -> MTABusTripUpdate? {
         guard let buses = getBuses(at: stop), !buses.isEmpty else {
             return nil
         }
