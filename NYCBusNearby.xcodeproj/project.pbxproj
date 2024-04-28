@@ -39,6 +39,7 @@
 		9083657A29721B520070A354 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 9083657929721B520070A354 /* SwiftProtobufPluginLibrary */; };
 		90857EF42991BB1E0052309B /* BannerAd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90857EF32991BB1E0052309B /* BannerAd.swift */; };
 		90857EF62991BB3E0052309B /* BannerAdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90857EF52991BB3E0052309B /* BannerAdViewController.swift */; };
+		9086A2822BDEA0EB00220FCC /* BusAtStopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9086A2812BDEA0EB00220FCC /* BusAtStopView.swift */; };
 		908B780029857A0500445E12 /* MTAFeed in Frameworks */ = {isa = PBXBuildFile; productRef = 908B77FF29857A0500445E12 /* MTAFeed */; };
 		908B78022985BAF500445E12 /* MTABusTripUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908B78012985BAF500445E12 /* MTABusTripUpdate.swift */; };
 		908B78042985BEB700445E12 /* MTABusStopTimeUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908B78032985BEB700445E12 /* MTABusStopTimeUpdate.swift */; };
@@ -79,6 +80,7 @@
 		90836564297218B20070A354 /* MTAFeedConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTAFeedConstant.swift; sourceTree = "<group>"; };
 		90857EF32991BB1E0052309B /* BannerAd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAd.swift; sourceTree = "<group>"; };
 		90857EF52991BB3E0052309B /* BannerAdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAdViewController.swift; sourceTree = "<group>"; };
+		9086A2812BDEA0EB00220FCC /* BusAtStopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusAtStopView.swift; sourceTree = "<group>"; };
 		908B78012985BAF500445E12 /* MTABusTripUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusTripUpdate.swift; sourceTree = "<group>"; };
 		908B78032985BEB700445E12 /* MTABusStopTimeUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusStopTimeUpdate.swift; sourceTree = "<group>"; };
 		90A1EDE62BDC616E001533FA /* BusStopRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopRowView.swift; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 				9082C1D62975BE95004D7130 /* SettingsView.swift */,
 				906AA4D129745B65000841BD /* BusesAtStopView.swift */,
 				906AA4D32974A496000841BD /* BusTripUpdateView.swift */,
+				9086A2812BDEA0EB00220FCC /* BusAtStopView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -327,6 +330,7 @@
 				906D0E312988723B00FA1287 /* RestDownloader.swift in Sources */,
 				906AA4D229745B65000841BD /* BusesAtStopView.swift in Sources */,
 				9082C1D72975BE95004D7130 /* SettingsView.swift in Sources */,
+				9086A2822BDEA0EB00220FCC /* BusAtStopView.swift in Sources */,
 				906AA4CC29745534000841BD /* DistanceUnit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

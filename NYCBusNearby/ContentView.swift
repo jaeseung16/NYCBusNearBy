@@ -37,6 +37,7 @@ struct ContentView: View {
     @State private var showProgress = false
     
     @State private var selectedStop: MTABusStop?
+    @State private var selectedBus: MTABus?
     
     private var kmSelected: Bool {
         distanceUnit == .km
@@ -57,14 +58,26 @@ struct ContentView: View {
                             }
                         }
                     }
-                } detail: {
+                } content: {
                     if let stop = selectedStop, let buses = getBuses(at: stop), !buses.isEmpty {
                         BusesAtStopView(stop: stop,
                                         buses: getSortedBuses(from: buses),
-                                        tripUpdateByTripId: viewModel.getTripUpdateByTripId(from: buses))
+                                        selectedBus: $selectedBus)
                         .navigationTitle(stop.name)
                     }
+                } detail: {
+                    if let stop = selectedStop, let bus = selectedBus {
+                        if let buses = getBuses(at: stop), !buses.isEmpty {
+                            if let tripId = bus.tripId, let tripUpdate = viewModel.getTripUpdateByTripId(from: buses)[tripId] {
+                                BusTripUpdateView(tripUpdate: tripUpdate)
+                                    .navigationTitle(bus.routeId ?? "")
+                            } else {
+                                EmptyView()
+                            }
+                        }
+                    }
                 }
+                .navigationSplitViewStyle(.balanced)
             }
             
             Spacer()
