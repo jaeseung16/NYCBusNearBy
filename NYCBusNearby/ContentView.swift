@@ -229,13 +229,16 @@ struct ContentView: View {
     private func downloadAllData() -> Void {
         lastRefresh = Date()
         if viewModel.location?.coordinate != nil {
-            viewModel.getAllData() { result in
-                switch result {
-                case .success(let success):
-                    presentAlertFeedUnavailable = !success
-                case .failure:
+            Task {
+                var result = false
+                do {
+                    result = try await viewModel.getAllDataAsync()
+                } catch {
                     presentAlertFeedUnavailable.toggle()
                 }
+                
+                presentAlertFeedUnavailable = !result
+                
                 showProgress = false
                 updateStopsAndTrainsNearby()
             }

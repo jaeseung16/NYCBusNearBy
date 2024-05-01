@@ -346,6 +346,16 @@ class ViewModel: NSObject, ObservableObject {
         
     }
     
+    func getAllDataAsync() async throws -> Bool {
+        resetData()
+        
+        let result = try await downloadFromMTAInfo()
+        
+        ViewModel.logger.log("result=\(result, privacy: .public)")
+        
+        return result.count == BusFeedURL.allCases.count
+    }
+    
     private func downloadFromMTAInfo(completionHandler: @escaping (Result<Bool, Error>) -> Void) -> Void {
         let start = Date()
         let dispatchGroup = DispatchGroup()
@@ -403,6 +413,49 @@ class ViewModel: NSObject, ObservableObject {
             }
             ViewModel.logger.log("It took \(DateInterval(start: start, end: Date()).duration) sec to finish all feed downloads")
         }
+    }
+    
+    private func downloadFromMTAInfo() async throws -> [Bool] {
+        let start = Date()
+        var success = [Bool]()
+        
+        for busFeedURL in BusFeedURL.allCases {
+            var mtaFeedWrapper: MTAFeedWrapper?
+            do {
+                mtaFeedWrapper = try await feedDownloader.download(from: busFeedURL)
+            } catch {
+                ViewModel.logger.log("Failed to download for \(busFeedURL.rawValue, privacy: .public): error = \(String(describing: error.localizedDescription), privacy: .public)")
+            }
+            
+            guard let mtaFeedWrapper = mtaFeedWrapper else {
+                success.append(false)
+                continue
+            }
+            
+            ViewModel.logger.log("BusFeedURL=\(busFeedURL.rawValue, privacy: .public)")
+            
+            DispatchQueue.main.async {
+                if !mtaFeedWrapper.alerts.isEmpty {
+                    self.alerts.append(contentsOf: mtaFeedWrapper.alerts)
+                }
+                if !mtaFeedWrapper.tripUpdatesByTripId.isEmpty {
+                    mtaFeedWrapper.tripUpdatesByTripId.forEach { key, updates in
+                        self.tripUpdatesByTripId[key] = updates
+                    }
+                }
+                if !mtaFeedWrapper.vehiclesByStopId.isEmpty {
+                    mtaFeedWrapper.vehiclesByStopId.forEach { key, vehicles in
+                        self.vehiclesByStopId[key] = vehicles
+                    }
+                }
+            }
+            
+            success.append(true)
+        }
+        
+        ViewModel.logger.log("It took \(DateInterval(start: start, end: Date()).duration) sec to finish all feed downloads")
+        
+        return success
     }
     
     func updateRegion(center coordinate: CLLocationCoordinate2D) -> Void {
