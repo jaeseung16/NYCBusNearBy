@@ -146,12 +146,22 @@ class ViewModel: NSObject, ObservableObject {
         populateBusStops()
         populateHeadsignByTripId()
         
-        getAllData() { result in
-            switch result {
-            case .success(let success):
-                self.feedAvailable = success
-            case .failure:
-                self.feedAvailable = false
+        Task {
+            var result = false
+            do {
+                result = try await getAllDataAsync()
+            } catch {
+                result = false
+            }
+            
+            if result {
+                DispatchQueue.main.async {
+                    self.feedAvailable = true
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.feedAvailable = false
+                }
             }
         }
         
@@ -419,38 +429,40 @@ class ViewModel: NSObject, ObservableObject {
         let start = Date()
         var success = [Bool]()
         
-        for busFeedURL in BusFeedURL.allCases {
-            var mtaFeedWrapper: MTAFeedWrapper?
-            do {
-                mtaFeedWrapper = try await feedDownloader.download(from: busFeedURL)
-            } catch {
-                ViewModel.logger.log("Failed to download for \(busFeedURL.rawValue, privacy: .public): error = \(String(describing: error.localizedDescription), privacy: .public)")
-            }
-            
-            guard let mtaFeedWrapper = mtaFeedWrapper else {
-                success.append(false)
-                continue
-            }
-            
-            ViewModel.logger.log("BusFeedURL=\(busFeedURL.rawValue, privacy: .public)")
-            
-            DispatchQueue.main.async {
-                if !mtaFeedWrapper.alerts.isEmpty {
-                    self.alerts.append(contentsOf: mtaFeedWrapper.alerts)
+        try? await withThrowingTaskGroup(of: MTAFeedWrapper.self) { group in
+            for busFeedURL in BusFeedURL.allCases {
+                ViewModel.logger.log("BusFeedURL=\(busFeedURL.rawValue, privacy: .public)")
+                group.addTask {
+                    var mtaFeedWrapper: MTAFeedWrapper = MTAFeedWrapper()
+                    do {
+                        mtaFeedWrapper = try await self.feedDownloader.download(from: busFeedURL) ?? MTAFeedWrapper()
+                    } catch {
+                        ViewModel.logger.log("Failed to download for \(busFeedURL.rawValue, privacy: .public): error = \(String(describing: error.localizedDescription), privacy: .public)")
+                        mtaFeedWrapper = MTAFeedWrapper()
+                    }
+                    return mtaFeedWrapper
                 }
-                if !mtaFeedWrapper.tripUpdatesByTripId.isEmpty {
-                    mtaFeedWrapper.tripUpdatesByTripId.forEach { key, updates in
-                        self.tripUpdatesByTripId[key] = updates
+            }
+            
+            for try await mtaFeedWrapper in group {
+                DispatchQueue.main.async {
+                    if !mtaFeedWrapper.alerts.isEmpty {
+                        self.alerts.append(contentsOf: mtaFeedWrapper.alerts)
+                    }
+                    if !mtaFeedWrapper.tripUpdatesByTripId.isEmpty {
+                        mtaFeedWrapper.tripUpdatesByTripId.forEach { key, updates in
+                            self.tripUpdatesByTripId[key] = updates
+                        }
+                    }
+                    if !mtaFeedWrapper.vehiclesByStopId.isEmpty {
+                        mtaFeedWrapper.vehiclesByStopId.forEach { key, vehicles in
+                            self.vehiclesByStopId[key] = vehicles
+                        }
                     }
                 }
-                if !mtaFeedWrapper.vehiclesByStopId.isEmpty {
-                    mtaFeedWrapper.vehiclesByStopId.forEach { key, vehicles in
-                        self.vehiclesByStopId[key] = vehicles
-                    }
-                }
+                
+                success.append(true)
             }
-            
-            success.append(true)
         }
         
         ViewModel.logger.log("It took \(DateInterval(start: start, end: Date()).duration) sec to finish all feed downloads")
