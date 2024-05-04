@@ -37,12 +37,14 @@
 		90836565297218B20070A354 /* MTAFeedConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90836564297218B20070A354 /* MTAFeedConstant.swift */; };
 		9083657829721B520070A354 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 9083657729721B520070A354 /* SwiftProtobuf */; };
 		9083657A29721B520070A354 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 9083657929721B520070A354 /* SwiftProtobufPluginLibrary */; };
-		90857EEE2991BA2E0052309B /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 90857EED2991BA2E0052309B /* GoogleMobileAds */; };
 		90857EF42991BB1E0052309B /* BannerAd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90857EF32991BB1E0052309B /* BannerAd.swift */; };
 		90857EF62991BB3E0052309B /* BannerAdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90857EF52991BB3E0052309B /* BannerAdViewController.swift */; };
+		9086A2822BDEA0EB00220FCC /* BusAtStopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9086A2812BDEA0EB00220FCC /* BusAtStopView.swift */; };
 		908B780029857A0500445E12 /* MTAFeed in Frameworks */ = {isa = PBXBuildFile; productRef = 908B77FF29857A0500445E12 /* MTAFeed */; };
 		908B78022985BAF500445E12 /* MTABusTripUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908B78012985BAF500445E12 /* MTABusTripUpdate.swift */; };
 		908B78042985BEB700445E12 /* MTABusStopTimeUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908B78032985BEB700445E12 /* MTABusStopTimeUpdate.swift */; };
+		90A1EDE52BDC5E02001533FA /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 90A1EDE42BDC5E02001533FA /* GoogleMobileAds */; };
+		90A1EDE72BDC616E001533FA /* BusStopRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A1EDE62BDC616E001533FA /* BusStopRowView.swift */; };
 		90F9B07C2976064D000CED11 /* NYCBusNearby.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 9082C1E1297605D9004D7130 /* NYCBusNearby.sqlite */; };
 /* End PBXBuildFile section */
 
@@ -78,8 +80,10 @@
 		90836564297218B20070A354 /* MTAFeedConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTAFeedConstant.swift; sourceTree = "<group>"; };
 		90857EF32991BB1E0052309B /* BannerAd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAd.swift; sourceTree = "<group>"; };
 		90857EF52991BB3E0052309B /* BannerAdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAdViewController.swift; sourceTree = "<group>"; };
+		9086A2812BDEA0EB00220FCC /* BusAtStopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusAtStopView.swift; sourceTree = "<group>"; };
 		908B78012985BAF500445E12 /* MTABusTripUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusTripUpdate.swift; sourceTree = "<group>"; };
 		908B78032985BEB700445E12 /* MTABusStopTimeUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusStopTimeUpdate.swift; sourceTree = "<group>"; };
+		90A1EDE62BDC616E001533FA /* BusStopRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopRowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,7 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				90857EEE2991BA2E0052309B /* GoogleMobileAds in Frameworks */,
+				90A1EDE52BDC5E02001533FA /* GoogleMobileAds in Frameworks */,
 				9082C1CE2975908F004D7130 /* Persistence in Frameworks */,
 				9083657A29721B520070A354 /* SwiftProtobufPluginLibrary in Frameworks */,
 				90504D712973601100BDE429 /* CodableCSV in Frameworks */,
@@ -136,9 +140,11 @@
 		9082C1D82975BEA1004D7130 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				90A1EDE62BDC616E001533FA /* BusStopRowView.swift */,
 				9082C1D62975BE95004D7130 /* SettingsView.swift */,
 				906AA4D129745B65000841BD /* BusesAtStopView.swift */,
 				906AA4D32974A496000841BD /* BusTripUpdateView.swift */,
+				9086A2812BDEA0EB00220FCC /* BusAtStopView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -232,7 +238,7 @@
 				90504D702973601100BDE429 /* CodableCSV */,
 				9082C1CD2975908F004D7130 /* Persistence */,
 				908B77FF29857A0500445E12 /* MTAFeed */,
-				90857EED2991BA2E0052309B /* GoogleMobileAds */,
+				90A1EDE42BDC5E02001533FA /* GoogleMobileAds */,
 			);
 			productName = NYCBusNearby;
 			productReference = 9083654E297217AD0070A354 /* NYCBusNearby.app */;
@@ -246,7 +252,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1420;
+				LastUpgradeCheck = 1530;
 				TargetAttributes = {
 					9083654D297217AD0070A354 = {
 						CreatedOnToolsVersion = 14.2;
@@ -267,7 +273,7 @@
 				90504D6F2973601100BDE429 /* XCRemoteSwiftPackageReference "CodableCSV" */,
 				9082C1CC2975908F004D7130 /* XCRemoteSwiftPackageReference "PersistenceSwift" */,
 				908B77FE29857A0500445E12 /* XCRemoteSwiftPackageReference "MTAFeed-Swift" */,
-				90857EEC2991BA2E0052309B /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				90A1EDE32BDC5E02001533FA /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 			);
 			productRefGroup = 9083654F297217AD0070A354 /* Products */;
 			projectDirPath = "";
@@ -314,6 +320,7 @@
 				906D0E29298870B000FA1287 /* RestDirection.swift in Sources */,
 				906D0E27298870AC00FA1287 /* RestVehicleStatus.swift in Sources */,
 				9082C1D2297590D7004D7130 /* NYCBusNearby.xcdatamodeld in Sources */,
+				90A1EDE72BDC616E001533FA /* BusStopRowView.swift in Sources */,
 				906AA4CE29745974000841BD /* MTABus.swift in Sources */,
 				906AA4D42974A496000841BD /* BusTripUpdateView.swift in Sources */,
 				90836552297217AD0070A354 /* NYCBusNearbyApp.swift in Sources */,
@@ -323,6 +330,7 @@
 				906D0E312988723B00FA1287 /* RestDownloader.swift in Sources */,
 				906AA4D229745B65000841BD /* BusesAtStopView.swift in Sources */,
 				9082C1D72975BE95004D7130 /* SettingsView.swift in Sources */,
+				9086A2822BDEA0EB00220FCC /* BusAtStopView.swift in Sources */,
 				906AA4CC29745534000841BD /* DistanceUnit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -366,6 +374,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -380,7 +389,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -427,6 +436,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -435,7 +445,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = "-ObjC";
@@ -453,7 +463,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = NYCBusNearby/NYCBusNearby.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"NYCBusNearby/Preview Content\"";
 				DEVELOPMENT_TEAM = U8VSJXRJTQ;
 				ENABLE_PREVIEWS = YES;
@@ -470,7 +480,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.NYCBusNearby;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -489,7 +499,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = NYCBusNearby/NYCBusNearby.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"NYCBusNearby/Preview Content\"";
 				DEVELOPMENT_TEAM = U8VSJXRJTQ;
 				ENABLE_PREVIEWS = YES;
@@ -506,7 +516,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.resonance.NYCBusNearby;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -566,20 +576,20 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		90857EEC2991BA2E0052309B /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 9.0.0;
-			};
-		};
 		908B77FE29857A0500445E12 /* XCRemoteSwiftPackageReference "MTAFeed-Swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jaeseung16/MTAFeed-Swift";
 			requirement = {
 				branch = main;
 				kind = branch;
+			};
+		};
+		90A1EDE32BDC5E02001533FA /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.3.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -605,15 +615,15 @@
 			package = 9083657629721B520070A354 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
 			productName = SwiftProtobufPluginLibrary;
 		};
-		90857EED2991BA2E0052309B /* GoogleMobileAds */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 90857EEC2991BA2E0052309B /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
-			productName = GoogleMobileAds;
-		};
 		908B77FF29857A0500445E12 /* MTAFeed */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 908B77FE29857A0500445E12 /* XCRemoteSwiftPackageReference "MTAFeed-Swift" */;
 			productName = MTAFeed;
+		};
+		90A1EDE42BDC5E02001533FA /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 90A1EDE32BDC5E02001533FA /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
 		};
 /* End XCSwiftPackageProductDependency section */
 

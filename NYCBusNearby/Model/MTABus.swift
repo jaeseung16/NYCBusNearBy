@@ -8,7 +8,9 @@
 import Foundation
 import MTAFeed
 
-struct MTABus: Hashable {
+struct MTABus: Hashable, Identifiable {
+    var id: Self { self }
+    
     let trip: MTATrip?
     let status: MTAVehicleStatus?
     

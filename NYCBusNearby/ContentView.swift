@@ -28,13 +28,16 @@ struct ContentView: View {
     
     @State private var presentAlertNotInNYC = false
     @State private var presentedAlertNotInNYC = false
-    @State private var presentUpdateMaxDistance = false
+    @State private var presentSettings = false
     @State private var presentAlertLocationUnkown = false
     @State private var presentAlertFeedUnavailable = false
     @State private var timer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
     @State private var refreshable = false
     
     @State private var showProgress = false
+    
+    @State private var selectedStop: MTABusStop?
+    @State private var selectedBus: MTABus?
     
     private var kmSelected: Bool {
         distanceUnit == .km
@@ -45,27 +48,30 @@ struct ContentView: View {
             locationLabel
             
             if !busesNearby.isEmpty {
-                NavigationView {
-                    List {
-                        ForEach(stopsNearby, id:\.self) { stop in
-                            if let buses = getBuses(at: stop), !buses.isEmpty {
-                                NavigationLink {
-                                    BusesAtStopView(stop: stop,
-                                                    buses: getSortedBuses(from: buses),
-                                                    tripUpdateByTripId: viewModel.getTripUpdateByTripId(from: buses))
-                                        .navigationTitle(stop.name)
-                                } label: {
-                                    if kmSelected {
-                                        label(for: stop, distanceUnit: .km)
-                                    } else {
-                                        label(for: stop, distanceUnit: .mile)
-                                    }
-                                }
+                NavigationSplitView {
+                    List(stopsNearby, id: \.self, selection: $selectedStop) { stop in
+                        NavigationLink(value: stop) {
+                            if kmSelected {
+                                BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .km)
+                            } else {
+                                BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .mile)
                             }
                         }
                     }
+                } content: {
+                    if let stop = selectedStop, let buses = getSortedBuses(at: stop) {
+                        BusesAtStopView(stop: stop, buses: buses, selectedBus: $selectedBus)
+                        .navigationTitle(stop.name)
+                    }
+                } detail: {
+                    if let stop = selectedStop, let bus = selectedBus, let tripUpdate = getTripUpdates(for: bus, near: stop) {
+                        BusTripUpdateView(tripUpdate: tripUpdate, stop: stop)
+                            .navigationTitle(bus.routeId ?? "")
+                    } else {
+                        EmptyView()
+                    }
                 }
-                .navigationViewStyle(.stack)
+                .navigationSplitViewStyle(.balanced)
             }
             
             Spacer()
@@ -79,7 +85,7 @@ struct ContentView: View {
                 .progressViewStyle(.circular)
                 .opacity(showProgress ? 1 : 0)
         }
-        .sheet(isPresented: $presentUpdateMaxDistance) {
+        .sheet(isPresented: $presentSettings) {
             SettingsView(distanceUnit: $distanceUnit, distance: $maxDistance, maxComing: $maxComing)
         }
         .onReceive(viewModel.$feedAvailable) { _ in
@@ -99,7 +105,7 @@ struct ContentView: View {
         .onChange(of: maxComing) { newValue in
             viewModel.maxComing = newValue
         }
-        .onChange(of: presentUpdateMaxDistance) { _ in
+        .onChange(of: presentSettings) { _ in
             if viewModel.maxDistance != maxDistance {
                 viewModel.maxDistance = maxDistance
                 updateStopsAndTrainsNearby()
@@ -126,22 +132,7 @@ struct ContentView: View {
         if !userLocality.isEmpty && userLocality != "Unknown" {
             return Label(userLocality, systemImage: "mappin.and.ellipse")
         } else {
-            return Label("Nearby Subway Stations", systemImage: "tram.fill.tunnel")
-        }
-    }
-    
-    private func label(for stop: MTABusStop, distanceUnit: DistanceUnit) -> some View {
-        HStack {
-            Text("\(stop.name)")
-            
-            Spacer()
-            
-            VStack(alignment: .leading) {
-                Text("\(stop.id)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                Text(distance(to: stop).converted(to: distanceUnit.unitLength), format: distanceFormatStyle)
-            }
+            return Label("Nearby Bus Stops", systemImage: "bus")
         }
     }
     
@@ -169,8 +160,24 @@ struct ContentView: View {
         return busesNearby[stop]?.filter { $0.eventTime != nil  && viewModel.isValid($0.eventTime!)}
     }
     
-    private func getSortedBuses(from buses: [MTABus]) -> [MTABus] {
+    private func getSortedBuses(at stop: MTABusStop) -> [MTABus]? {
+        guard let buses = getBuses(at: stop), !buses.isEmpty else {
+            return nil
+        }
+        
         return buses.sorted(by: { $0.eventTime! < $1.eventTime! })
+    }
+    
+    private func getTripUpdates(for bus: MTABus, near stop: MTABusStop) -> MTABusTripUpdate? {
+        guard let buses = getBuses(at: stop), !buses.isEmpty else {
+            return nil
+        }
+            
+        guard let tripId = bus.tripId else {
+            return nil
+        }
+          
+        return viewModel.getTripUpdateByTripId(from: buses)[tripId]
     }
     
     private var bottomView: some View {
@@ -179,7 +186,7 @@ struct ContentView: View {
                 Spacer()
                 
                 Button {
-                    presentUpdateMaxDistance = true
+                    presentSettings = true
                 } label: {
                     Label("Settings", systemImage: "gear")
                 }
@@ -221,14 +228,17 @@ struct ContentView: View {
     
     private func downloadAllData() -> Void {
         lastRefresh = Date()
-        if (viewModel.location?.coordinate) != nil {
-            viewModel.getAllData() { result in
-                switch result {
-                case .success(let success):
-                    presentAlertFeedUnavailable = !success
-                case .failure:
+        if viewModel.location?.coordinate != nil {
+            Task {
+                var result = false
+                do {
+                    result = try await viewModel.getAllDataAsync()
+                } catch {
                     presentAlertFeedUnavailable.toggle()
                 }
+                
+                presentAlertFeedUnavailable = !result
+                
                 showProgress = false
                 updateStopsAndTrainsNearby()
             }
