@@ -30,10 +30,17 @@ struct BusesAtStopView: View {
     var body: some View {
         VStack {
             if #available(iOS 17.0, *) {
-                Map(initialPosition: MapCameraPosition.region(region.wrappedValue), bounds: MapCameraBounds(centerCoordinateBounds: region.wrappedValue), interactionModes: .zoom) {
-                    UserAnnotation()
-                    
-                    Marker("", coordinate: stop.getCLLocationCoordinate2D())
+                MapReader { proxy in
+                    Map(initialPosition: MapCameraPosition.region(region.wrappedValue), interactionModes: .all) {
+                        UserAnnotation()
+                        Marker("", coordinate: stop.getCLLocationCoordinate2D())
+                    }
+                    .onMapCameraChange { context in
+                        let region = context.region
+                        DispatchQueue.main.async {
+                            viewModel.region = region
+                        }
+                    }
                 }
                 .aspectRatio(CGSize(width: 1.0, height: 1.0), contentMode: .fit)
             } else {
@@ -42,7 +49,6 @@ struct BusesAtStopView: View {
                 }
                 .aspectRatio(CGSize(width: 1.0, height: 1.0), contentMode: .fit)
             }
-            
             
             List(buses, selection: $selectedBus) { bus in
                 if bus.trip != nil, let eventTime = bus.eventTime, viewModel.isValid(eventTime) {
