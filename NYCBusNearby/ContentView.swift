@@ -230,15 +230,8 @@ struct ContentView: View {
         lastRefresh = Date()
         if viewModel.location?.coordinate != nil {
             Task {
-                var result = false
-                do {
-                    result = try await viewModel.getAllDataAsync()
-                } catch {
-                    presentAlertFeedUnavailable.toggle()
-                }
-                
+                var result =  await viewModel.getAllDataAsync()
                 presentAlertFeedUnavailable = !result
-                
                 showProgress = false
                 updateStopsAndTrainsNearby()
             }
