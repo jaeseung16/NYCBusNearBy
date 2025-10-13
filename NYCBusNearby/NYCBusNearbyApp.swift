@@ -22,7 +22,7 @@ struct NYCBusNearbyApp: App {
         } else {
             ATTrackingManager.requestTrackingAuthorization { status in
                 //Whether or not user has opted in initialize GADMobileAds here it will handle the rest
-                GADMobileAds.sharedInstance().start(completionHandler: nil)
+                MobileAds.shared.start(completionHandler: nil)
             }
         }
     }
