@@ -26,7 +26,7 @@ class ViewModel: NSObject, ObservableObject {
             return [T]()
         }
         
-        guard let contents = try? String(contentsOf: stopsURL) else {
+        guard let contents = try? String(contentsOf: stopsURL, encoding: .utf8) else {
             ViewModel.logger.error("The file doesn't contain anything")
             return [T]()
         }
@@ -84,11 +84,9 @@ class ViewModel: NSObject, ObservableObject {
         return CLLocationDistance(maxDistance * rangeFactor)
     }
     
-    func lookUpCurrentLocation() {
-        locationHelper.lookUpCurrentLocation() { userLocality in
-            self.userLocality = userLocality
-            self.userLocalityUpdated.toggle()
-        }
+    func lookUpCurrentLocation() async {
+        self.userLocality = await locationHelper.lookUpCurrentLocation()
+        self.userLocalityUpdated.toggle()
     }
     
     //private let persistence = Persistence(name: "NYCBusNearby", identifier: "com.resonance.jlee.NYCBusNearby", isCloud: false)
@@ -457,8 +455,10 @@ extension ViewModel: @MainActor CLLocationManagerDelegate {
         self.locationUpdated.toggle()
         
         if let location = self.location {
-            lookUpCurrentLocation()
-            updateRegion(center: location.coordinate)
+            Task {
+                await lookUpCurrentLocation()
+                updateRegion(center: location.coordinate)
+            }
         }
     }
     
