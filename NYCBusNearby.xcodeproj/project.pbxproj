@@ -550,7 +550,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jaeseung16/MTAFeed-Swift";
 			requirement = {
-				branch = swift6;
+				branch = main;
 				kind = branch;
 			};
 		};
