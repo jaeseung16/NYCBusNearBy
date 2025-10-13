@@ -46,7 +46,6 @@ class ViewModel: NSObject, ObservableObject {
     var headsignByTripId = [String: String]()
     
     var feedDownloader = MTAFeedDownloader<BusFeedURL>(apiKey: MTAFeedConstant.apiKey)
-    var restDownloader = RestDownloader()
     
     @Published var feedAvailable = true
     
