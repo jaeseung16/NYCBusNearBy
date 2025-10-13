@@ -102,10 +102,10 @@ struct ContentView: View {
         .onReceive(timer) { _ in
             refreshable = lastRefresh.distance(to: Date()) > 60
         }
-        .onChange(of: maxComing) { newValue in
+        .onChange(of: maxComing) { _, newValue in
             viewModel.maxComing = newValue
         }
-        .onChange(of: presentSettings) { _ in
+        .onChange(of: presentSettings) { _, _ in
             if viewModel.maxDistance != maxDistance {
                 viewModel.maxDistance = maxDistance
                 updateStopsAndTrainsNearby()
@@ -230,7 +230,7 @@ struct ContentView: View {
         lastRefresh = Date()
         if viewModel.location?.coordinate != nil {
             Task {
-                var result =  await viewModel.getAllDataAsync()
+                let result = await viewModel.getAllDataAsync()
                 presentAlertFeedUnavailable = !result
                 showProgress = false
                 updateStopsAndTrainsNearby()
