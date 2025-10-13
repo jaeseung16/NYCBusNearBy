@@ -147,22 +147,7 @@ class ViewModel: NSObject, ObservableObject {
         populateHeadsignByTripId()
         
         Task {
-            var result = false
-            do {
-                result = try await getAllDataAsync()
-            } catch {
-                result = false
-            }
-            
-            if result {
-                DispatchQueue.main.async {
-                    self.feedAvailable = true
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.feedAvailable = false
-                }
-            }
+            self.feedAvailable = await getAllDataAsync()
         }
         
         ViewModel.logger.log("# of stops = \(self.mtaStops.count)")
