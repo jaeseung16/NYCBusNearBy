@@ -37,6 +37,7 @@
 		908B78042985BEB700445E12 /* MTABusStopTimeUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908B78032985BEB700445E12 /* MTABusStopTimeUpdate.swift */; };
 		90A1EDE52BDC5E02001533FA /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 90A1EDE42BDC5E02001533FA /* GoogleMobileAds */; };
 		90A1EDE72BDC616E001533FA /* BusStopRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A1EDE62BDC616E001533FA /* BusStopRowView.swift */; };
+		90E0D0392E9EF43E008A4487 /* AppIcon_iOS26.icon in Resources */ = {isa = PBXBuildFile; fileRef = 90E0D0382E9EF43E008A4487 /* AppIcon_iOS26.icon */; };
 		90F9B07C2976064D000CED11 /* NYCBusNearby.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 9082C1E1297605D9004D7130 /* NYCBusNearby.sqlite */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,7 @@
 		908B78012985BAF500445E12 /* MTABusTripUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusTripUpdate.swift; sourceTree = "<group>"; };
 		908B78032985BEB700445E12 /* MTABusStopTimeUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusStopTimeUpdate.swift; sourceTree = "<group>"; };
 		90A1EDE62BDC616E001533FA /* BusStopRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopRowView.swift; sourceTree = "<group>"; };
+		90E0D0382E9EF43E008A4487 /* AppIcon_iOS26.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon_iOS26.icon; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +150,7 @@
 				90836555297217AE0070A354 /* Assets.xcassets */,
 				90836557297217AE0070A354 /* Preview Content */,
 				9083655F297218000070A354 /* ViewModel.swift */,
+				90E0D0382E9EF43E008A4487 /* AppIcon_iOS26.icon */,
 			);
 			path = NYCBusNearby;
 			sourceTree = "<group>";
@@ -260,6 +263,7 @@
 				90F9B07C2976064D000CED11 /* NYCBusNearby.sqlite in Resources */,
 				90836559297217AE0070A354 /* Preview Assets.xcassets in Resources */,
 				90836556297217AE0070A354 /* Assets.xcassets in Resources */,
+				90E0D0392E9EF43E008A4487 /* AppIcon_iOS26.icon in Resources */,
 				9082C1DC2975F79F004D7130 /* stops.txt in Resources */,
 				90504D68297357C200BDE429 /* routes.txt in Resources */,
 				9082C1E029760565004D7130 /* trips.txt in Resources */,
@@ -427,7 +431,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = NYCBusNearby/NYCBusNearby.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"NYCBusNearby/Preview Content\"";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
@@ -466,7 +470,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = NYCBusNearby/NYCBusNearby.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"NYCBusNearby/Preview Content\"";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
