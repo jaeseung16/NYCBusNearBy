@@ -427,7 +427,7 @@
 		9083655D297217AE0070A354 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon_iOS26;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = NYCBusNearby/NYCBusNearby.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -466,7 +466,7 @@
 		9083655E297217AE0070A354 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon_iOS26;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = NYCBusNearby/NYCBusNearby.entitlements;
 				CODE_SIGN_STYLE = Automatic;
