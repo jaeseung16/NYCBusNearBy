@@ -43,26 +43,42 @@ struct ContentView: View {
         distanceUnit == .km
     }
     
+    private let refreshThreshold: TimeInterval = 60
+    
+    private var interval: ClosedRange<Date> {
+        let start = lastRefresh
+        let end = lastRefresh.addingTimeInterval(refreshThreshold)
+        return start...end
+    }
+    
     var body: some View {
         VStack {
             NavigationSplitView {
                 VStack {
                     locationLabel
-                    if !busesNearby.isEmpty {
-                        List(stopsNearby, id: \.self, selection: $selectedStop) { stop in
-                            NavigationLink(value: stop) {
-                                if kmSelected {
-                                    BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .km)
-                                } else {
-                                    BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .mile)
+                    
+                    ZStack {
+                        if !busesNearby.isEmpty {
+                            List(stopsNearby, id: \.self, selection: $selectedStop) { stop in
+                                NavigationLink(value: stop) {
+                                    if kmSelected {
+                                        BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .km)
+                                    } else {
+                                        BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .mile)
+                                    }
                                 }
                             }
                         }
+                        
+                        bottomView
                     }
                     
                     Spacer()
                     
-                    bottomView
+#if os(iOS)
+BannerAd()
+    .frame(height: 50)
+#endif
                 }
             } content: {
                 if let stop = selectedStop, let buses = getSortedBuses(at: stop) {
@@ -98,7 +114,11 @@ struct ContentView: View {
             updateStopsAndTrainsNearby()
         }
         .onReceive(timer) { _ in
-            refreshable = lastRefresh.distance(to: Date()) > 60
+            if !refreshable && lastRefresh.distance(to: Date()) > refreshThreshold {
+                withAnimation {
+                    refreshable = true
+                }
+            }
         }
         .onChange(of: maxComing) { _, newValue in
             viewModel.maxComing = newValue
@@ -180,43 +200,44 @@ struct ContentView: View {
     
     private var bottomView: some View {
         VStack {
-            HStack {
-                Spacer()
-                
-                Button {
-                    presentSettings = true
-                } label: {
-                    Label("Settings", systemImage: "gear")
-                }
-                .padding(5.0)
-                .glassEffect()
-                
-                Spacer()
+            Spacer()
+            
+            GlassEffectContainer {
+                HStack {
+                    Spacer()
+                    
+                    Button {
+                        presentSettings = true
+                    } label: {
+                        Label("Settings", systemImage: "gear")
+                    }
+                    .padding(5.0)
+                    .frame(width: 120.0)
+                    .glassEffect()
+                    
+                    Spacer()
 
-                Button {
-                    downloadAllDataByButton()
-                } label: {
-                    Label("Refresh", systemImage: "arrow.clockwise.circle")
+                    if refreshable {
+                        Button {
+                            downloadAllDataByButton()
+                        } label: {
+                            Label("Refresh", systemImage: "arrow.clockwise.circle")
+                        }
+                        .padding(5.0)
+                        .frame(width: 120.0)
+                        .glassEffect()
+                    } else {
+                        ProgressView(timerInterval: interval, countsDown: true)
+                            .progressViewStyle(.linear)
+                            .padding(5.0)
+                            .frame(width: 120.0)
+                            .glassEffect()
+                    }
+                    
+                    Spacer()
                 }
-                .padding(5.0)
-                .disabled(!refreshable)
-                .glassEffect()
-                
-                Spacer()
+                .disabled(showProgress)
             }
-            .disabled(showProgress)
-            
-            HStack {
-                Spacer()
-                Text("Refreshed:")
-                Text(lastRefresh, style: .time)
-            }
-            
-            #if os(iOS)
-            BannerAd()
-                .frame(height: 50)
-            #endif
-            
         }
     }
     
