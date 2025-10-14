@@ -92,6 +92,8 @@ struct BusTripUpdateView: View {
             Spacer()
             
             Text(eventTime, style: .time)
+                .padding(2.0)
+                .foregroundColor(.black)
                 .background {
                     if name == stop.name && eventTime > Date() {
                         RoundedRectangle(cornerRadius: 4.0)
