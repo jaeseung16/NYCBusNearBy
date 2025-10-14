@@ -40,14 +40,22 @@ struct BusTripUpdateView: View {
             }
             
             if #available(iOS 17.0, *) {
-                Map(initialPosition: MapCameraPosition.region(region.wrappedValue), bounds: MapCameraBounds(centerCoordinateBounds: region.wrappedValue), interactionModes: .all) {
-                    UserAnnotation()
-                    
-                    ForEach(stopTimeUpdates) { stopTimeUpdate in
-                        if let stop = viewModel.stopsById[stopTimeUpdate.id], let eventTime = stopTimeUpdate.eventTime {
-                            Annotation("", coordinate: stop.getCLLocationCoordinate2D()) {
-                                annotationLabel(stop.name, at: eventTime)
+                MapReader { proxy in
+                    Map(initialPosition: MapCameraPosition.region(region.wrappedValue), interactionModes: .all) {
+                        UserAnnotation()
+                        
+                        ForEach(stopTimeUpdates) { stopTimeUpdate in
+                            if let stop = viewModel.stopsById[stopTimeUpdate.id], let eventTime = stopTimeUpdate.eventTime {
+                                Annotation("", coordinate: stop.getCLLocationCoordinate2D()) {
+                                    annotationLabel(stop.name, at: eventTime)
+                                }
                             }
+                        }
+                    }
+                    .onMapCameraChange { context in
+                        let region = context.region
+                        DispatchQueue.main.async {
+                            viewModel.region = region
                         }
                     }
                 }
@@ -74,19 +82,27 @@ struct BusTripUpdateView: View {
     
     private func stopTimeView(_ name: String, eventTime: Date) -> some View {
         HStack {
-            Text("\(name)")
+            if name == stop.name && eventTime > Date() {
+                Text("\(name)")
+                    .font(.headline)
+            } else {
+                Text("\(name)")
+            }
             
             Spacer()
             
             Text(eventTime, style: .time)
+                .background {
+                    if name == stop.name && eventTime > Date() {
+                        RoundedRectangle(cornerRadius: 4.0)
+                            .foregroundStyle(.orange)
+                    } else if eventTime > Date() {
+                        RoundedRectangle(cornerRadius: 4.0)
+                            .foregroundStyle(.teal)
+                    }
+                }
         }
         .foregroundColor(eventTime < Date() ? .secondary : .primary)
-        .background {
-            if name == stop.name && eventTime > Date() {
-                RoundedRectangle(cornerRadius: 1.0)
-                    .foregroundStyle(.orange)
-            }
-        }
     }
     
     private func annotationLabel(_ name: String, at eventTime: Date) -> some View {
