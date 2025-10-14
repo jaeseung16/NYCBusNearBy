@@ -30,6 +30,8 @@ struct BusesAtStopView: View {
     var body: some View {
         VStack {
             Text(stop.name)
+                .font(.title3)
+                .bold()
             
             if #available(iOS 17.0, *) {
                 MapReader { proxy in
