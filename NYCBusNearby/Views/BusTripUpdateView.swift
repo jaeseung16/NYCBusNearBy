@@ -40,7 +40,7 @@ struct BusTripUpdateView: View {
             }
             
             if #available(iOS 17.0, *) {
-                Map(initialPosition: MapCameraPosition.region(region.wrappedValue), bounds: MapCameraBounds(centerCoordinateBounds: region.wrappedValue), interactionModes: .zoom) {
+                Map(initialPosition: MapCameraPosition.region(region.wrappedValue), bounds: MapCameraBounds(centerCoordinateBounds: region.wrappedValue), interactionModes: .all) {
                     UserAnnotation()
                     
                     ForEach(stopTimeUpdates) { stopTimeUpdate in
