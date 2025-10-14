@@ -29,11 +29,16 @@ struct BusTripUpdateView: View {
         }
     }
     
+    var bus: MTABus
     var tripUpdate: MTABusTripUpdate
     var stop: MTABusStop
     
     var body: some View {
         VStack {
+            if let routeId = bus.routeId {
+                Text(routeId)
+            }
+            
             if #available(iOS 17.0, *) {
                 Map(initialPosition: MapCameraPosition.region(region.wrappedValue), bounds: MapCameraBounds(centerCoordinateBounds: region.wrappedValue), interactionModes: .zoom) {
                     UserAnnotation()

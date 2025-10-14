@@ -29,6 +29,8 @@ struct BusesAtStopView: View {
     
     var body: some View {
         VStack {
+            Text(stop.name)
+            
             if #available(iOS 17.0, *) {
                 MapReader { proxy in
                     Map(initialPosition: MapCameraPosition.region(region.wrappedValue), interactionModes: .all) {

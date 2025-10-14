@@ -45,39 +45,37 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            locationLabel
-            
-            if !busesNearby.isEmpty {
-                NavigationSplitView {
-                    List(stopsNearby, id: \.self, selection: $selectedStop) { stop in
-                        NavigationLink(value: stop) {
-                            if kmSelected {
-                                BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .km)
-                            } else {
-                                BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .mile)
+            NavigationSplitView {
+                VStack {
+                    locationLabel
+                    if !busesNearby.isEmpty {
+                        List(stopsNearby, id: \.self, selection: $selectedStop) { stop in
+                            NavigationLink(value: stop) {
+                                if kmSelected {
+                                    BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .km)
+                                } else {
+                                    BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .mile)
+                                }
                             }
                         }
                     }
-                } content: {
-                    if let stop = selectedStop, let buses = getSortedBuses(at: stop) {
-                        BusesAtStopView(stop: stop, buses: buses, selectedBus: $selectedBus)
-                        .navigationTitle(stop.name)
-                    }
-                } detail: {
-                    if let stop = selectedStop, let bus = selectedBus, let tripUpdate = getTripUpdates(for: bus, near: stop) {
-                        BusTripUpdateView(tripUpdate: tripUpdate, stop: stop)
-                            .navigationTitle(bus.routeId ?? "")
-                    } else {
-                        EmptyView()
-                    }
+                    
+                    Spacer()
+                    
+                    bottomView
                 }
-                .navigationSplitViewStyle(.balanced)
+            } content: {
+                if let stop = selectedStop, let buses = getSortedBuses(at: stop) {
+                    BusesAtStopView(stop: stop, buses: buses, selectedBus: $selectedBus)
+                }
+            } detail: {
+                if let stop = selectedStop, let bus = selectedBus, let tripUpdate = getTripUpdates(for: bus, near: stop) {
+                    BusTripUpdateView(bus: bus, tripUpdate: tripUpdate, stop: stop)
+                } else {
+                    EmptyView()
+                }
             }
-            
-            Spacer()
-            
-            bottomView
-            
+            .navigationSplitViewStyle(.balanced)
         }
         .padding()
         .overlay {
