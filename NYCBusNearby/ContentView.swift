@@ -188,6 +188,7 @@ struct ContentView: View {
                 } label: {
                     Label("Settings", systemImage: "gear")
                 }
+                .padding(5.0)
                 .glassEffect()
                 
                 Spacer()
@@ -197,6 +198,7 @@ struct ContentView: View {
                 } label: {
                     Label("Refresh", systemImage: "arrow.clockwise.circle")
                 }
+                .padding(5.0)
                 .disabled(!refreshable)
                 .glassEffect()
                 
