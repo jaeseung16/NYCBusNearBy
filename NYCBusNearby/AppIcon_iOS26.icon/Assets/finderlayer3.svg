@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_3_Layer" data-name="3 – Layer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fccc0a;
+      }
+
+      .cls-2 {
+        fill: #ff8000;
+      }
+
+      .cls-2, .cls-3, .cls-4 {
+        font-family: Arial-BoldMT, Arial;
+        font-size: 144px;
+        font-weight: 700;
+      }
+
+      .cls-3 {
+        fill: blue;
+      }
+
+      .cls-4 {
+        fill: #fff;
+        letter-spacing: -.02em;
+      }
+
+      .cls-5 {
+        stroke: #000;
+        stroke-miterlimit: 10;
+        stroke-width: 5px;
+      }
+    </style>
+  </defs>
+  <line class="cls-5" x1="490.85" y1="373.39" x2="489.05" y2="574.99"/>
+  <line class="cls-5" x1="489.95" y1="474.64" x2="305.45" y2="692.89"/>
+  <line class="cls-5" x1="533.15" y1="373.39" x2="534.95" y2="574.99"/>
+  <line class="cls-5" x1="534.05" y1="474.64" x2="718.55" y2="692.89"/>
+  <text class="cls-3" transform="translate(185.11 288.04)"><tspan x="0" y="0">N</tspan></text>
+  <text class="cls-4" transform="translate(463.34 288.04)"><tspan x="0" y="0">Y</tspan></text>
+  <text class="cls-2" transform="translate(734.44 288.11)"><tspan x="0" y="0">C</tspan></text>
+  <circle class="cls-1" cx="314.2" cy="766.53" r="27.5"/>
+  <circle class="cls-1" cx="244.2" cy="766.53" r="27.5"/>
+  <circle class="cls-1" cx="779.8" cy="766.53" r="27.5"/>
+  <circle class="cls-1" cx="709.8" cy="766.53" r="27.5"/>
+</svg>

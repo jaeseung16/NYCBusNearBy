@@ -43,41 +43,55 @@ struct ContentView: View {
         distanceUnit == .km
     }
     
+    private let refreshThreshold: TimeInterval = 60
+    
+    private var interval: ClosedRange<Date> {
+        let start = lastRefresh
+        let end = lastRefresh.addingTimeInterval(refreshThreshold)
+        return start...end
+    }
+    
     var body: some View {
         VStack {
-            locationLabel
-            
-            if !busesNearby.isEmpty {
-                NavigationSplitView {
-                    List(stopsNearby, id: \.self, selection: $selectedStop) { stop in
-                        NavigationLink(value: stop) {
-                            if kmSelected {
-                                BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .km)
-                            } else {
-                                BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .mile)
+            NavigationSplitView {
+                VStack {
+                    locationLabel
+                    
+                    ZStack {
+                        if !busesNearby.isEmpty {
+                            List(stopsNearby, id: \.self, selection: $selectedStop) { stop in
+                                NavigationLink(value: stop) {
+                                    if kmSelected {
+                                        BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .km)
+                                    } else {
+                                        BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .mile)
+                                    }
+                                }
                             }
                         }
+                        
+                        bottomView
                     }
-                } content: {
-                    if let stop = selectedStop, let buses = getSortedBuses(at: stop) {
-                        BusesAtStopView(stop: stop, buses: buses, selectedBus: $selectedBus)
-                        .navigationTitle(stop.name)
-                    }
-                } detail: {
-                    if let stop = selectedStop, let bus = selectedBus, let tripUpdate = getTripUpdates(for: bus, near: stop) {
-                        BusTripUpdateView(tripUpdate: tripUpdate, stop: stop)
-                            .navigationTitle(bus.routeId ?? "")
-                    } else {
-                        EmptyView()
-                    }
+                    
+                    Spacer()
+                    
+#if os(iOS)
+BannerAd()
+    .frame(height: 50)
+#endif
                 }
-                .navigationSplitViewStyle(.balanced)
+            } content: {
+                if let stop = selectedStop, let buses = getSortedBuses(at: stop) {
+                    BusesAtStopView(stop: stop, buses: buses, selectedBus: $selectedBus)
+                }
+            } detail: {
+                if let stop = selectedStop, let bus = selectedBus, let tripUpdate = getTripUpdates(for: bus, near: stop) {
+                    BusTripUpdateView(bus: bus, tripUpdate: tripUpdate, stop: stop)
+                } else {
+                    EmptyView()
+                }
             }
-            
-            Spacer()
-            
-            bottomView
-            
+            .navigationSplitViewStyle(.balanced)
         }
         .padding()
         .overlay {
@@ -100,12 +114,16 @@ struct ContentView: View {
             updateStopsAndTrainsNearby()
         }
         .onReceive(timer) { _ in
-            refreshable = lastRefresh.distance(to: Date()) > 60
+            if !refreshable && lastRefresh.distance(to: Date()) > refreshThreshold {
+                withAnimation {
+                    refreshable = true
+                }
+            }
         }
-        .onChange(of: maxComing) { newValue in
+        .onChange(of: maxComing) { _, newValue in
             viewModel.maxComing = newValue
         }
-        .onChange(of: presentSettings) { _ in
+        .onChange(of: presentSettings) { _, _ in
             if viewModel.maxDistance != maxDistance {
                 viewModel.maxDistance = maxDistance
                 updateStopsAndTrainsNearby()
@@ -182,39 +200,44 @@ struct ContentView: View {
     
     private var bottomView: some View {
         VStack {
-            HStack {
-                Spacer()
-                
-                Button {
-                    presentSettings = true
-                } label: {
-                    Label("Settings", systemImage: "gear")
-                }
-                
-                Spacer()
+            Spacer()
+            
+            GlassEffectContainer {
+                HStack {
+                    Spacer()
+                    
+                    Button {
+                        presentSettings = true
+                    } label: {
+                        Label("Settings", systemImage: "gear")
+                    }
+                    .padding(5.0)
+                    .frame(width: 120.0)
+                    .glassEffect()
+                    
+                    Spacer()
 
-                Button {
-                    downloadAllDataByButton()
-                } label: {
-                    Label("Refresh", systemImage: "arrow.clockwise.circle")
+                    if refreshable {
+                        Button {
+                            downloadAllDataByButton()
+                        } label: {
+                            Label("Refresh", systemImage: "arrow.clockwise.circle")
+                        }
+                        .padding(5.0)
+                        .frame(width: 120.0)
+                        .glassEffect()
+                    } else {
+                        ProgressView(timerInterval: interval, countsDown: true)
+                            .progressViewStyle(.linear)
+                            .padding(5.0)
+                            .frame(width: 120.0)
+                            .glassEffect()
+                    }
+                    
+                    Spacer()
                 }
-                .disabled(!refreshable)
-                
-                Spacer()
+                .disabled(showProgress)
             }
-            .disabled(showProgress)
-            
-            HStack {
-                Spacer()
-                Text("Refreshed:")
-                Text(lastRefresh, style: .time)
-            }
-            
-            #if os(iOS)
-            BannerAd()
-                .frame(height: 50)
-            #endif
-            
         }
     }
     
@@ -230,15 +253,8 @@ struct ContentView: View {
         lastRefresh = Date()
         if viewModel.location?.coordinate != nil {
             Task {
-                var result = false
-                do {
-                    result = try await viewModel.getAllDataAsync()
-                } catch {
-                    presentAlertFeedUnavailable.toggle()
-                }
-                
+                let result = await viewModel.getAllDataAsync()
                 presentAlertFeedUnavailable = !result
-                
                 showProgress = false
                 updateStopsAndTrainsNearby()
             }

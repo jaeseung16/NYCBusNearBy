@@ -8,12 +8,15 @@
 import Foundation
 import CoreLocation
 import os
+@preconcurrency import MapKit
 
+@MainActor
 class LocationHelper {
     private static let logger = Logger()
     
+    private static let UNKNOWN = "Unknown"
+    
     let locationManager = CLLocationManager()
-    let geocoder = CLGeocoder()
     
     var delegate: CLLocationManagerDelegate? {
         didSet {
@@ -31,15 +34,16 @@ class LocationHelper {
         locationManager.requestWhenInUseAuthorization()
     }
     
-    func lookUpCurrentLocation(completionHandler: @escaping (String) -> Void) -> Void {
-        if let lastLocation = locationManager.location {
-            geocoder.reverseGeocodeLocation(lastLocation) { (placemarks, error) in
-                var userLocality = "Unknown"
-                if error == nil, let placemark = placemarks?[0] {
-                    userLocality = self.getUserLocality(from: placemark)
-                }
-                completionHandler(userLocality)
-            }
+    func lookUpCurrentLocation() async -> String {
+        guard let lastLocation = locationManager.location,
+              let request = MKReverseGeocodingRequest(location: lastLocation) else {
+            return LocationHelper.UNKNOWN
+        }
+        do {
+            let mapItems = try await request.mapItems
+            return mapItems.first?.name ?? LocationHelper.UNKNOWN
+        } catch {
+            return LocationHelper.UNKNOWN
         }
     }
     
