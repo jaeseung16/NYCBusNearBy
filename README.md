@@ -1,18 +1,22 @@
-# Description
+# NYCBusNearBy
 
-The app provides the information on train schedules at the subway stations in New York City near a user.
+<img src="./docs/assets/images/AppIcon_iOS26-iOS-Default-1024x1024@1x.png" width=100>
 
 [<img src="./docs/assets/images/App_Store_Badge.svg">](https://apps.apple.com/app/nyc-buses-near-me/id1665731412)
 
-# How to Use
+## Description
+
+The app provides the information on train schedules at the subway stations in New York City near a user.
+
+## How to Use
 
 [Demo video](https://www.youtube.com/watch?v=aqaZNByjI2c)
 
-## NYC bus stops near a user
+### NYC bus stops near a user
   - A list of NYC bus stops sorted by the distance from a user
   - A user can set the maximum distance (up to 3 km or 1.9 miles) to control the list
 
-## Bus schedules at a bus stop
+### Bus schedules at a bus stop
   - Accessible by selecting a bus stop
   - A map indicating the locations of a user and the selected stop
   - A list of buses sorted by the approximate arrival time
@@ -20,12 +24,12 @@ The app provides the information on train schedules at the subway stations in Ne
   - A user can download more recent information by clicking 'Refresh', which may be available ~1 minute after the last refresh.
     * The source of the bus schedules is the MTA's real-time data feeds (https://new.mta.info/developers)
   
-## Trip Schedule of a bus
+### Trip Schedule of a bus
   - Accessible by selecting a bus
   - A list of bus stops with estimated arrival times
   - A map indicating the locations of a user and the nearby bus stops with estimated arrival times
 
-# Version History
-## ver 1.2 (Oct 2025)
-## ver 1.1 (May 2024)
-## ver 1.0 (Feb 2023)
+## Version History
+### ver 1.2 (Oct 2025)
+### ver 1.1 (May 2024)
+### ver 1.0 (Feb 2023)
