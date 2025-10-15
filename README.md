@@ -24,3 +24,8 @@ The app provides the information on train schedules at the subway stations in Ne
   - Accessible by selecting a bus
   - A list of bus stops with estimated arrival times
   - A map indicating the locations of a user and the nearby bus stops with estimated arrival times
+
+# Version History
+## ver 1.2 (Oct 2025)
+## ver 1.1 (May 2024)
+## ver 1.0 (Feb 2023)
