@@ -28,43 +28,46 @@ struct BusesAtStopView: View {
     }
     
     var body: some View {
-        VStack {
-            Text(stop.name)
-                .font(.title3)
-                .bold()
-            
-            if #available(iOS 17.0, *) {
-                MapReader { proxy in
-                    Map(initialPosition: MapCameraPosition.region(region.wrappedValue), interactionModes: .all) {
-                        UserAnnotation()
-                        Marker("", coordinate: stop.getCLLocationCoordinate2D())
+        GeometryReader { geometry in
+            VStack {
+                Text(stop.name)
+                    .font(.title3)
+                    .bold()
+                
+                if #available(iOS 17.0, *) {
+                    MapReader { proxy in
+                        Map(initialPosition: MapCameraPosition.region(region.wrappedValue), interactionModes: .all) {
+                            UserAnnotation()
+                            Marker("", coordinate: stop.getCLLocationCoordinate2D())
+                        }
+                        .onMapCameraChange { context in
+                            let region = context.region
+                            DispatchQueue.main.async {
+                                viewModel.region = region
+                            }
+                        }
                     }
-                    .onMapCameraChange { context in
-                        let region = context.region
-                        DispatchQueue.main.async {
-                            viewModel.region = region
+                    .aspectRatio(CGSize(width: 1.0, height: 1.0), contentMode: .fit)
+                    .frame(width: 0.95 * geometry.size.width)
+                } else {
+                    Map(coordinateRegion: region, interactionModes: .zoom, showsUserLocation: true, annotationItems: [stop]) { place in
+                        MapMarker(coordinate: place.getCLLocationCoordinate2D())
+                    }
+                    .aspectRatio(CGSize(width: 1.0, height: 1.0), contentMode: .fit)
+                    .frame(width: 0.95 * geometry.size.width)
+                }
+                
+                List(buses, selection: $selectedBus) { bus in
+                    if bus.trip != nil, let eventTime = bus.eventTime, viewModel.isValid(eventTime) {
+                        NavigationLink(value: bus) {
+                            BusAtStopView(bus: bus, arrivalTime: eventTime)
                         }
                     }
                 }
-                .aspectRatio(CGSize(width: 1.0, height: 1.0), contentMode: .fit)
-            } else {
-                Map(coordinateRegion: region, interactionModes: .zoom, showsUserLocation: true, annotationItems: [stop]) { place in
-                    MapMarker(coordinate: place.getCLLocationCoordinate2D())
-                }
-                .aspectRatio(CGSize(width: 1.0, height: 1.0), contentMode: .fit)
+                
+                Spacer()
             }
-            
-            List(buses, selection: $selectedBus) { bus in
-                if bus.trip != nil, let eventTime = bus.eventTime, viewModel.isValid(eventTime) {
-                    NavigationLink(value: bus) {
-                        BusAtStopView(bus: bus, arrivalTime: eventTime)
-                    }
-                }
-            }
-            
-            Spacer()
         }
     }
-    
 }
 
