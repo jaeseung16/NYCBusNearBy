@@ -543,7 +543,7 @@
 			repositoryURL = "https://github.com/jaeseung16/PersistenceSwift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.4;
+				minimumVersion = 0.2.21;
 			};
 		};
 		9083657629721B520070A354 /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
@@ -551,7 +551,7 @@
 			repositoryURL = "https://github.com/apple/swift-protobuf.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				minimumVersion = 1.39.0;
 			};
 		};
 		908B77FE29857A0500445E12 /* XCRemoteSwiftPackageReference "MTAFeed-Swift" */ = {
@@ -567,7 +567,7 @@
 			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 12.11.0;
+				minimumVersion = 13.10.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
