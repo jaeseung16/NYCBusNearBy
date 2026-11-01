@@ -6,8 +6,8 @@
     {
       "layers" : [
         {
-          "image-name" : "finderlayer3.svg",
-          "name" : "finderlayer3"
+          "image-name" : "AppIcon_iOS26_layer3.png",
+          "name" : "AppIcon_iOS26_layer3"
         }
       ],
       "shadow" : {
@@ -22,9 +22,8 @@
     {
       "layers" : [
         {
-          "blend-mode" : "normal",
-          "image-name" : "finderlayer2.svg",
-          "name" : "finderlayer2"
+          "image-name" : "AppIcon_iOS26_layer2.png",
+          "name" : "AppIcon_iOS26_layer2"
         }
       ],
       "shadow" : {
@@ -39,8 +38,8 @@
     {
       "layers" : [
         {
-          "image-name" : "finderlayer1.svg",
-          "name" : "finderlayer1"
+          "image-name" : "AppIcon_iOS26_layer1.png",
+          "name" : "AppIcon_iOS26_layer1"
         }
       ],
       "shadow" : {
