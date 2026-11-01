@@ -57,10 +57,14 @@ struct BusesAtStopView: View {
                     .frame(width: 0.95 * geometry.size.width)
                 }
                 
-                List(buses, selection: $selectedBus) { bus in
-                    if bus.trip != nil, let eventTime = bus.eventTime, viewModel.isValid(eventTime) {
-                        NavigationLink(value: bus) {
-                            BusAtStopView(bus: bus, arrivalTime: eventTime)
+                if buses.isEmpty {
+                    ContentUnavailableView("No Buses", systemImage: "bus", description: Text("There are no buses to show. Please try again later or update the settings."))
+                } else {
+                    List(buses, selection: $selectedBus) { bus in
+                        if bus.trip != nil, let eventTime = bus.eventTime, viewModel.isValid(eventTime) {
+                            NavigationLink(value: bus) {
+                                BusAtStopView(bus: bus, arrivalTime: eventTime)
+                            }
                         }
                     }
                 }

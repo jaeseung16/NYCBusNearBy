@@ -82,8 +82,12 @@ BannerAd()
 #endif
                 }
             } content: {
-                if let stop = selectedStop, let buses = getSortedBuses(at: stop) {
-                    BusesAtStopView(stop: stop, buses: buses, selectedBus: $selectedBus)
+                if let stop = selectedStop {
+                    if let buses = getSortedBuses(at: stop) {
+                        BusesAtStopView(stop: stop, buses: buses, selectedBus: $selectedBus)
+                    } else {
+                        BusesAtStopView(stop: stop, buses: [], selectedBus: $selectedBus)
+                    }
                 }
             } detail: {
                 if let stop = selectedStop, let bus = selectedBus, let tripUpdate = getTripUpdates(for: bus, near: stop) {
