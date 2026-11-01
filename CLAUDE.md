@@ -1,0 +1,54 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Commands
+
+Single Xcode project, one target (`NYCBusNearby`), one shared scheme. There is no test target and no linter configured.
+
+```bash
+# Build for the iOS Simulator (verified; CODE_SIGNING_ALLOWED=NO avoids needing a signing identity)
+xcodebuild -project NYCBusNearby.xcodeproj -scheme NYCBusNearby \
+  -destination 'generic/platform=iOS Simulator' -configuration Debug CODE_SIGNING_ALLOWED=NO build
+
+# Resolve SPM packages / list schemes
+xcodebuild -list -project NYCBusNearby.xcodeproj
+```
+
+Run the app from Xcode (Cmd+R). The app needs a location to show anything, so use the simulator's Features > Location menu or a custom GPX location. Live bus data comes from the MTA feeds over the network.
+
+## Dependencies
+
+Swift Package Manager only (no CocoaPods/Carthage). Resolved in `NYCBusNearby.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`:
+- `MTAFeed` (jaeseung16/MTAFeed-Swift, tracks `main`): `MTAFeedDownloader`, `BusFeedURL`, `MTAFeedWrapper`, `MTAVehicle`, `MTATripUpdate`, `MTAAlert`. Its types are not in this repo, so look in the package source when changing feed handling.
+- `Persistence` (PersistenceSwift), `CodableCSV`, `GoogleMobileAds` (+ UMP), and `SwiftProtobuf`, which the app target links directly.
+
+Swift 6.0 language mode, iOS 26.0 deployment target. Views use iOS 26 APIs such as `glassEffect()` and `GlassEffectContainer`.
+
+## Architecture
+
+**App wiring.** `NYCBusNearbyApp` creates one `ViewModel` and injects it as an `@EnvironmentObject` into `ContentView`. `ViewModel` is `@MainActor` and owns nearly all state: static bus stops, trip headsigns, live feed data, and location. It also starts the ATT/AdMob setup in the app's `init`.
+
+**Data sources.** There are two, and they are loaded differently:
+1. *Static reference data* (bus stops and trip headsigns) lives in Core Data (`NYCBusNearby.xcdatamodeld`, entities `MTABusStopEntity` and `MTABusTripEntity`). On first launch the store is replaced with the bundled `Resources/NYCBusNearby.sqlite` (gated by the `launchedBefore` UserDefaults flag). If the store is empty, the app falls back to parsing `Resources/stops.txt` and `trips.txt` (GTFS-style CSV via CodableCSV) and writing them to Core Data. Once populated, the CSVs are not re-read, so edits to the `.txt` files do not take effect on installs that already have data.
+2. *Live data* comes from the MTA real-time feeds. `getAllDataAsync()` downloads every `BusFeedURL` case in parallel through a `TaskGroup`, then fills `tripUpdatesByTripId`, `vehiclesByStopId`, and `alerts`. It runs at launch and when the user taps Refresh.
+
+**Joining live data to stops.** `ViewModel.buses(within:from:)` is the core logic. It takes the stops within a radius, walks all trip updates, and matches each `stopTimeUpdate.stopId` against those stops. MTA stop IDs carry a direction suffix (`N`/`S`), which is stripped before the lookup in `stopsById`. Results are grouped as `[MTABusStop: [MTABus]]`. Arrival times are filtered with `isValid` (`maxAgo` to `maxComing`).
+
+**UI flow.** `ContentView` is a three-column `NavigationSplitView`:
+- sidebar: `stopsNearby` (`BusStopRowView`), sorted by distance
+- content: `BusesAtStopView` for the selected stop
+- detail: `BusTripUpdateView` for the selected bus, showing its remaining stops and ETAs
+
+Selecting a stop or bus is tracked with `selectedStop` and `selectedBus` `@State`. Helper methods on `ContentView` (`getSortedBuses`, `getTripUpdates`) turn the view model's data into what each column shows.
+
+**Refresh and settings.** `ContentView` polls every 10 seconds with a `Timer` publisher. After 60 seconds (`refreshThreshold`) it enables the Refresh button, and the progress ring counts down until then. User settings (`maxDistance`, `maxComing`, `distanceUnit`) are stored with `@AppStorage` in `ContentView`, and `ViewModel` reads the same UserDefaults keys at init. Changes are pushed to the view model through `onChange` and when the settings sheet is dismissed. Setting `maxDistance` on the view model also recomputes the map `region`.
+
+**Location.** `LocationHelper` wraps `CLLocationManager`. It forwards location updates to `ViewModel` (via `CLLocationManagerDelegate`) and does reverse geocoding with `MKReverseGeocodingRequest` for the locality label.
+
+**Ads.** `AdMob/BannerAd.swift` wraps a `BannerAdViewController` in a `UIViewControllerRepresentable`. It is shown only on iOS (`#if os(iOS)`) at the bottom of the sidebar.
+
+## Other notes
+
+- Documentation lives in `docs/`. Worklog entries go in `docs/worklogs/`, named `YYYY-MM-DD-<topic>.md`.
+- `README.md` describes the app as showing subway stations. It is a bus app; the README copy is out of date.
