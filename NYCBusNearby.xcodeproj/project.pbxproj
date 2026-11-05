@@ -558,8 +558,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jaeseung16/MTAFeed-Swift";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.3.0;
 			};
 		};
 		90A1EDE32BDC5E02001533FA /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
