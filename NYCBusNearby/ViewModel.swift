@@ -16,11 +16,11 @@ import MTAFeed
 
 @MainActor
 class ViewModel: NSObject, ObservableObject {
-    private static let logger = Logger()
+    nonisolated private static let logger = Logger()
     
     var mtaStops = [MTABusStop]()
     
-    private static func read<T>(from resource: String, type: T.Type) -> [T] where T: Decodable {
+    nonisolated private static func read<T>(from resource: String, type: T.Type) -> [T] where T: Decodable {
         guard let stopsURL = Bundle.main.url(forResource: resource, withExtension: "txt") else {
             ViewModel.logger.error("No file named \(resource).txt")
             return [T]()
@@ -90,32 +90,19 @@ class ViewModel: NSObject, ObservableObject {
         self.userLocalityUpdated.toggle()
     }
     
-    //private let persistence = Persistence(name: "NYCBusNearby", identifier: "com.resonance.jlee.NYCBusNearby", isCloud: false)
+    private static let stopsDataVersionKey = "stopsDataVersion"
     
-    private lazy var persistenceContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "NYCBusNearby")
-            
-        if !self.launchedBefore {
-            if let storeUrl = container.persistentStoreDescriptions.first?.url,
-               let seededDataUrl = Bundle.main.url(forResource: "NYCBusNearby", withExtension: "sqlite") {
-                do {
-                    try container.persistentStoreCoordinator.replacePersistentStore(at: storeUrl,
-                                                                                    destinationOptions: nil,
-                                                                                    withPersistentStoreFrom: seededDataUrl,
-                                                                                    sourceOptions: nil,
-                                                                                    type: .sqlite)
-                    
-                    UserDefaults.standard.setValue(true, forKey: "launchedBefore")
-                } catch {
-                    ViewModel.logger.error("Couln't replace: \(error.localizedDescription, privacy: .public)")
-                }
-            } else {
-                ViewModel.logger.log("persistenceStore=\(container.persistentStoreDescriptions.first?.url?.absoluteString ?? "")")
-                ViewModel.logger.log("bundle=\(Bundle.main.url(forResource: "NYCBusNearby", withExtension: "sqlite")?.absoluteString ?? "")")
-                //fatalError("Cannot unwrap URLs!")
-            }
+    /// Identifies the bundled `stops.txt`. Written by `scripts/update_gtfs.py`.
+    private nonisolated static var bundledStopsDataVersion: String? {
+        guard let url = Bundle.main.url(forResource: "gtfs_version", withExtension: "txt"),
+              let version = try? String(contentsOf: url, encoding: .utf8) else {
+            return nil
         }
-        
+        return version.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
+    private let persistenceContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "NYCBusNearby")
         container.loadPersistentStores { storeDescription, error in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
@@ -124,15 +111,14 @@ class ViewModel: NSObject, ObservableObject {
         ViewModel.logger.log("container=\(container.persistentStoreDescriptions.first?.url?.absoluteString ?? "")")
         return container
     }()
-
-    private var launchedBefore = false
+    
+    /// Toggled when `mtaStops` has been loaded.
+    @Published var stopsLoaded = false
     
     override init() {
         super.init()
         
         locationHelper.delegate = self
-        
-        launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
         
         if let _ = UserDefaults.standard.object(forKey: "maxDistance") {
             self.maxDistance = UserDefaults.standard.double(forKey: "maxDistance")
@@ -142,81 +128,87 @@ class ViewModel: NSObject, ObservableObject {
             self.maxComing = UserDefaults.standard.double(forKey: "maxComing")
         }
         
-        populateBusStops()
+        // Replaced by `stopsDataVersion`.
+        UserDefaults.standard.removeObject(forKey: "launchedBefore")
+        
         populateHeadsigns()
+        
+        Task {
+            await populateBusStops()
+        }
         
         Task {
             self.feedAvailable = await getAllDataAsync()
         }
-        
-        ViewModel.logger.log("# of stops = \(self.mtaStops.count)")
     }
     
-    func populateBusStops() -> Void {
-        let fetchRequest = NSFetchRequest<MTABusStopEntity>(entityName: "MTABusStopEntity")
+    /// Loads stops from Core Data, first re-importing the bundled `stops.txt` if it changed since the last import.
+    func populateBusStops() async {
+        let bundledVersion = ViewModel.bundledStopsDataVersion
+        let importedVersion = UserDefaults.standard.string(forKey: ViewModel.stopsDataVersionKey)
         
-        var fetchedEntities = [MTABusStopEntity]()
+        if bundledVersion == nil || bundledVersion != importedVersion {
+            do {
+                let count = try await ViewModel.importBundledStops(into: persistenceContainer)
+                ViewModel.logger.log("Imported \(count) stops, version=\(bundledVersion ?? "nil", privacy: .public)")
+                if let bundledVersion {
+                    UserDefaults.standard.set(bundledVersion, forKey: ViewModel.stopsDataVersionKey)
+                }
+            } catch {
+                ViewModel.logger.error("Failed to import stops: \(error.localizedDescription, privacy: .public)")
+            }
+        }
+        
+        let fetchRequest = NSFetchRequest<MTABusStopEntity>(entityName: "MTABusStopEntity")
         do {
-            fetchedEntities = try persistenceContainer.viewContext.fetch(fetchRequest)
+            mtaStops = getMTABusStops(from: try persistenceContainer.viewContext.fetch(fetchRequest))
         } catch {
             ViewModel.logger.error("Failed to fetch: \(error.localizedDescription)")
         }
         
-        if fetchedEntities.isEmpty {
-            var count = 0
-            let viewContext = persistenceContainer.viewContext
-            
-            mtaStops = Array(Set(ViewModel.read(from: "stops", type: MTABusStop.self)))
-            
-            mtaStops.forEach { stop in
-                let entity = MTABusStopEntity(context: viewContext)
-                entity.stop_id = stop.id
-                entity.name = stop.name
-                entity.desc = stop.desc
-                entity.latitude = stop.latitude
-                entity.longitude = stop.longitude
-                
-                count += 1
-                
-                do {
-                    try viewContext.save()
-                } catch {
-                    ViewModel.logger.error("Failed to save \(entity): \(error.localizedDescription)")
-                }
-            }
-            
-        } else {
-            mtaStops = getMTABusStops(from: fetchedEntities)
+        if mtaStops.isEmpty {
+            // The store is unusable; fall back to the bundled file so the app still works.
+            mtaStops = ViewModel.read(from: "stops", type: MTABusStop.self)
         }
         
-        stopsById = Dictionary(uniqueKeysWithValues: mtaStops.map { ($0.id, $0) })
+        stopsById = Dictionary(mtaStops.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        ViewModel.logger.log("# of stops = \(self.mtaStops.count)")
+        stopsLoaded.toggle()
     }
     
+    /// Replaces every stop in the store with the bundled `stops.txt`, in one background batch delete and one batch insert.
+    private nonisolated static func importBundledStops(into container: NSPersistentContainer) async throws -> Int {
+        try await container.performBackgroundTask { context in
+            let stops = ViewModel.read(from: "stops", type: MTABusStop.self)
+            guard !stops.isEmpty else {
+                throw CocoaError(.fileReadCorruptFile)
+            }
+            
+            let delete = NSBatchDeleteRequest(fetchRequest: NSFetchRequest<NSFetchRequestResult>(entityName: "MTABusStopEntity"))
+            try context.execute(delete)
+            
+            let objects: [[String: Any]] = stops.map {
+                ["stop_id": $0.id, "name": $0.name, "desc": $0.desc, "latitude": $0.latitude, "longitude": $0.longitude]
+            }
+            let insert = NSBatchInsertRequest(entityName: "MTABusStopEntity", objects: objects)
+            insert.resultType = .count
+            let result = try context.execute(insert) as? NSBatchInsertResult
+            return result?.result as? Int ?? stops.count
+        }
+    }
     
     func getMTABusStops(from entities: [MTABusStopEntity]) -> [MTABusStop] {
-        var count = 0
-
-        var mtaBusStops = [MTABusStop]()
-        
-        entities.forEach { entity in
-            if let id = entity.stop_id {
-                let mtaBusTrip = MTABusStop(id: id,
-                                            name: entity.name ?? "",
-                                            desc: entity.desc ?? "",
-                                            latitude: entity.latitude,
-                                            longitude: entity.longitude)
-                
-                mtaBusStops.append(mtaBusTrip)
-                
-                count += 1
-            }
+        let mtaBusStops = entities.compactMap { entity -> MTABusStop? in
+            guard let id = entity.stop_id else { return nil }
+            return MTABusStop(id: id,
+                              name: entity.name ?? "",
+                              desc: entity.desc ?? "",
+                              latitude: entity.latitude,
+                              longitude: entity.longitude)
         }
-        
-        ViewModel.logger.log("Loaded \(count) entities")
-        
-        return Array(Set(mtaBusStops))
+        ViewModel.logger.log("Loaded \(mtaBusStops.count) entities")
+        return mtaBusStops
     }
-    
     
     func populateHeadsigns() -> Void {
         let headsigns = ViewModel.read(from: "route_headsigns", type: MTABusRouteHeadsign.self)

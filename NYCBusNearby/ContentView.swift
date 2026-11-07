@@ -118,6 +118,9 @@ BannerAd()
         .onReceive(viewModel.$locationUpdated) { _ in
             updateStopsAndTrainsNearby()
         }
+        .onReceive(viewModel.$stopsLoaded) { _ in
+            updateStopsAndTrainsNearby()
+        }
         .onReceive(timer) { _ in
             if !refreshable && lastRefresh.distance(to: Date()) > refreshThreshold {
                 withAnimation {
@@ -166,7 +169,8 @@ BannerAd()
     }
     
     private func updateStopsAndTrainsNearby() -> Void {
-        if let coordinate = viewModel.location?.coordinate {
+        // Stops load in the background; don't conclude "not in NYC" before they arrive.
+        if let coordinate = viewModel.location?.coordinate, !viewModel.mtaStops.isEmpty {
             location = coordinate
             stopsNearby = viewModel.stops(within: maxDistance, from: location)
             busesNearby = viewModel.buses(within: maxDistance, from: location)
