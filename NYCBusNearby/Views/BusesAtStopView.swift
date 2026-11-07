@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import MTAFeed
 
 struct BusesAtStopView: View {
     @EnvironmentObject private var viewModel: ViewModel
@@ -14,6 +15,10 @@ struct BusesAtStopView: View {
     var stop: MTABusStop
     var buses: [MTABus]
     @Binding var selectedBus: MTABus?
+    
+    private var alerts: [MTAAlert] {
+        viewModel.activeAlerts(routeIds: Set(buses.compactMap { $0.routeId }.filter { !$0.isEmpty }))
+    }
     
     private var region : Binding<MKCoordinateRegion> {
         Binding {
@@ -33,6 +38,8 @@ struct BusesAtStopView: View {
                 Text(stop.name)
                     .font(.title3)
                     .bold()
+                
+                ServiceAlertsButton(alerts: alerts)
                 
                 if #available(iOS 17.0, *) {
                     MapReader { proxy in
@@ -63,7 +70,8 @@ struct BusesAtStopView: View {
                     List(buses, selection: $selectedBus) { bus in
                         if bus.trip != nil, let eventTime = bus.eventTime, viewModel.isValid(eventTime) {
                             NavigationLink(value: bus) {
-                                BusAtStopView(bus: bus, arrivalTime: eventTime)
+                                BusAtStopView(bus: bus, arrivalTime: eventTime,
+                                              hasAlert: viewModel.alertedRouteIds.contains(bus.routeId ?? ""))
                             }
                         }
                     }

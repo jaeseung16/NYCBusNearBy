@@ -8,13 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		90504D652973556700BDE429 /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90504D642973556700BDE429 /* LocationHelper.swift */; };
-		9A1B2C3D4E5F60718293A4C1 /* gtfs_version.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D4E5F60718293A4C2 /* gtfs_version.txt */; };
-		9A1B2C3D4E5F60718293A4B1 /* route_headsigns.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D4E5F60718293A4B2 /* route_headsigns.txt */; };
 		90504D68297357C200BDE429 /* routes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 90504D67297357C200BDE429 /* routes.txt */; };
 		90504D6E29735F8600BDE429 /* MTABusStop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90504D6D29735F8600BDE429 /* MTABusStop.swift */; };
 		90504D712973601100BDE429 /* CodableCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 90504D702973601100BDE429 /* CodableCSV */; };
 		906AA4CC29745534000841BD /* DistanceUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4CB29745534000841BD /* DistanceUnit.swift */; };
-		9A1B2C3D4E5F60718293A4B3 /* MTABusRouteHeadsign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D4E5F60718293A4B4 /* MTABusRouteHeadsign.swift */; };
 		906AA4CE29745974000841BD /* MTABus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4CD29745974000841BD /* MTABus.swift */; };
 		906AA4D229745B65000841BD /* BusesAtStopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4D129745B65000841BD /* BusesAtStopView.swift */; };
 		906AA4D42974A496000841BD /* BusTripUpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4D32974A496000841BD /* BusTripUpdateView.swift */; };
@@ -39,20 +36,21 @@
 		90A1EDE52BDC5E02001533FA /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 90A1EDE42BDC5E02001533FA /* GoogleMobileAds */; };
 		90A1EDE72BDC616E001533FA /* BusStopRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A1EDE62BDC616E001533FA /* BusStopRowView.swift */; };
 		90E0D0392E9EF43E008A4487 /* AppIcon_iOS26.icon in Resources */ = {isa = PBXBuildFile; fileRef = 90E0D0382E9EF43E008A4487 /* AppIcon_iOS26.icon */; };
+		9A1B2C3D4E5F60718293A4B1 /* route_headsigns.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D4E5F60718293A4B2 /* route_headsigns.txt */; };
+		9A1B2C3D4E5F60718293A4B3 /* MTABusRouteHeadsign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D4E5F60718293A4B4 /* MTABusRouteHeadsign.swift */; };
+		9A1B2C3D4E5F60718293A4C1 /* gtfs_version.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D4E5F60718293A4C2 /* gtfs_version.txt */; };
+		9A1B2C3D4E5F60718293A4D1 /* MTAAlertText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D4E5F60718293A4D2 /* MTAAlertText.swift */; };
+		9A1B2C3D4E5F60718293A4E1 /* ServiceAlertsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D4E5F60718293A4E2 /* ServiceAlertsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		90504D642973556700BDE429 /* LocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelper.swift; sourceTree = "<group>"; };
-		9A1B2C3D4E5F60718293A4C2 /* gtfs_version.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = gtfs_version.txt; sourceTree = "<group>"; };
-		9A1B2C3D4E5F60718293A4B2 /* route_headsigns.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = route_headsigns.txt; sourceTree = "<group>"; };
 		90504D67297357C200BDE429 /* routes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = routes.txt; sourceTree = "<group>"; };
 		90504D6D29735F8600BDE429 /* MTABusStop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusStop.swift; sourceTree = "<group>"; };
 		906AA4CB29745534000841BD /* DistanceUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceUnit.swift; sourceTree = "<group>"; };
-		9A1B2C3D4E5F60718293A4B4 /* MTABusRouteHeadsign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusRouteHeadsign.swift; sourceTree = "<group>"; };
 		906AA4CD29745974000841BD /* MTABus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABus.swift; sourceTree = "<group>"; };
 		906AA4D129745B65000841BD /* BusesAtStopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusesAtStopView.swift; sourceTree = "<group>"; };
 		906AA4D32974A496000841BD /* BusTripUpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusTripUpdateView.swift; sourceTree = "<group>"; };
-		9A1B2C3D4E5F60718293A4B5 /* NYCBusNearby 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "NYCBusNearby 2.xcdatamodel"; sourceTree = "<group>"; };
 		9082C1D1297590D7004D7130 /* NYCBusTrips.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NYCBusTrips.xcdatamodel; sourceTree = "<group>"; };
 		9082C1D52975BA96004D7130 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9082C1D62975BE95004D7130 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -71,6 +69,12 @@
 		908B78032985BEB700445E12 /* MTABusStopTimeUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusStopTimeUpdate.swift; sourceTree = "<group>"; };
 		90A1EDE62BDC616E001533FA /* BusStopRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopRowView.swift; sourceTree = "<group>"; };
 		90E0D0382E9EF43E008A4487 /* AppIcon_iOS26.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon_iOS26.icon; sourceTree = "<group>"; };
+		9A1B2C3D4E5F60718293A4B2 /* route_headsigns.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = route_headsigns.txt; sourceTree = "<group>"; };
+		9A1B2C3D4E5F60718293A4B4 /* MTABusRouteHeadsign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusRouteHeadsign.swift; sourceTree = "<group>"; };
+		9A1B2C3D4E5F60718293A4B5 /* NYCBusNearby 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "NYCBusNearby 2.xcdatamodel"; sourceTree = "<group>"; };
+		9A1B2C3D4E5F60718293A4C2 /* gtfs_version.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = gtfs_version.txt; sourceTree = "<group>"; };
+		9A1B2C3D4E5F60718293A4D2 /* MTAAlertText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTAAlertText.swift; sourceTree = "<group>"; };
+		9A1B2C3D4E5F60718293A4E2 /* ServiceAlertsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceAlertsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +121,7 @@
 				906AA4D129745B65000841BD /* BusesAtStopView.swift */,
 				906AA4D32974A496000841BD /* BusTripUpdateView.swift */,
 				9086A2812BDEA0EB00220FCC /* BusAtStopView.swift */,
+				9A1B2C3D4E5F60718293A4E2 /* ServiceAlertsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -171,6 +176,7 @@
 				90504D642973556700BDE429 /* LocationHelper.swift */,
 				906AA4CD29745974000841BD /* MTABus.swift */,
 				9A1B2C3D4E5F60718293A4B4 /* MTABusRouteHeadsign.swift */,
+				9A1B2C3D4E5F60718293A4D2 /* MTAAlertText.swift */,
 				90504D6D29735F8600BDE429 /* MTABusStop.swift */,
 				90836564297218B20070A354 /* MTAFeedConstant.swift */,
 				908B78012985BAF500445E12 /* MTABusTripUpdate.swift */,
@@ -290,12 +296,14 @@
 				90A1EDE72BDC616E001533FA /* BusStopRowView.swift in Sources */,
 				906AA4CE29745974000841BD /* MTABus.swift in Sources */,
 				9A1B2C3D4E5F60718293A4B3 /* MTABusRouteHeadsign.swift in Sources */,
+				9A1B2C3D4E5F60718293A4D1 /* MTAAlertText.swift in Sources */,
 				906AA4D42974A496000841BD /* BusTripUpdateView.swift in Sources */,
 				90836552297217AD0070A354 /* NYCBusNearbyApp.swift in Sources */,
 				908B78022985BAF500445E12 /* MTABusTripUpdate.swift in Sources */,
 				906AA4D229745B65000841BD /* BusesAtStopView.swift in Sources */,
 				9082C1D72975BE95004D7130 /* SettingsView.swift in Sources */,
 				9086A2822BDEA0EB00220FCC /* BusAtStopView.swift in Sources */,
+				9A1B2C3D4E5F60718293A4E1 /* ServiceAlertsView.swift in Sources */,
 				906AA4CC29745534000841BD /* DistanceUnit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

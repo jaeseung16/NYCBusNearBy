@@ -37,6 +37,8 @@ Swift 6.0 language mode, iOS 26.0 deployment target. Views use iOS 26 APIs such 
 
 **Joining live data to stops.** `ViewModel.buses(within:from:)` is the core logic. It takes the stops within a radius, walks all trip updates, and matches each `stopTimeUpdate.stopId` against those stops. MTA stop IDs carry a direction suffix (`N`/`S`), which is stripped before the lookup in `stopsById`. Results are grouped as `[MTABusStop: [MTABus]]`. Arrival times are filtered with `isValid` (`maxAgo` to `maxComing`).
 
+**Alerts and cancellations.** Bus alerts name routes (rarely trips) through `MTAAlert.informedEntities`. `ViewModel.activeAlerts(routeIds:tripId:)` filters them by `isActive()`, and `alertedRouteIds` is recomputed after each download. Alert text is HTML with entities such as `&#x200c;`. Always display `plainHeaderText` and `plainDescriptionText` (`Model/MTAAlertText.swift`), not the raw fields; the description also drops the header that it repeats. `ServiceAlertsButton` (`Views/ServiceAlertsView.swift`) shows the alerts in a sheet in `BusesAtStopView` and `BusTripUpdateView`. A trip whose `schedule_relationship` is CANCELED is shown as canceled (`MTABus.isCanceled`) rather than hidden.
+
 **UI flow.** `ContentView` is a three-column `NavigationSplitView`:
 - sidebar: `stopsNearby` (`BusStopRowView`), sorted by distance
 - content: `BusesAtStopView` for the selected stop

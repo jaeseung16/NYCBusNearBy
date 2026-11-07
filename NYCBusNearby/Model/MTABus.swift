@@ -31,4 +31,9 @@ struct MTABus: Hashable, Identifiable {
     var tripId: String? {
         return trip?.tripId ?? ""
     }
+    
+    /// The trip update's `schedule_relationship` is CANCELED.
+    var isCanceled: Bool {
+        return trip?.isCanceled ?? false
+    }
 }

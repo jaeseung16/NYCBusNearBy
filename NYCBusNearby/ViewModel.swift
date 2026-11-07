@@ -51,11 +51,14 @@ class ViewModel: NSObject, ObservableObject {
     @Published var feedAvailable = true
     
     var alerts = [MTAAlert]()
+    /// Routes named by at least one alert that is active as of the last download.
+    var alertedRouteIds = Set<String>()
     var vehiclesByStopId = [String: [MTAVehicle]]()
     var tripUpdatesByTripId = [String: [MTATripUpdate]]()
     
     func resetData() {
         alerts = [MTAAlert]()
+        alertedRouteIds = Set<String>()
         vehiclesByStopId = [String: [MTAVehicle]]()
         tripUpdatesByTripId = [String: [MTATripUpdate]]()
     }
@@ -285,6 +288,8 @@ class ViewModel: NSObject, ObservableObject {
             success.append(true)
         }
         
+        alertedRouteIds = Set(alerts.filter { $0.isActive() }.flatMap { $0.routeIds })
+        
         ViewModel.logger.log("It took \(DateInterval(start: start, end: Date()).duration) sec to finish all feed downloads")
         return success
     }
@@ -361,6 +366,20 @@ class ViewModel: NSObject, ObservableObject {
         // ViewModel.logger.info("trains=\(trains, privacy: .public) near (\(center.longitude, privacy: .public), \(center.latitude, privacy: .public))")
         
         return buses
+    }
+    
+    /// Active alerts that name any of `routeIds`, or the trip `tripId`.
+    func activeAlerts(routeIds: Set<String>, tripId: String? = nil, at date: Date = Date()) -> [MTAAlert] {
+        alerts.filter { alert in
+            guard alert.isActive(at: date) else { return false }
+            if !alert.routeIds.isDisjoint(with: routeIds) {
+                return true
+            }
+            if let tripId, alert.tripIds.contains(tripId) {
+                return true
+            }
+            return false
+        }
     }
     
     func getTripUpdateByTripId(from buses: [MTABus]) -> [String: MTABusTripUpdate] {

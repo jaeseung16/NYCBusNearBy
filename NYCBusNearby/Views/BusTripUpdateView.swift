@@ -40,6 +40,15 @@ struct BusTripUpdateView: View {
                     Text(routeId)
                 }
                 
+                if bus.isCanceled {
+                    Label("This trip is canceled", systemImage: "xmark.octagon.fill")
+                        .font(.subheadline)
+                        .foregroundStyle(.red)
+                }
+                
+                ServiceAlertsButton(alerts: viewModel.activeAlerts(routeIds: Set([bus.routeId ?? ""].filter { !$0.isEmpty }),
+                                                                   tripId: bus.tripId))
+                
                 if #available(iOS 17.0, *) {
                     MapReader { proxy in
                         Map(initialPosition: MapCameraPosition.region(region.wrappedValue), interactionModes: .all) {
