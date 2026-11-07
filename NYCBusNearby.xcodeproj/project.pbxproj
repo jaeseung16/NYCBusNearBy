@@ -44,6 +44,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9A1B2C3D4E5F60718293A501 /* NYCBusNearby.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = NYCBusNearby.xcconfig; sourceTree = "<group>"; };
+		9A1B2C3D4E5F60718293A502 /* Secrets.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.example.xcconfig; sourceTree = "<group>"; };
 		90504D642973556700BDE429 /* LocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelper.swift; sourceTree = "<group>"; };
 		90504D67297357C200BDE429 /* routes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = routes.txt; sourceTree = "<group>"; };
 		90504D6D29735F8600BDE429 /* MTABusStop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusStop.swift; sourceTree = "<group>"; };
@@ -94,6 +96,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9A1B2C3D4E5F60718293A503 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				9A1B2C3D4E5F60718293A501 /* NYCBusNearby.xcconfig */,
+				9A1B2C3D4E5F60718293A502 /* Secrets.example.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
 		90504D662973577D00BDE429 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -129,6 +140,7 @@
 		90836545297217AD0070A354 = {
 			isa = PBXGroup;
 			children = (
+				9A1B2C3D4E5F60718293A503 /* Config */,
 				90836550297217AD0070A354 /* NYCBusNearby */,
 				9083654F297217AD0070A354 /* Products */,
 			);
@@ -201,6 +213,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9083655C297217AE0070A354 /* Build configuration list for PBXNativeTarget "NYCBusNearby" */;
 			buildPhases = (
+				9A1B2C3D4E5F60718293A504 /* Check MTA API Key */,
 				9083654A297217AD0070A354 /* Sources */,
 				9083654B297217AD0070A354 /* Frameworks */,
 				9083654C297217AD0070A354 /* Resources */,
@@ -278,6 +291,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9A1B2C3D4E5F60718293A504 /* Check MTA API Key */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Check MTA API Key";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -z \"${MTA_BUS_TIME_API_KEY}\" ]; then\n  echo \"error: MTA_BUS_TIME_API_KEY is not set. Copy Config/Secrets.example.xcconfig to Config/Secrets.xcconfig and set your MTA Bus Time API key.\"\n  exit 1\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9083654A297217AD0070A354 /* Sources */ = {
@@ -437,6 +472,7 @@
 		};
 		9083655D297217AE0070A354 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9A1B2C3D4E5F60718293A501 /* NYCBusNearby.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon_iOS26;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -477,6 +513,7 @@
 		};
 		9083655E297217AE0070A354 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9A1B2C3D4E5F60718293A501 /* NYCBusNearby.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon_iOS26;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

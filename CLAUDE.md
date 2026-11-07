@@ -15,6 +15,8 @@ xcodebuild -project NYCBusNearby.xcodeproj -scheme NYCBusNearby \
 xcodebuild -list -project NYCBusNearby.xcodeproj
 ```
 
+**API key.** The build needs the MTA Bus Time API key in `MTA_BUS_TIME_API_KEY`, which a "Check MTA API Key" build phase enforces. Set it in `Config/Secrets.xcconfig` (git-ignored; copy `Config/Secrets.example.xcconfig`). `Config/NYCBusNearby.xcconfig` includes it as the target's base configuration. For a one-off command-line build you can instead append `MTA_BUS_TIME_API_KEY=<key>` to `xcodebuild`. The key reaches the app through the `MTABusTimeAPIKey` Info.plist entry, which `MTAFeedConstant.apiKey` reads. Never commit the key.
+
 Run the app from Xcode (Cmd+R). The app needs a location to show anything, so use the simulator's Features > Location menu or a custom GPX location. Live bus data comes from the MTA feeds over the network.
 
 ## Dependencies

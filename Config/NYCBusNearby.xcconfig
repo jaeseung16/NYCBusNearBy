@@ -1,0 +1,11 @@
+//
+//  NYCBusNearby.xcconfig
+//  Base build settings for the NYCBusNearby target (Debug and Release).
+//
+//  The MTA Bus Time API key is kept out of git. To set it up:
+//    cp Config/Secrets.example.xcconfig Config/Secrets.xcconfig
+//  then set MTA_BUS_TIME_API_KEY in Config/Secrets.xcconfig.
+//  The "Check MTA API Key" build phase fails the build if it is missing.
+//
+
+#include? "Secrets.xcconfig"

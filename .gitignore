@@ -1,0 +1,10 @@
+# Secrets (see Config/Secrets.example.xcconfig)
+Config/Secrets.xcconfig
+
+# Xcode per-user state and build output
+xcuserdata/
+DerivedData/
+build/
+
+# macOS
+.DS_Store
