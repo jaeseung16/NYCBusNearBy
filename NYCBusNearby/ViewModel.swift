@@ -43,7 +43,8 @@ class ViewModel: NSObject, ObservableObject {
     
     var stopsById = [String: MTABusStop]()
     
-    var headsignByTripId = [String: String]()
+    /// Keyed by `MTABusRouteHeadsign.key(routeId:directionId:)`.
+    var headsignByRouteDirection = [String: String]()
     
     var feedDownloader = MTAFeedDownloader<BusFeedURL>(apiKey: MTAFeedConstant.apiKey)
     
@@ -142,7 +143,7 @@ class ViewModel: NSObject, ObservableObject {
         }
         
         populateBusStops()
-        populateHeadsignByTripId()
+        populateHeadsigns()
         
         Task {
             self.feedAvailable = await getAllDataAsync()
@@ -217,82 +218,24 @@ class ViewModel: NSObject, ObservableObject {
     }
     
     
-    func populateHeadsignByTripId() -> Void {
-        let fetchRequest = NSFetchRequest<MTABusTripEntity>(entityName: "MTABusTripEntity")
-        
-        var fetchedEntities = [MTABusTripEntity]()
-        do {
-            fetchedEntities = try persistenceContainer.viewContext.fetch(fetchRequest)
-        } catch {
-            ViewModel.logger.error("Failed to fetch: \(error.localizedDescription)")
-        }
-        
-        
-        var mtaBusTrips = [MTABusTrip]()
-        if fetchedEntities.isEmpty {
-            let viewContext = persistenceContainer.viewContext
-            
-            mtaBusTrips = Array(Set(ViewModel.read(from: "trips", type: MTABusTrip.self)))
-            
-            mtaBusTrips.forEach { trip in
-                let entity = MTABusTripEntity(context: viewContext)
-                entity.route_id = trip.routeId
-                entity.service_id = trip.serviceId
-                entity.trip_id = trip.tripId
-                entity.trip_headsign = trip.tripHeadsign
-                entity.direction_id = trip.directionId
-                entity.block_id = trip.blockId
-                entity.shape_id = trip.shapeId
-                
-                do {
-                    try viewContext.save()
-                } catch {
-                    ViewModel.logger.error("Failed to save \(entity): \(error.localizedDescription)")
-                }
-                
-            }
-            
-        } else {
-            mtaBusTrips = getMTABusTrips(from: fetchedEntities)
-        }
-        
-        self.headsignByTripId = Dictionary(uniqueKeysWithValues: mtaBusTrips.map { ($0.id, $0.tripHeadsign) })
+    func populateHeadsigns() -> Void {
+        let headsigns = ViewModel.read(from: "route_headsigns", type: MTABusRouteHeadsign.self)
+        headsignByRouteDirection = Dictionary(headsigns.map { ($0.key, $0.headsign) },
+                                              uniquingKeysWith: { first, _ in first })
+        ViewModel.logger.log("Loaded \(self.headsignByRouteDirection.count) route headsigns")
     }
     
-    /*
-    func populatePersistenceStore() -> [MTABusTrip] {
-        
-        
-        ViewModel.logger.log("Save \(count) entities")
-        
-        return mtaBusTrips
-    }
-    */
-    
-    func getMTABusTrips(from entities: [MTABusTripEntity]) -> [MTABusTrip] {
-        var count = 0
-
-        var mtaBusTrips = [MTABusTrip]()
-        
-        entities.forEach { entity in
-            if let tripId = entity.trip_id {
-                let mtaBusTrip = MTABusTrip(routeId: entity.route_id ?? "",
-                                            serviceId: entity.service_id ?? "",
-                                            tripId: tripId,
-                                            tripHeadsign: entity.trip_headsign ?? "",
-                                            directionId: entity.direction_id ?? "",
-                                            blockId: entity.block_id ?? "",
-                                            shapeId: entity.shape_id ?? "")
-                
-                mtaBusTrips.append(mtaBusTrip)
-                
-                count += 1
-            }
+    /// The trip's headsign: the most common one for its route and direction,
+    /// or the name of the last stop in its trip update if the route or direction is unknown.
+    func headsign(for tripUpdate: MTATripUpdate) -> String? {
+        if let routeId = tripUpdate.trip?.routeId, let directionId = tripUpdate.trip?.directionId,
+           let headsign = headsignByRouteDirection[MTABusRouteHeadsign.key(routeId: routeId, directionId: String(directionId))] {
+            return headsign
         }
-        
-        ViewModel.logger.log("Loaded \(count) entities")
-        
-        return Array(Set(mtaBusTrips))
+        if let lastStopId = tripUpdate.stopTimeUpdates.last?.stopId {
+            return stopsById[lastStopId]?.name
+        }
+        return nil
     }
     
     func getAllDataAsync() async -> Bool {
@@ -400,7 +343,7 @@ class ViewModel: NSObject, ObservableObject {
                                                 stopId: stopId,
                                                 arrivalTime: stopTimeUpdate.arrivalTime,
                                                 departureTime: stopTimeUpdate.departureTime,
-                                                headsign: headsignByTripId[tripId])
+                                                headsign: headsign(for: tripUpdate))
                             
                             var stopIdWithoutDirection: String
                             if let last = stopId.last, last == "N" || last == "S" {

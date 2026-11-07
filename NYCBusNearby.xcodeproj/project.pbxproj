@@ -8,19 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		90504D652973556700BDE429 /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90504D642973556700BDE429 /* LocationHelper.swift */; };
+		9A1B2C3D4E5F60718293A4B1 /* route_headsigns.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D4E5F60718293A4B2 /* route_headsigns.txt */; };
 		90504D68297357C200BDE429 /* routes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 90504D67297357C200BDE429 /* routes.txt */; };
 		90504D6E29735F8600BDE429 /* MTABusStop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90504D6D29735F8600BDE429 /* MTABusStop.swift */; };
 		90504D712973601100BDE429 /* CodableCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 90504D702973601100BDE429 /* CodableCSV */; };
 		906AA4CC29745534000841BD /* DistanceUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4CB29745534000841BD /* DistanceUnit.swift */; };
+		9A1B2C3D4E5F60718293A4B3 /* MTABusRouteHeadsign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D4E5F60718293A4B4 /* MTABusRouteHeadsign.swift */; };
 		906AA4CE29745974000841BD /* MTABus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4CD29745974000841BD /* MTABus.swift */; };
 		906AA4D229745B65000841BD /* BusesAtStopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4D129745B65000841BD /* BusesAtStopView.swift */; };
 		906AA4D42974A496000841BD /* BusTripUpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4D32974A496000841BD /* BusTripUpdateView.swift */; };
-		906AA4D82974B167000841BD /* MTABusTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4D72974B167000841BD /* MTABusTrip.swift */; };
 		9082C1CE2975908F004D7130 /* Persistence in Frameworks */ = {isa = PBXBuildFile; productRef = 9082C1CD2975908F004D7130 /* Persistence */; };
 		9082C1D2297590D7004D7130 /* NYCBusNearby.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9082C1D0297590D7004D7130 /* NYCBusNearby.xcdatamodeld */; };
 		9082C1D72975BE95004D7130 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9082C1D62975BE95004D7130 /* SettingsView.swift */; };
 		9082C1DC2975F79F004D7130 /* stops.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9082C1DB2975F79F004D7130 /* stops.txt */; };
-		9082C1E029760565004D7130 /* trips.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9082C1DF29760565004D7130 /* trips.txt */; };
 		90836552297217AD0070A354 /* NYCBusNearbyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90836551297217AD0070A354 /* NYCBusNearbyApp.swift */; };
 		90836554297217AD0070A354 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90836553297217AD0070A354 /* ContentView.swift */; };
 		90836556297217AE0070A354 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90836555297217AE0070A354 /* Assets.xcassets */; };
@@ -43,18 +43,19 @@
 
 /* Begin PBXFileReference section */
 		90504D642973556700BDE429 /* LocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelper.swift; sourceTree = "<group>"; };
+		9A1B2C3D4E5F60718293A4B2 /* route_headsigns.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = route_headsigns.txt; sourceTree = "<group>"; };
 		90504D67297357C200BDE429 /* routes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = routes.txt; sourceTree = "<group>"; };
 		90504D6D29735F8600BDE429 /* MTABusStop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusStop.swift; sourceTree = "<group>"; };
 		906AA4CB29745534000841BD /* DistanceUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceUnit.swift; sourceTree = "<group>"; };
+		9A1B2C3D4E5F60718293A4B4 /* MTABusRouteHeadsign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusRouteHeadsign.swift; sourceTree = "<group>"; };
 		906AA4CD29745974000841BD /* MTABus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABus.swift; sourceTree = "<group>"; };
 		906AA4D129745B65000841BD /* BusesAtStopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusesAtStopView.swift; sourceTree = "<group>"; };
 		906AA4D32974A496000841BD /* BusTripUpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusTripUpdateView.swift; sourceTree = "<group>"; };
-		906AA4D72974B167000841BD /* MTABusTrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusTrip.swift; sourceTree = "<group>"; };
+		9A1B2C3D4E5F60718293A4B5 /* NYCBusNearby 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "NYCBusNearby 2.xcdatamodel"; sourceTree = "<group>"; };
 		9082C1D1297590D7004D7130 /* NYCBusTrips.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NYCBusTrips.xcdatamodel; sourceTree = "<group>"; };
 		9082C1D52975BA96004D7130 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9082C1D62975BE95004D7130 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		9082C1DB2975F79F004D7130 /* stops.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stops.txt; sourceTree = "<group>"; };
-		9082C1DF29760565004D7130 /* trips.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trips.txt; sourceTree = "<group>"; };
 		9082C1E1297605D9004D7130 /* NYCBusNearby.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = NYCBusNearby.sqlite; sourceTree = "<group>"; };
 		9083654E297217AD0070A354 /* NYCBusNearby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYCBusNearby.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90836551297217AD0070A354 /* NYCBusNearbyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NYCBusNearbyApp.swift; sourceTree = "<group>"; };
@@ -93,9 +94,9 @@
 			isa = PBXGroup;
 			children = (
 				9082C1E1297605D9004D7130 /* NYCBusNearby.sqlite */,
+				9A1B2C3D4E5F60718293A4B2 /* route_headsigns.txt */,
 				90504D67297357C200BDE429 /* routes.txt */,
 				9082C1DB2975F79F004D7130 /* stops.txt */,
-				9082C1DF29760565004D7130 /* trips.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -169,8 +170,8 @@
 				906AA4CB29745534000841BD /* DistanceUnit.swift */,
 				90504D642973556700BDE429 /* LocationHelper.swift */,
 				906AA4CD29745974000841BD /* MTABus.swift */,
+				9A1B2C3D4E5F60718293A4B4 /* MTABusRouteHeadsign.swift */,
 				90504D6D29735F8600BDE429 /* MTABusStop.swift */,
-				906AA4D72974B167000841BD /* MTABusTrip.swift */,
 				90836564297218B20070A354 /* MTAFeedConstant.swift */,
 				908B78012985BAF500445E12 /* MTABusTripUpdate.swift */,
 				908B78032985BEB700445E12 /* MTABusStopTimeUpdate.swift */,
@@ -266,7 +267,7 @@
 				90E0D0392E9EF43E008A4487 /* AppIcon_iOS26.icon in Resources */,
 				9082C1DC2975F79F004D7130 /* stops.txt in Resources */,
 				90504D68297357C200BDE429 /* routes.txt in Resources */,
-				9082C1E029760565004D7130 /* trips.txt in Resources */,
+				9A1B2C3D4E5F60718293A4B1 /* route_headsigns.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,10 +289,10 @@
 				9082C1D2297590D7004D7130 /* NYCBusNearby.xcdatamodeld in Sources */,
 				90A1EDE72BDC616E001533FA /* BusStopRowView.swift in Sources */,
 				906AA4CE29745974000841BD /* MTABus.swift in Sources */,
+				9A1B2C3D4E5F60718293A4B3 /* MTABusRouteHeadsign.swift in Sources */,
 				906AA4D42974A496000841BD /* BusTripUpdateView.swift in Sources */,
 				90836552297217AD0070A354 /* NYCBusNearbyApp.swift in Sources */,
 				908B78022985BAF500445E12 /* MTABusTripUpdate.swift in Sources */,
-				906AA4D82974B167000841BD /* MTABusTrip.swift in Sources */,
 				906AA4D229745B65000841BD /* BusesAtStopView.swift in Sources */,
 				9082C1D72975BE95004D7130 /* SettingsView.swift in Sources */,
 				9086A2822BDEA0EB00220FCC /* BusAtStopView.swift in Sources */,
@@ -609,9 +610,10 @@
 		9082C1D0297590D7004D7130 /* NYCBusNearby.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				9A1B2C3D4E5F60718293A4B5 /* NYCBusNearby 2.xcdatamodel */,
 				9082C1D1297590D7004D7130 /* NYCBusTrips.xcdatamodel */,
 			);
-			currentVersion = 9082C1D1297590D7004D7130 /* NYCBusTrips.xcdatamodel */;
+			currentVersion = 9A1B2C3D4E5F60718293A4B5 /* NYCBusNearby 2.xcdatamodel */;
 			path = NYCBusNearby.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
