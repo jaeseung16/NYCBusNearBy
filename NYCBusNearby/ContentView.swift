@@ -11,6 +11,8 @@ import Combine
 
 struct ContentView: View {
     @EnvironmentObject private var viewModel: ViewModel
+    @Environment(\.scenePhase) private var scenePhase
+    @StateObject private var adsStarter = AdsStarter()
     @AppStorage("maxDistance") private var maxDistance = 1000.0
     @AppStorage("distanceUnit") private var distanceUnit = DistanceUnit.mile
     @AppStorage("maxComing") private var maxComing: TimeInterval = 30 * 60
@@ -77,8 +79,13 @@ struct ContentView: View {
                     Spacer()
                     
 #if os(iOS)
-BannerAd()
-    .frame(height: 50)
+                    if adsStarter.adsStarted {
+                        BannerAd()
+                            .frame(height: 50)
+                    } else {
+                        Color.clear
+                            .frame(height: 50)
+                    }
 #endif
                 }
             } content: {
@@ -125,6 +132,13 @@ BannerAd()
             if !refreshable && lastRefresh.distance(to: Date()) > refreshThreshold {
                 withAnimation {
                     refreshable = true
+                }
+            }
+        }
+        .onChange(of: scenePhase, initial: true) { _, newPhase in
+            if newPhase == .active {
+                Task {
+                    await adsStarter.appDidBecomeActive()
                 }
             }
         }

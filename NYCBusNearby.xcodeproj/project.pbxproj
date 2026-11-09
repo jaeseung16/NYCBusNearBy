@@ -28,6 +28,7 @@
 		9083657829721B520070A354 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 9083657729721B520070A354 /* SwiftProtobuf */; };
 		9083657A29721B520070A354 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 9083657929721B520070A354 /* SwiftProtobufPluginLibrary */; };
 		90857EF42991BB1E0052309B /* BannerAd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90857EF32991BB1E0052309B /* BannerAd.swift */; };
+		A1D5C0012EB0000100A7F001 /* AdsStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D5C0022EB0000100A7F001 /* AdsStarter.swift */; };
 		90857EF62991BB3E0052309B /* BannerAdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90857EF52991BB3E0052309B /* BannerAdViewController.swift */; };
 		9086A2822BDEA0EB00220FCC /* BusAtStopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9086A2812BDEA0EB00220FCC /* BusAtStopView.swift */; };
 		908B780029857A0500445E12 /* MTAFeed in Frameworks */ = {isa = PBXBuildFile; productRef = 908B77FF29857A0500445E12 /* MTAFeed */; };
@@ -63,6 +64,7 @@
 		9083655F297218000070A354 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		90836564297218B20070A354 /* MTAFeedConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTAFeedConstant.swift; sourceTree = "<group>"; };
 		90857EF32991BB1E0052309B /* BannerAd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAd.swift; sourceTree = "<group>"; };
+		A1D5C0022EB0000100A7F001 /* AdsStarter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsStarter.swift; sourceTree = "<group>"; };
 		90857EF52991BB3E0052309B /* BannerAdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAdViewController.swift; sourceTree = "<group>"; };
 		9086A2812BDEA0EB00220FCC /* BusAtStopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusAtStopView.swift; sourceTree = "<group>"; };
 		908B78012985BAF500445E12 /* MTABusTripUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusTripUpdate.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 			children = (
 				90857EF32991BB1E0052309B /* BannerAd.swift */,
 				90857EF52991BB3E0052309B /* BannerAdViewController.swift */,
+				A1D5C0022EB0000100A7F001 /* AdsStarter.swift */,
 			);
 			path = AdMob;
 			sourceTree = "<group>";
@@ -321,6 +324,7 @@
 			files = (
 				90504D652973556700BDE429 /* LocationHelper.swift in Sources */,
 				90857EF62991BB3E0052309B /* BannerAdViewController.swift in Sources */,
+				A1D5C0012EB0000100A7F001 /* AdsStarter.swift in Sources */,
 				908B78042985BEB700445E12 /* MTABusStopTimeUpdate.swift in Sources */,
 				90857EF42991BB1E0052309B /* BannerAd.swift in Sources */,
 				90836554297217AD0070A354 /* ContentView.swift in Sources */,
@@ -489,6 +493,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "NYC Buses Near Me";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to provide bus schedule at the nearby stops";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Your data is used to show you more relevant ads, which keep this app free.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -530,6 +535,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "NYC Buses Near Me";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to provide bus schedule at the nearby stops";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Your data is used to show you more relevant ads, which keep this app free.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
