@@ -6,11 +6,19 @@
 //
 
 import SwiftUI
+import AppIntents
 
 @main
 struct NYCBusNearbyApp: App {
 
-    private let viewModel = ViewModel()
+    private let viewModel: ViewModel
+
+    init() {
+        let viewModel = ViewModel()
+        self.viewModel = viewModel
+        // Lets App Intents reach the shared view model with `@Dependency var viewModel: ViewModel`.
+        AppDependencyManager.shared.add(dependency: viewModel)
+    }
 
     var body: some Scene {
         WindowGroup {
