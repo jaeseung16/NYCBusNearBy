@@ -28,7 +28,6 @@
 		9083657829721B520070A354 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 9083657729721B520070A354 /* SwiftProtobuf */; };
 		9083657A29721B520070A354 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 9083657929721B520070A354 /* SwiftProtobufPluginLibrary */; };
 		90857EF42991BB1E0052309B /* BannerAd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90857EF32991BB1E0052309B /* BannerAd.swift */; };
-		A1D5C0012EB0000100A7F001 /* AdsStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D5C0022EB0000100A7F001 /* AdsStarter.swift */; };
 		90857EF62991BB3E0052309B /* BannerAdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90857EF52991BB3E0052309B /* BannerAdViewController.swift */; };
 		9086A2822BDEA0EB00220FCC /* BusAtStopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9086A2812BDEA0EB00220FCC /* BusAtStopView.swift */; };
 		908B780029857A0500445E12 /* MTAFeed in Frameworks */ = {isa = PBXBuildFile; productRef = 908B77FF29857A0500445E12 /* MTAFeed */; };
@@ -42,6 +41,7 @@
 		9A1B2C3D4E5F60718293A4C1 /* gtfs_version.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D4E5F60718293A4C2 /* gtfs_version.txt */; };
 		9A1B2C3D4E5F60718293A4D1 /* MTAAlertText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D4E5F60718293A4D2 /* MTAAlertText.swift */; };
 		9A1B2C3D4E5F60718293A4E1 /* ServiceAlertsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D4E5F60718293A4E2 /* ServiceAlertsView.swift */; };
+		A1D5C0012EB0000100A7F001 /* AdsStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D5C0022EB0000100A7F001 /* AdsStarter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,7 +64,6 @@
 		9083655F297218000070A354 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		90836564297218B20070A354 /* MTAFeedConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTAFeedConstant.swift; sourceTree = "<group>"; };
 		90857EF32991BB1E0052309B /* BannerAd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAd.swift; sourceTree = "<group>"; };
-		A1D5C0022EB0000100A7F001 /* AdsStarter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsStarter.swift; sourceTree = "<group>"; };
 		90857EF52991BB3E0052309B /* BannerAdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAdViewController.swift; sourceTree = "<group>"; };
 		9086A2812BDEA0EB00220FCC /* BusAtStopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusAtStopView.swift; sourceTree = "<group>"; };
 		908B78012985BAF500445E12 /* MTABusTripUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusTripUpdate.swift; sourceTree = "<group>"; };
@@ -79,6 +78,7 @@
 		9A1B2C3D4E5F60718293A4E2 /* ServiceAlertsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceAlertsView.swift; sourceTree = "<group>"; };
 		9A1B2C3D4E5F60718293A501 /* NYCBusNearby.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = NYCBusNearby.xcconfig; sourceTree = "<group>"; };
 		9A1B2C3D4E5F60718293A502 /* Secrets.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.example.xcconfig; sourceTree = "<group>"; };
+		A1D5C0022EB0000100A7F001 /* AdsStarter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsStarter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -482,7 +482,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = NYCBusNearby/NYCBusNearby.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"NYCBusNearby/Preview Content\"";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
@@ -524,7 +524,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = NYCBusNearby/NYCBusNearby.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"NYCBusNearby/Preview Content\"";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
