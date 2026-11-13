@@ -42,6 +42,8 @@
 		9A1B2C3D4E5F60718293A4D1 /* MTAAlertText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D4E5F60718293A4D2 /* MTAAlertText.swift */; };
 		9A1B2C3D4E5F60718293A4E1 /* ServiceAlertsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1B2C3D4E5F60718293A4E2 /* ServiceAlertsView.swift */; };
 		A1D5C0012EB0000100A7F001 /* AdsStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D5C0022EB0000100A7F001 /* AdsStarter.swift */; };
+		B2E7A1022F00000100A1F001 /* ShowNearbyBusesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1012F00000100A1F001 /* ShowNearbyBusesIntent.swift */; };
+		B2E7A1042F00000100A1F001 /* NYCBusShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1032F00000100A1F001 /* NYCBusShortcuts.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +81,8 @@
 		9A1B2C3D4E5F60718293A501 /* NYCBusNearby.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = NYCBusNearby.xcconfig; sourceTree = "<group>"; };
 		9A1B2C3D4E5F60718293A502 /* Secrets.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.example.xcconfig; sourceTree = "<group>"; };
 		A1D5C0022EB0000100A7F001 /* AdsStarter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsStarter.swift; sourceTree = "<group>"; };
+		B2E7A1012F00000100A1F001 /* ShowNearbyBusesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowNearbyBusesIntent.swift; sourceTree = "<group>"; };
+		B2E7A1032F00000100A1F001 /* NYCBusShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NYCBusShortcuts.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				90857EF22991BB0E0052309B /* AdMob */,
+				B2E7A1002F00000100A1F001 /* AppIntents */,
 				9082C1D82975BEA1004D7130 /* Views */,
 				9082C1D52975BA96004D7130 /* Info.plist */,
 				9082C1CF297590B2004D7130 /* CoreData */,
@@ -198,6 +203,15 @@
 				A1D5C0022EB0000100A7F001 /* AdsStarter.swift */,
 			);
 			path = AdMob;
+			sourceTree = "<group>";
+		};
+		B2E7A1002F00000100A1F001 /* AppIntents */ = {
+			isa = PBXGroup;
+			children = (
+				B2E7A1032F00000100A1F001 /* NYCBusShortcuts.swift */,
+				B2E7A1012F00000100A1F001 /* ShowNearbyBusesIntent.swift */,
+			);
+			path = AppIntents;
 			sourceTree = "<group>";
 		};
 		9A1B2C3D4E5F60718293A503 /* Config */ = {
@@ -325,6 +339,8 @@
 				90504D652973556700BDE429 /* LocationHelper.swift in Sources */,
 				90857EF62991BB3E0052309B /* BannerAdViewController.swift in Sources */,
 				A1D5C0012EB0000100A7F001 /* AdsStarter.swift in Sources */,
+				B2E7A1022F00000100A1F001 /* ShowNearbyBusesIntent.swift in Sources */,
+				B2E7A1042F00000100A1F001 /* NYCBusShortcuts.swift in Sources */,
 				908B78042985BEB700445E12 /* MTABusStopTimeUpdate.swift in Sources */,
 				90857EF42991BB1E0052309B /* BannerAd.swift in Sources */,
 				90836554297217AD0070A354 /* ContentView.swift in Sources */,

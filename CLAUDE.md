@@ -29,7 +29,9 @@ Swift 6.0 language mode, iOS 26.0 deployment target. Views use iOS 26 APIs such 
 
 ## Architecture
 
-**App wiring.** `NYCBusNearbyApp` creates one `ViewModel` and injects it as an `@EnvironmentObject` into `ContentView`. `ViewModel` is `@MainActor` and owns nearly all state: static bus stops, route headsigns, live feed data, and location. It also starts the ATT/AdMob setup in the app's `init`.
+**App wiring.** `NYCBusNearbyApp.init` creates one `ViewModel`, registers it with `AppDependencyManager` for App Intents, and injects it as an `@EnvironmentObject` into `ContentView`. `ViewModel` is `@MainActor` and owns nearly all state: static bus stops, route headsigns, live feed data, and location. ATT and AdMob start in `AdsStarter` when the scene becomes active.
+
+**App Intents.** Intents live in `AppIntents/`. `NYCBusShortcuts` (`AppShortcutsProvider`) lists every App Shortcut and its Siri phrases, and each phrase must contain `\(.applicationName)`. An intent gets the view model with `@Dependency private var viewModel: ViewModel`. The project doesn't use synchronized folders, so add each new file to the target. The plan and the steps for adding an intent are in `docs/plans/app-intents.md`.
 
 **Data sources.** There are two, and they are loaded differently:
 1. *Static reference data.* Bus stops live in Core Data (`NYCBusNearby.xcdatamodeld`, entity `MTABusStopEntity`; current model version `NYCBusNearby 2`, and the old `NYCBusTrips` version is kept so existing stores migrate automatically). `Resources/stops.txt` is imported into the store whenever `Resources/gtfs_version.txt` differs from the `stopsDataVersion` UserDefaults value. The import is one background `NSBatchDeleteRequest` plus `NSBatchInsertRequest` in `ViewModel.populateBusStops()`. Stops load asynchronously, and `ViewModel.stopsLoaded` tells `ContentView` to recompute the nearby stops. No seed sqlite is bundled.
