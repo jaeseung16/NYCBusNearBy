@@ -117,7 +117,13 @@ class ViewModel: NSObject, ObservableObject {
     
     /// Toggled when `mtaStops` has been loaded.
     @Published var stopsLoaded = false
-    
+
+    let favoritesStore = FavoriteStopsStore()
+    /// The user's favorite stops, in the user's order. Change them only through `updateFavorites(_:)`.
+    @Published private(set) var favoriteStops = [FavoriteStop]()
+    /// Favorites whose stop isn't in the current stop data. Valid after the stops load.
+    private(set) var missingFavoriteIds = Set<String>()
+
     override init() {
         super.init()
         
@@ -135,7 +141,10 @@ class ViewModel: NSObject, ObservableObject {
         UserDefaults.standard.removeObject(forKey: "launchedBefore")
         
         populateHeadsigns()
-        
+
+        favoriteStops = favoritesStore.load()
+        ViewModel.logger.log("Loaded \(self.favoriteStops.count) favorite stops")
+
         Task {
             await populateBusStops()
         }
@@ -176,6 +185,7 @@ class ViewModel: NSObject, ObservableObject {
         
         stopsById = Dictionary(mtaStops.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
         ViewModel.logger.log("# of stops = \(self.mtaStops.count)")
+        refreshFavoriteSnapshots()
         stopsLoaded.toggle()
     }
     
@@ -398,6 +408,99 @@ class ViewModel: NSObject, ObservableObject {
     
     func isValid(_ eventTime: Date) -> Bool {
         return eventTime.timeIntervalSinceNow > maxAgo && eventTime.timeIntervalSinceNow < maxComing
+    }
+}
+
+// MARK: - Favorites
+// In this file because `favoriteStops` has a `private(set)` setter.
+
+extension ViewModel {
+    /// Favorites whose stop is in the current stop data, in the user's order.
+    var favoriteMTABusStops: [MTABusStop] {
+        favoriteStops.compactMap { stopsById[$0.id] }
+    }
+
+    func isFavorite(_ stop: MTABusStop) -> Bool {
+        favoriteStops.contains { $0.id == stop.id }
+    }
+
+    func favorite(forStopId stopId: String) -> FavoriteStop? {
+        favoriteStops.first { $0.id == stopId }
+    }
+
+    func addFavorite(_ stop: MTABusStop) {
+        updateFavorites { favorites in
+            guard !favorites.contains(where: { $0.id == stop.id }) else { return }
+            favorites.append(FavoriteStop(stop: stop))
+        }
+    }
+
+    func removeFavorite(id: String) {
+        updateFavorites { favorites in
+            favorites.removeAll { $0.id == id }
+        }
+        missingFavoriteIds.remove(id)
+    }
+
+    func toggleFavorite(_ stop: MTABusStop) {
+        if isFavorite(stop) {
+            removeFavorite(id: stop.id)
+        } else {
+            addFavorite(stop)
+        }
+    }
+
+    /// Reorders favorites, with the same arguments as `List`'s `onMove`.
+    func moveFavorites(fromOffsets source: IndexSet, toOffset destination: Int) {
+        updateFavorites { favorites in
+            let moving = source.filter { favorites.indices.contains($0) }.map { favorites[$0] }
+            let insertAt = destination - source.filter { $0 < destination }.count
+            for index in source.sorted(by: >) where favorites.indices.contains(index) {
+                favorites.remove(at: index)
+            }
+            favorites.insert(contentsOf: moving, at: min(max(insertAt, 0), favorites.endIndex))
+        }
+    }
+
+    /// Sets or clears (`nil` or blank) a favorite's nickname.
+    func renameFavorite(id: String, nickname: String?) {
+        updateFavorites { favorites in
+            guard let index = favorites.firstIndex(where: { $0.id == id }) else { return }
+            favorites[index].nickname = FavoriteStop.normalizedNickname(nickname)
+        }
+    }
+
+    /// Updates favorites' names and coordinates from the loaded stops, and finds favorites whose stop is gone.
+    func refreshFavoriteSnapshots() {
+        guard !stopsById.isEmpty else { return }
+
+        missingFavoriteIds = Set(favoriteStops.map(\.id).filter { stopsById[$0] == nil })
+        if !missingFavoriteIds.isEmpty {
+            ViewModel.logger.log("Favorite stops not in the stop data: \(self.missingFavoriteIds.sorted(), privacy: .public)")
+        }
+
+        updateFavorites { favorites in
+            for index in favorites.indices {
+                if let stop = stopsById[favorites[index].id] {
+                    _ = favorites[index].refresh(from: stop)
+                }
+            }
+        }
+    }
+
+    /// The only place favorites change: applies `change`, then saves if anything changed.
+    private func updateFavorites(_ change: (inout [FavoriteStop]) -> Void) {
+        var favorites = favoriteStops
+        change(&favorites)
+        guard favorites != favoriteStops else { return }
+
+        favoriteStops = favorites
+        favoritesStore.save(favorites)
+        favoritesDidChange()
+    }
+
+    private func favoritesDidChange() {
+        // Step 4 of docs/plans/favorites.md: NYCBusShortcuts.updateAppShortcutParameters()
     }
 }
 
