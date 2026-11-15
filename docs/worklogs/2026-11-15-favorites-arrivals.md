@@ -76,3 +76,58 @@
 - Not tested yet, because these need taps: selecting a far favorite and its arrivals and map,
   the toolbar star, swipe actions, the context menu, rename, reorder and delete, selection clearing,
   relaunch persistence, and VoiceOver. These are in the plan's Testing section.
+
+## Step 3 committed
+- `46c39ee` "feat: Add the favorites UI", after the user tested it.
+
+## Step 4 implemented: App Intents for stops
+- New files in `AppIntents/`, added to the group and the Sources phase in `project.pbxproj`:
+  - `BusStopEntity.swift`:
+    - `BusStopEntity`, an `AppEntity` with the stop code as its ID. The title is the nickname or
+      the name. The subtitle is "Stop #code", and also shows the GTFS name when there's a nickname.
+    - `BusStopQuery` (`EntityStringQuery`):
+      - suggestions are the favorites
+      - `entities(for:)` looks in the favorites, then `stopsById`
+      - `entities(matching:)` matches favorites by nickname or name, then stop codes (exact, then
+        by prefix), then stop names, up to 20 results
+  - `OpenStopIntent.swift`: `.foreground`, sets `viewModel.requestedStopId`.
+  - `NextBusesAtStopIntent.swift`: `.background`. Waits for the stops and a feed up to 60 s old.
+    Returns `[BusArrival]` and a dialog that reads the next three arrivals, e.g. "M15 to South
+    Ferry in 4 minutes. B44 to Sheepshead Bay is canceled." Separate dialogs for a stop that's
+    no longer served, an unreachable feed, and no buses in the time window.
+  - `BusArrival.swift`: a `TransientAppEntity` with route, headsign, arrival time, minutes away,
+    and canceled.
+- `NYCBusShortcuts`: two App Shortcuts, 3 of the 10 allowed:
+  - "When is the next bus at <stop>", "Next buses at <stop>", "Next buses at a stop"
+  - "Show <stop>", "Open <stop>", "Open a bus stop"
+  - each phrase ends with "in <app name>"
+- `ViewModel`:
+  - `requestedStopId`
+  - `ensureStopsLoaded()`, which waits for the first stop load (now kept as `stopsLoadTask`)
+  - `ensureFreshFeed(maxAge:)` and `lastFeedDownload`
+  - `upcomingBuses(at:)`
+  - `getAllDataAsync()` shares a download that is already running, so an intent and the launch
+    (or Refresh) don't clear each other's data
+  - `favoritesDidChange()` calls `NYCBusShortcuts.updateAppShortcutParameters()`
+- `NYCBusNearbyApp.init` also calls `updateAppShortcutParameters()`.
+- `ContentView`:
+  - `showRequestedStop()` selects the requested stop and clears the selected bus. It runs on
+    `requestedStopId` changes (`initial: true`, for a cold launch) and again once the stops load.
+  - It turns the favorites filter off for a stop that isn't a favorite.
+  - `busesByStop` also covers the selected stop.
+
+### Verification
+- Generic simulator build: succeeded, no errors or warnings.
+- `Metadata.appintents/extract.actionsdata` lists:
+  - the three intents: `OpenStopIntent` opens the app, `NextBusesAtStopIntent` doesn't
+  - both entities
+  - all nine phrases, with `${stop}` and `${applicationName}`
+- F7: in four launches on the iPad simulator, all feeds downloaded in 0.29–0.35 s.
+- Not run yet: the intents themselves. That needs Siri or the Shortcuts app, which can't be driven
+  from the command line. To test:
+  - the Shortcuts picker lists the favorites with their nicknames
+  - search by code and by name
+  - "Show <nickname>" with the app cold and warm
+  - "When is the next bus at <nickname>" with the app not running
+  - a canceled trip in the dialog
+- Not committed.

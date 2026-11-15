@@ -18,6 +18,8 @@ struct NYCBusNearbyApp: App {
         self.viewModel = viewModel
         // Lets App Intents reach the shared view model with `@Dependency var viewModel: ViewModel`.
         AppDependencyManager.shared.add(dependency: viewModel)
+        // The stop phrases offer the favorites, which were loaded in ViewModel.init.
+        NYCBusShortcuts.updateAppShortcutParameters()
     }
 
     var body: some Scene {

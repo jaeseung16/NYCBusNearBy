@@ -123,6 +123,16 @@ class ViewModel: NSObject, ObservableObject {
     @Published private(set) var favoriteStops = [FavoriteStop]()
     /// Favorites whose stop isn't in the current stop data. Valid after the stops load.
     private(set) var missingFavoriteIds = Set<String>()
+    
+    /// A stop an App Intent asked to show. `ContentView` selects it, then sets this back to `nil`.
+    @Published var requestedStopId: String?
+    
+    /// The first `populateBusStops()`, so App Intents can wait for it.
+    private var stopsLoadTask: Task<Void, Never>?
+    /// The feed download in progress. Callers that arrive during a download share it.
+    private var feedDownloadTask: Task<Bool, Never>?
+    /// When the last feed download finished.
+    private(set) var lastFeedDownload: Date?
 
     override init() {
         super.init()
@@ -145,7 +155,7 @@ class ViewModel: NSObject, ObservableObject {
         favoriteStops = favoritesStore.load()
         ViewModel.logger.log("Loaded \(self.favoriteStops.count) favorite stops")
 
-        Task {
+        stopsLoadTask = Task {
             await populateBusStops()
         }
         
@@ -243,14 +253,24 @@ class ViewModel: NSObject, ObservableObject {
         return nil
     }
     
+    /// Downloads every feed. A call made while a download is running waits for that download
+    /// instead of starting another one, which would clear the data under it.
     func getAllDataAsync() async -> Bool {
-        resetData()
+        if let feedDownloadTask {
+            return await feedDownloadTask.value
+        }
         
-        let result = await downloadFromMTAInfo()
-        
-        ViewModel.logger.log("result=\(result, privacy: .public)")
-        
-        return result.count == BusFeedURL.allCases.count
+        let task = Task {
+            resetData()
+            let result = await downloadFromMTAInfo()
+            ViewModel.logger.log("result=\(result, privacy: .public)")
+            return result.count == BusFeedURL.allCases.count
+        }
+        feedDownloadTask = task
+        let success = await task.value
+        feedDownloadTask = nil
+        lastFeedDownload = Date()
+        return success
     }
     
     private func downloadFromMTAInfo() async -> [Bool] {
@@ -505,7 +525,33 @@ extension ViewModel {
     }
 
     private func favoritesDidChange() {
-        // Step 4 of docs/plans/favorites.md: NYCBusShortcuts.updateAppShortcutParameters()
+        // Favorites are the suggested stops for the Siri phrases with a stop in them.
+        NYCBusShortcuts.updateAppShortcutParameters()
+    }
+}
+
+// MARK: - App Intents
+
+extension ViewModel {
+    /// Waits until the stops have loaded, for an intent that runs right after a cold launch.
+    func ensureStopsLoaded() async {
+        await stopsLoadTask?.value
+    }
+    
+    /// Downloads the feeds unless the last download is newer than `maxAge` seconds,
+    /// or waits for the download in progress.
+    func ensureFreshFeed(maxAge: TimeInterval) async {
+        if feedDownloadTask == nil, let lastFeedDownload, lastFeedDownload.timeIntervalSinceNow > -maxAge {
+            return
+        }
+        feedAvailable = await getAllDataAsync()
+    }
+    
+    /// Buses arriving at `stop` within the time window in the settings, soonest first.
+    func upcomingBuses(at stop: MTABusStop) -> [MTABus] {
+        (buses(at: [stop])[stop] ?? [])
+            .filter { bus in bus.eventTime.map(isValid) ?? false }
+            .sorted { $0.eventTime! < $1.eventTime! }
     }
 }
 

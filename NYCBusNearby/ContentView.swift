@@ -122,6 +122,10 @@ struct ContentView: View {
         }
         .onReceive(viewModel.$stopsLoaded) { _ in
             updateStopsAndTrainsNearby()
+            showRequestedStop()
+        }
+        .onChange(of: viewModel.requestedStopId, initial: true) { _, _ in
+            showRequestedStop()
         }
         .onChange(of: viewModel.favoriteStops) { _, _ in
             // onChange, not onReceive: @Published sends before the new value is stored.
@@ -319,6 +323,25 @@ struct ContentView: View {
         }
     }
     
+    /// Selects the stop an App Intent asked for. After a cold launch, waits for the stops to load.
+    private func showRequestedStop() {
+        guard let stopId = viewModel.requestedStopId else { return }
+        guard let stop = viewModel.stopsById[stopId] else {
+            if !viewModel.mtaStops.isEmpty {
+                // The stops are loaded and this one isn't there.
+                viewModel.requestedStopId = nil
+            }
+            return
+        }
+        viewModel.requestedStopId = nil
+        if showFavoritesOnly && !viewModel.isFavorite(stop) {
+            showFavoritesOnly = false
+        }
+        selectedBus = nil
+        selectedStop = stop
+        updateStopsAndTrainsNearby()
+    }
+    
     /// After the filter changes, clears the selection if the selected stop isn't in the list being shown.
     /// Not called when favorites change, so unstarring the stop being viewed doesn't close it.
     private func clearSelectionIfHidden() {
@@ -361,7 +384,8 @@ struct ContentView: View {
         
         // Favorites get arrivals wherever they are, with or without a location fix.
         // Without a fix, the last nearby stops are kept, as before.
-        busesByStop = viewModel.buses(at: stopsNearby + viewModel.favoriteMTABusStops)
+        // The selected stop may be neither, when an App Intent opened it.
+        busesByStop = viewModel.buses(at: stopsNearby + viewModel.favoriteMTABusStops + [selectedStop].compactMap { $0 })
     }
     
     private func getBuses(at stop: MTABusStop) -> [MTABus]? {

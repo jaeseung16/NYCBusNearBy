@@ -46,6 +46,10 @@
 		A1D5C0012EB0000100A7F001 /* AdsStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D5C0022EB0000100A7F001 /* AdsStarter.swift */; };
 		B2E7A1022F00000100A1F001 /* ShowNearbyBusesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1012F00000100A1F001 /* ShowNearbyBusesIntent.swift */; };
 		B2E7A1042F00000100A1F001 /* NYCBusShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1032F00000100A1F001 /* NYCBusShortcuts.swift */; };
+		B2E7A1122F00000100A1F001 /* BusStopEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1112F00000100A1F001 /* BusStopEntity.swift */; };
+		B2E7A1142F00000100A1F001 /* OpenStopIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1132F00000100A1F001 /* OpenStopIntent.swift */; };
+		B2E7A1162F00000100A1F001 /* NextBusesAtStopIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1152F00000100A1F001 /* NextBusesAtStopIntent.swift */; };
+		B2E7A1182F00000100A1F001 /* BusArrival.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1172F00000100A1F001 /* BusArrival.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -87,6 +91,10 @@
 		A1D5C0022EB0000100A7F001 /* AdsStarter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsStarter.swift; sourceTree = "<group>"; };
 		B2E7A1012F00000100A1F001 /* ShowNearbyBusesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowNearbyBusesIntent.swift; sourceTree = "<group>"; };
 		B2E7A1032F00000100A1F001 /* NYCBusShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NYCBusShortcuts.swift; sourceTree = "<group>"; };
+		B2E7A1112F00000100A1F001 /* BusStopEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopEntity.swift; sourceTree = "<group>"; };
+		B2E7A1132F00000100A1F001 /* OpenStopIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenStopIntent.swift; sourceTree = "<group>"; };
+		B2E7A1152F00000100A1F001 /* NextBusesAtStopIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextBusesAtStopIntent.swift; sourceTree = "<group>"; };
+		B2E7A1172F00000100A1F001 /* BusArrival.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusArrival.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +222,10 @@
 		B2E7A1002F00000100A1F001 /* AppIntents */ = {
 			isa = PBXGroup;
 			children = (
+				B2E7A1112F00000100A1F001 /* BusStopEntity.swift */,
+				B2E7A1132F00000100A1F001 /* OpenStopIntent.swift */,
+				B2E7A1152F00000100A1F001 /* NextBusesAtStopIntent.swift */,
+				B2E7A1172F00000100A1F001 /* BusArrival.swift */,
 				B2E7A1032F00000100A1F001 /* NYCBusShortcuts.swift */,
 				B2E7A1012F00000100A1F001 /* ShowNearbyBusesIntent.swift */,
 			);
@@ -347,6 +359,10 @@
 				A1D5C0012EB0000100A7F001 /* AdsStarter.swift in Sources */,
 				B2E7A1022F00000100A1F001 /* ShowNearbyBusesIntent.swift in Sources */,
 				B2E7A1042F00000100A1F001 /* NYCBusShortcuts.swift in Sources */,
+				B2E7A1122F00000100A1F001 /* BusStopEntity.swift in Sources */,
+				B2E7A1142F00000100A1F001 /* OpenStopIntent.swift in Sources */,
+				B2E7A1162F00000100A1F001 /* NextBusesAtStopIntent.swift in Sources */,
+				B2E7A1182F00000100A1F001 /* BusArrival.swift in Sources */,
 				908B78042985BEB700445E12 /* MTABusStopTimeUpdate.swift in Sources */,
 				90857EF42991BB1E0052309B /* BannerAd.swift in Sources */,
 				90836554297217AD0070A354 /* ContentView.swift in Sources */,

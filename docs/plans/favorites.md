@@ -1,6 +1,6 @@
 # Plan: Favorite stops
 
-Status: **Steps 1–3 implemented** (2026-11-13, 2026-11-15). Step 3 needs hands-on testing before TestFlight; Step 4 is next. Decisions are recorded at the end.
+Status: **Steps 1–4 implemented** (2026-11-13, 2026-11-15). Step 4 needs testing with Siri and Shortcuts on a device. Decisions are recorded at the end.
 
 Favorites came up in `docs/plans/app-intents.md` (finding F8, Phase 3 candidate 3): a stop-based
 intent needs a short list of stops the user cares about, and stop names are poor search keys
@@ -203,6 +203,23 @@ This is candidate 3 of `docs/plans/app-intents.md`. Follow its "How to add an in
   `"When is the next bus at \(\.$stop) in \(.applicationName)"`. The provider would then have
   3 of the 10 allowed App Shortcuts.
 - Call `NYCBusShortcuts.updateAppShortcutParameters()` on launch and whenever favorites change.
+
+As implemented (2026-11-15):
+- `BusStopEntity`'s subtitle is "<GTFS name> · Stop #<code>" when it has a nickname, so two
+  stops with the same nickname-free name can still be told apart. `defaultQuery` is a computed
+  property.
+- `BusArrival` is a `TransientAppEntity` with `@Property` fields (route, headsign, arrival time,
+  minutes away, canceled), because an intent can only return entities or other intent values.
+- Each stop intent also has a phrase without the parameter ("Next buses at a stop in …",
+  "Open a bus stop in …"), so Siri asks which stop.
+- Feed readiness: `getAllDataAsync()` now shares a download that is already running. Before, a
+  second call cleared the data under the first. `ensureFreshFeed(maxAge:)` skips the download
+  when the last one finished less than `maxAge` seconds ago.
+- `ContentView.showRequestedStop()` runs on `requestedStopId` changes (`initial: true`) and after
+  the stops load. It turns off the favorites filter for a stop that isn't a favorite, and
+  `busesByStop` also covers the selected stop, so a stop opened by an intent gets arrivals even
+  when it's neither nearby nor a favorite.
+- F7: all three feeds downloaded in 0.29–0.35 s per launch in the simulator, on the Mac's network.
 
 ### Step 5: Later
 
