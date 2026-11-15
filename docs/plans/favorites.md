@@ -1,6 +1,6 @@
 # Plan: Favorite stops
 
-Status: **Steps 1–2 implemented** (2026-11-13, 2026-11-15). Step 3 is next. Decisions are recorded at the end.
+Status: **Steps 1–3 implemented** (2026-11-13, 2026-11-15). Step 3 needs hands-on testing before TestFlight; Step 4 is next. Decisions are recorded at the end.
 
 Favorites came up in `docs/plans/app-intents.md` (finding F8, Phase 3 candidate 3): a stop-based
 intent needs a short list of stops the user cares about, and stop names are poor search keys
@@ -156,7 +156,11 @@ section or screen.
 - With the filter on, an `EditButton` reorders favorites (`.onMove` → `moveFavorites`), and
   `.onDelete` removes them.
 - If `selectedStop` isn't in the filtered list when the filter changes, clear `selectedStop` and
-  `selectedBus`.
+  `selectedBus`. As implemented, this happens only when the filter changes, not when favorites
+  change, so unstarring the stop being viewed doesn't close it.
+- As implemented: the toggle uses `.labelStyle(.iconOnly)` to save room. The `EditButton` and the
+  lists share an `editMode` `@State` through `.environment(\.editMode, …)`. Before the stops load,
+  favorites show greyed out without "No longer served", because they can't be selected yet.
 
 **`BusStopRowView`**
 - Add `title: String` (so a nickname can replace the name), make `distance` optional, and add
@@ -169,6 +173,10 @@ section or screen.
 - Show the nickname as the title with the GTFS name below it when a nickname is set.
 - Map (G6): if the stop is outside `viewModel.region`, start the camera on the stop. Do the same in
   `BusTripUpdateView`.
+- As implemented: `ViewModel.mapRegion(showing:)` returns the current region if it contains the
+  stop, otherwise one of the same span centered on the stop. Both maps get `.id(stop.id)`, because
+  `Map(initialPosition:)` reads its position only once and the view is otherwise reused for the
+  next stop.
 
 ### Step 4: App Intents (~1.5–2 days)
 

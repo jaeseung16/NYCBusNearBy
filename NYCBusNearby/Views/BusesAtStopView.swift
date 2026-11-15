@@ -20,6 +20,14 @@ struct BusesAtStopView: View {
         viewModel.activeAlerts(routeIds: Set(buses.compactMap { $0.routeId }.filter { !$0.isEmpty }))
     }
     
+    private var favorite: FavoriteStop? {
+        viewModel.favorite(forStopId: stop.id)
+    }
+    
+    private var isFavorite: Bool {
+        favorite != nil
+    }
+    
     private var region : Binding<MKCoordinateRegion> {
         Binding {
             viewModel.region ?? MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 40.712778, longitude: -74.006111),
@@ -35,15 +43,24 @@ struct BusesAtStopView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack {
-                Text(stop.name)
-                    .font(.title3)
-                    .bold()
+                if let nickname = favorite?.nickname {
+                    Text(nickname)
+                        .font(.title3)
+                        .bold()
+                    Text(stop.name)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text(stop.name)
+                        .font(.title3)
+                        .bold()
+                }
                 
                 ServiceAlertsButton(alerts: alerts)
                 
                 if #available(iOS 17.0, *) {
                     MapReader { proxy in
-                        Map(initialPosition: MapCameraPosition.region(region.wrappedValue), interactionModes: .all) {
+                        Map(initialPosition: MapCameraPosition.region(viewModel.mapRegion(showing: stop.getCLLocationCoordinate2D())), interactionModes: .all) {
                             UserAnnotation()
                             Marker("", coordinate: stop.getCLLocationCoordinate2D())
                         }
@@ -56,6 +73,8 @@ struct BusesAtStopView: View {
                     }
                     .aspectRatio(CGSize(width: 1.0, height: 1.0), contentMode: .fit)
                     .frame(width: 0.95 * geometry.size.width)
+                    // initialPosition is read only once, so start the camera again for another stop.
+                    .id(stop.id)
                 } else {
                     Map(coordinateRegion: region, interactionModes: .zoom, showsUserLocation: true, annotationItems: [stop]) { place in
                         MapMarker(coordinate: place.getCLLocationCoordinate2D())
@@ -78,6 +97,18 @@ struct BusesAtStopView: View {
                 }
                 
                 Spacer()
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    viewModel.toggleFavorite(stop)
+                } label: {
+                    Label(isFavorite ? "Remove from Favorites" : "Add to Favorites",
+                          systemImage: isFavorite ? "star.fill" : "star")
+                }
+                .tint(.yellow)
+                .sensoryFeedback(.selection, trigger: isFavorite)
             }
         }
     }

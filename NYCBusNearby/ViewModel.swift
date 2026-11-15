@@ -310,6 +310,18 @@ class ViewModel: NSObject, ObservableObject {
                                     longitudinalMeters: CLLocationDistance(maxDistance * rangeFactor))
     }
     
+    /// Where a map showing `coordinate` should start: the current region if it contains the coordinate,
+    /// otherwise a region of the same span centered on it, so a far-away favorite isn't off screen.
+    func mapRegion(showing coordinate: CLLocationCoordinate2D) -> MKCoordinateRegion {
+        if let region, region.contains(coordinate) {
+            return region
+        }
+        if let region {
+            return MKCoordinateRegion(center: coordinate, span: region.span)
+        }
+        return MKCoordinateRegion(center: coordinate, latitudinalMeters: regionSpan, longitudinalMeters: regionSpan)
+    }
+    
     func stops(within distance: Double, from center: CLLocationCoordinate2D) -> [MTABusStop] {
         let location = CLLocation(latitude: center.latitude, longitude: center.longitude)
         let radius = CLLocationDistance(distance)
@@ -515,5 +527,12 @@ extension ViewModel: @MainActor CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         ViewModel.logger.log("didFailWithError: error = \(error.localizedDescription, privacy: .public)")
         location = nil
+    }
+}
+
+extension MKCoordinateRegion {
+    func contains(_ coordinate: CLLocationCoordinate2D) -> Bool {
+        abs(coordinate.latitude - center.latitude) <= span.latitudeDelta / 2
+            && abs(coordinate.longitude - center.longitude) <= span.longitudeDelta / 2
     }
 }

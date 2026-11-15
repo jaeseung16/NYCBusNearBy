@@ -16,6 +16,7 @@ struct ContentView: View {
     @AppStorage("maxDistance") private var maxDistance = 1000.0
     @AppStorage("distanceUnit") private var distanceUnit = DistanceUnit.mile
     @AppStorage("maxComing") private var maxComing: TimeInterval = 30 * 60
+    @AppStorage("showFavoritesOnly") private var showFavoritesOnly = false
     
     private let distanceFormatStyle = Measurement<UnitLength>.FormatStyle(width: .abbreviated,
                                                                           usage: .asProvided,
@@ -42,9 +43,9 @@ struct ContentView: View {
     @State private var selectedStop: MTABusStop?
     @State private var selectedBus: MTABus?
     
-    private var kmSelected: Bool {
-        distanceUnit == .km
-    }
+    @State private var editMode = EditMode.inactive
+    @State private var renamingFavorite: FavoriteStop?
+    @State private var nicknameDraft = ""
     
     private let refreshThreshold: TimeInterval = 60
     
@@ -58,19 +59,13 @@ struct ContentView: View {
         VStack {
             NavigationSplitView {
                 VStack {
-                    locationLabel
+                    sidebarHeader
                     
                     ZStack {
-                        if !busesByStop.isEmpty {
-                            List(stopsNearby, id: \.self, selection: $selectedStop) { stop in
-                                NavigationLink(value: stop) {
-                                    if kmSelected {
-                                        BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .km)
-                                    } else {
-                                        BusStopRowView(stop: stop, distance: distance(to: stop), distanceUnit: .mile)
-                                    }
-                                }
-                            }
+                        if showFavoritesOnly {
+                            favoritesList
+                        } else {
+                            nearbyList
                         }
                         
                         bottomView
@@ -132,6 +127,12 @@ struct ContentView: View {
             // onChange, not onReceive: @Published sends before the new value is stored.
             updateStopsAndTrainsNearby()
         }
+        .onChange(of: showFavoritesOnly) { _, newValue in
+            if !newValue {
+                editMode = .inactive
+            }
+            clearSelectionIfHidden()
+        }
         .onReceive(timer) { _ in
             if !refreshable && lastRefresh.distance(to: Date()) > refreshThreshold {
                 withAnimation {
@@ -170,6 +171,163 @@ struct ContentView: View {
                 
             }
         }
+        .alert("Rename Favorite", isPresented: isRenaming, presenting: renamingFavorite) { favorite in
+            TextField(favorite.name, text: $nicknameDraft)
+            Button("Save") {
+                viewModel.renameFavorite(id: favorite.id, nickname: nicknameDraft)
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: { favorite in
+            Text("Leave blank to use \(favorite.name).")
+        }
+    }
+    
+    // MARK: - Sidebar
+    
+    private var sidebarHeader: some View {
+        HStack {
+            locationLabel
+            
+            Spacer()
+            
+            if showFavoritesOnly && !viewModel.favoriteStops.isEmpty {
+                EditButton()
+            }
+            
+            Toggle(isOn: $showFavoritesOnly.animation()) {
+                Label("Favorites", systemImage: showFavoritesOnly ? "star.fill" : "star")
+            }
+            .toggleStyle(.button)
+            .labelStyle(.iconOnly)
+            .accessibilityLabel("Show Favorites Only")
+        }
+        .environment(\.editMode, $editMode)
+    }
+    
+    /// Stops near the user, sorted by distance.
+    private var nearbyList: some View {
+        List(selection: $selectedStop) {
+            ForEach(stopsNearby, id: \.self) { stop in
+                let favorite = viewModel.favorite(forStopId: stop.id)
+                NavigationLink(value: stop) {
+                    BusStopRowView(title: favorite?.displayName ?? stop.name,
+                                   stopId: stop.id,
+                                   distance: distance(to: stop),
+                                   distanceUnit: distanceUnit,
+                                   isFavorite: favorite != nil)
+                }
+                .swipeActions(edge: .leading) {
+                    favoriteToggleButton(for: stop.id, stop: stop)
+                }
+                .contextMenu {
+                    favoriteMenuItems(for: stop.id, stop: stop)
+                }
+            }
+        }
+    }
+    
+    /// All favorites, wherever they are, in the user's order.
+    @ViewBuilder
+    private var favoritesList: some View {
+        if viewModel.favoriteStops.isEmpty {
+            ContentUnavailableView("No Favorites", systemImage: "star",
+                                   description: Text("Tap \(Image(systemName: "star")) on a stop to add it."))
+        } else {
+            List(selection: $selectedStop) {
+                ForEach(viewModel.favoriteStops) { favorite in
+                    favoriteRow(favorite)
+                        .swipeActions(edge: .leading) {
+                            favoriteToggleButton(for: favorite.id, stop: viewModel.stopsById[favorite.id])
+                        }
+                        .contextMenu {
+                            favoriteMenuItems(for: favorite.id, stop: viewModel.stopsById[favorite.id])
+                        }
+                }
+                .onMove { source, destination in
+                    viewModel.moveFavorites(fromOffsets: source, toOffset: destination)
+                }
+                .onDelete { offsets in
+                    let ids = offsets.map { viewModel.favoriteStops[$0].id }
+                    ids.forEach { viewModel.removeFavorite(id: $0) }
+                }
+            }
+            .environment(\.editMode, $editMode)
+        }
+    }
+    
+    @ViewBuilder
+    private func favoriteRow(_ favorite: FavoriteStop) -> some View {
+        if let stop = viewModel.stopsById[favorite.id] {
+            NavigationLink(value: stop) {
+                BusStopRowView(title: favorite.displayName,
+                               stopId: favorite.id,
+                               distance: distance(to: stop),
+                               distanceUnit: distanceUnit,
+                               isFavorite: true)
+            }
+        } else {
+            // Not selectable: either the stop is gone from the GTFS data, or the stops haven't loaded yet.
+            BusStopRowView(title: favorite.displayName,
+                           stopId: favorite.id,
+                           distance: nil,
+                           distanceUnit: distanceUnit,
+                           isFavorite: true,
+                           isUnavailable: viewModel.missingFavoriteIds.contains(favorite.id))
+        }
+    }
+    
+    /// "Add to Favorites" or "Remove from Favorites". `stop` is `nil` for a favorite whose stop is gone.
+    @ViewBuilder
+    private func favoriteToggleButton(for stopId: String, stop: MTABusStop?) -> some View {
+        if viewModel.favorite(forStopId: stopId) != nil {
+            Button {
+                viewModel.removeFavorite(id: stopId)
+            } label: {
+                Label("Remove from Favorites", systemImage: "star.slash")
+            }
+            .tint(.yellow)
+        } else if let stop {
+            Button {
+                viewModel.addFavorite(stop)
+            } label: {
+                Label("Add to Favorites", systemImage: "star")
+            }
+            .tint(.yellow)
+        }
+    }
+    
+    @ViewBuilder
+    private func favoriteMenuItems(for stopId: String, stop: MTABusStop?) -> some View {
+        favoriteToggleButton(for: stopId, stop: stop)
+        if let favorite = viewModel.favorite(forStopId: stopId) {
+            Button {
+                nicknameDraft = favorite.nickname ?? ""
+                renamingFavorite = favorite
+            } label: {
+                Label("Rename…", systemImage: "pencil")
+            }
+        }
+    }
+    
+    private var isRenaming: Binding<Bool> {
+        Binding {
+            renamingFavorite != nil
+        } set: { isPresented in
+            if !isPresented {
+                renamingFavorite = nil
+            }
+        }
+    }
+    
+    /// After the filter changes, clears the selection if the selected stop isn't in the list being shown.
+    /// Not called when favorites change, so unstarring the stop being viewed doesn't close it.
+    private func clearSelectionIfHidden() {
+        guard let stop = selectedStop else { return }
+        let isShown = showFavoritesOnly ? viewModel.isFavorite(stop) : stopsNearby.contains(stop)
+        if !isShown {
+            selectedStop = nil
+            selectedBus = nil
+        }
     }
     
     private var locationLabel: some View {
@@ -180,7 +338,9 @@ struct ContentView: View {
         }
     }
     
-    private func distance(to stop: MTABusStop) -> Measurement<UnitLength> {
+    /// `nil` until there's a location fix.
+    private func distance(to stop: MTABusStop) -> Measurement<UnitLength>? {
+        guard viewModel.location != nil else { return nil }
         let clLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
         let stopLocation = stop.getCLLocation()
         return Measurement(value: stopLocation.distance(from: clLocation), unit: UnitLength.meters)

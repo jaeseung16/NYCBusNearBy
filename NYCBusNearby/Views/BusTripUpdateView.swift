@@ -51,7 +51,7 @@ struct BusTripUpdateView: View {
                 
                 if #available(iOS 17.0, *) {
                     MapReader { proxy in
-                        Map(initialPosition: MapCameraPosition.region(region.wrappedValue), interactionModes: .all) {
+                        Map(initialPosition: MapCameraPosition.region(viewModel.mapRegion(showing: stop.getCLLocationCoordinate2D())), interactionModes: .all) {
                             UserAnnotation()
                             
                             ForEach(stopTimeUpdates) { stopTimeUpdate in
@@ -71,6 +71,8 @@ struct BusTripUpdateView: View {
                     }
                     .aspectRatio(CGSize(width: 1.0, height: 1.0), contentMode: .fit)
                     .frame(width: 0.95 * geometry.size.width)
+                    // Start the camera again for another stop.
+                    .id(stop.id)
                 } else {
                     Map(coordinateRegion: region, interactionModes: .zoom, showsUserLocation: true, annotationItems: stopTimeUpdates) { stopTimeUpdate in
                         MapAnnotation(coordinate: viewModel.stopsById[stopTimeUpdate.id]!.getCLLocationCoordinate2D()) {
