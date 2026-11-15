@@ -1,6 +1,6 @@
 # Plan: Favorite stops
 
-Status: **Step 1 implemented** (2026-11-13). Step 2 is next. Decisions are recorded at the end.
+Status: **Steps 1–2 implemented** (2026-11-13, 2026-11-15). Step 3 is next. Decisions are recorded at the end.
 
 Favorites came up in `docs/plans/app-intents.md` (finding F8, Phase 3 candidate 3): a stop-based
 intent needs a short list of stops the user cares about, and stop names are poor search keys
@@ -127,7 +127,12 @@ Step 1 doesn't change anything the user can see. It ships to TestFlight together
     `getBuses(at:)`, `getSortedBuses(at:)`, and `getTripUpdates(for:near:)` work for both.
   - Show the "no nearby stops" alert only when there are no favorites either. Fix its text to
     "There are no nearby bus stops".
-- Also call it from `.onReceive(viewModel.$favoriteStops)`.
+- Also call it when `viewModel.favoriteStops` changes. Use `.onChange`, not
+  `.onReceive(viewModel.$favoriteStops)`: `@Published` sends before the new value is stored, so
+  `favoriteMTABusStops` would still return the old list.
+- As implemented: without a location fix, the last `stopsNearby` are kept and merged with the
+  favorites, so a refresh still updates the stops that were nearby. The `if !busesByStop.isEmpty`
+  gate stays until Step 3 removes it.
 
 ### Step 3: UI (~1–1.5 days)
 

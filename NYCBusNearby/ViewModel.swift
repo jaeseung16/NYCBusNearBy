@@ -326,54 +326,47 @@ class ViewModel: NSObject, ObservableObject {
     }
     
     func buses(within distance: Double, from center: CLLocationCoordinate2D) -> [MTABusStop: [MTABus]] {
+        buses(at: stops(within: distance, from: center))
+    }
+    
+    /// Upcoming buses at each of `stops`, wherever they are. Stops without buses are left out.
+    func buses(at stops: [MTABusStop]) -> [MTABusStop: [MTABus]] {
         var buses = [MTABusStop: [MTABus]]()
         
-        let radius = CLLocationDistance(distance)
-        let circularRegion = CLCircularRegion(center: center, radius: radius, identifier: "\(center)")
+        let stopIds = Set(stops.map { $0.id })
+        guard !stopIds.isEmpty else { return buses }
         
-        let stopsNearby = mtaStops.filter { mtaStop in
-            circularRegion.contains(CLLocationCoordinate2D(latitude: mtaStop.latitude, longitude: mtaStop.longitude))
-        }
-        
-        let stopIds = stopsNearby.map { $0.id }
-        //ViewModel.logger.info("stopIds=\(stopIds, privacy: .public)")
-        //ViewModel.logger.info("tripUpdatesByTripId=\(self.tripUpdatesByTripId, privacy: .public)")
-        for tripId in tripUpdatesByTripId.keys {
-            if let tripUpdates = tripUpdatesByTripId[tripId] {
-                for tripUpdate in tripUpdates {
-                    for stopTimeUpdate in tripUpdate.stopTimeUpdates {
-                        if let stopId = stopTimeUpdate.stopId, stopIds.contains(stopId) {
-                            let vehiclesAtStop = vehiclesByStopId[stopId]?.first(where: { tripId == $0.trip?.tripId })
-                            
-                            let mtaBus = MTABus(trip: tripUpdate.trip,
-                                                status: vehiclesAtStop?.status,
-                                                stopId: stopId,
-                                                arrivalTime: stopTimeUpdate.arrivalTime,
-                                                departureTime: stopTimeUpdate.departureTime,
-                                                headsign: headsign(for: tripUpdate))
-                            
-                            var stopIdWithoutDirection: String
-                            if let last = stopId.last, last == "N" || last == "S" {
-                                stopIdWithoutDirection = String(stopId.dropLast(1))
-                            } else {
-                                stopIdWithoutDirection = stopId
-                            }
-                            
-                            if let stop = self.stopsById[stopIdWithoutDirection], buses[stop] != nil {
-                                buses[stop]!.append(mtaBus)
-                            } else if let stop = self.stopsById[stopIdWithoutDirection], buses[stop] == nil {
-                                buses[stop] = Array(arrayLiteral: mtaBus)
-                            } else {
-                                ViewModel.logger.info("Can't find a stop with stopId=\(stopId), privacy: .public)")
-                            }
-                        }
+        for (tripId, tripUpdates) in tripUpdatesByTripId {
+            for tripUpdate in tripUpdates {
+                for stopTimeUpdate in tripUpdate.stopTimeUpdates {
+                    // Feed stop IDs may carry a direction suffix (N/S); stop_ids in stops.txt don't.
+                    guard let stopId = stopTimeUpdate.stopId else { continue }
+                    let stopIdWithoutDirection = if let last = stopId.last, last == "N" || last == "S" {
+                        String(stopId.dropLast())
+                    } else {
+                        stopId
                     }
+                    
+                    guard stopIds.contains(stopIdWithoutDirection) else { continue }
+                    
+                    guard let stop = stopsById[stopIdWithoutDirection] else {
+                        ViewModel.logger.info("Can't find a stop with stopId=\(stopId, privacy: .public)")
+                        continue
+                    }
+                    
+                    let vehiclesAtStop = vehiclesByStopId[stopId]?.first(where: { tripId == $0.trip?.tripId })
+                    
+                    let mtaBus = MTABus(trip: tripUpdate.trip,
+                                        status: vehiclesAtStop?.status,
+                                        stopId: stopId,
+                                        arrivalTime: stopTimeUpdate.arrivalTime,
+                                        departureTime: stopTimeUpdate.departureTime,
+                                        headsign: headsign(for: tripUpdate))
+                    
+                    buses[stop, default: []].append(mtaBus)
                 }
             }
-            
         }
-            
-        // ViewModel.logger.info("trains=\(trains, privacy: .public) near (\(center.longitude, privacy: .public), \(center.latitude, privacy: .public))")
         
         return buses
     }

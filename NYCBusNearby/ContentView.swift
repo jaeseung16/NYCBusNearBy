@@ -26,7 +26,7 @@ struct ContentView: View {
     
     @State private var userLocality = "Unknown"
     @State private var stopsNearby = [MTABusStop]()
-    @State private var busesNearby = [MTABusStop: [MTABus]]()
+    @State private var busesByStop = [MTABusStop: [MTABus]]()
     @State private var lastRefresh = Date()
     
     @State private var presentAlertNotInNYC = false
@@ -61,7 +61,7 @@ struct ContentView: View {
                     locationLabel
                     
                     ZStack {
-                        if !busesNearby.isEmpty {
+                        if !busesByStop.isEmpty {
                             List(stopsNearby, id: \.self, selection: $selectedStop) { stop in
                                 NavigationLink(value: stop) {
                                     if kmSelected {
@@ -128,6 +128,10 @@ struct ContentView: View {
         .onReceive(viewModel.$stopsLoaded) { _ in
             updateStopsAndTrainsNearby()
         }
+        .onChange(of: viewModel.favoriteStops) { _, _ in
+            // onChange, not onReceive: @Published sends before the new value is stored.
+            updateStopsAndTrainsNearby()
+        }
         .onReceive(timer) { _ in
             if !refreshable && lastRefresh.distance(to: Date()) > refreshThreshold {
                 withAnimation {
@@ -151,7 +155,7 @@ struct ContentView: View {
                 updateStopsAndTrainsNearby()
             }
         }
-        .alert(Text("There are no nearby subway stations"), isPresented: $presentAlertNotInNYC) {
+        .alert(Text("There are no nearby bus stops"), isPresented: $presentAlertNotInNYC) {
             Button("OK") {
                 presentedAlertNotInNYC = true
             }
@@ -187,18 +191,21 @@ struct ContentView: View {
         if let coordinate = viewModel.location?.coordinate, !viewModel.mtaStops.isEmpty {
             location = coordinate
             stopsNearby = viewModel.stops(within: maxDistance, from: location)
-            busesNearby = viewModel.buses(within: maxDistance, from: location)
             
-            if stopsNearby.isEmpty {
+            if stopsNearby.isEmpty && viewModel.favoriteStops.isEmpty {
                 presentAlertNotInNYC = !presentedAlertNotInNYC
             } else if presentedAlertNotInNYC {
                 presentedAlertNotInNYC = false
             }
         }
+        
+        // Favorites get arrivals wherever they are, with or without a location fix.
+        // Without a fix, the last nearby stops are kept, as before.
+        busesByStop = viewModel.buses(at: stopsNearby + viewModel.favoriteMTABusStops)
     }
     
     private func getBuses(at stop: MTABusStop) -> [MTABus]? {
-        return busesNearby[stop]?.filter { $0.eventTime != nil  && viewModel.isValid($0.eventTime!)}
+        return busesByStop[stop]?.filter { $0.eventTime != nil  && viewModel.isValid($0.eventTime!)}
     }
     
     private func getSortedBuses(at stop: MTABusStop) -> [MTABus]? {
