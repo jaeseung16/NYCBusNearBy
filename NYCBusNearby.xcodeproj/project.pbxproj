@@ -10,8 +10,6 @@
 		90504D652973556700BDE429 /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90504D642973556700BDE429 /* LocationHelper.swift */; };
 		90504D68297357C200BDE429 /* routes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 90504D67297357C200BDE429 /* routes.txt */; };
 		90504D6E29735F8600BDE429 /* MTABusStop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90504D6D29735F8600BDE429 /* MTABusStop.swift */; };
-		B2E7A1062F00000100A1F001 /* FavoriteStop.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1052F00000100A1F001 /* FavoriteStop.swift */; };
-		B2E7A1082F00000100A1F001 /* FavoriteStopsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1072F00000100A1F001 /* FavoriteStopsStore.swift */; };
 		90504D712973601100BDE429 /* CodableCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 90504D702973601100BDE429 /* CodableCSV */; };
 		906AA4CC29745534000841BD /* DistanceUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4CB29745534000841BD /* DistanceUnit.swift */; };
 		906AA4CE29745974000841BD /* MTABus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906AA4CD29745974000841BD /* MTABus.swift */; };
@@ -46,6 +44,8 @@
 		A1D5C0012EB0000100A7F001 /* AdsStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D5C0022EB0000100A7F001 /* AdsStarter.swift */; };
 		B2E7A1022F00000100A1F001 /* ShowNearbyBusesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1012F00000100A1F001 /* ShowNearbyBusesIntent.swift */; };
 		B2E7A1042F00000100A1F001 /* NYCBusShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1032F00000100A1F001 /* NYCBusShortcuts.swift */; };
+		B2E7A1062F00000100A1F001 /* FavoriteStop.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1052F00000100A1F001 /* FavoriteStop.swift */; };
+		B2E7A1082F00000100A1F001 /* FavoriteStopsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1072F00000100A1F001 /* FavoriteStopsStore.swift */; };
 		B2E7A1122F00000100A1F001 /* BusStopEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1112F00000100A1F001 /* BusStopEntity.swift */; };
 		B2E7A1142F00000100A1F001 /* OpenStopIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1132F00000100A1F001 /* OpenStopIntent.swift */; };
 		B2E7A1162F00000100A1F001 /* NextBusesAtStopIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7A1152F00000100A1F001 /* NextBusesAtStopIntent.swift */; };
@@ -56,8 +56,6 @@
 		90504D642973556700BDE429 /* LocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelper.swift; sourceTree = "<group>"; };
 		90504D67297357C200BDE429 /* routes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = routes.txt; sourceTree = "<group>"; };
 		90504D6D29735F8600BDE429 /* MTABusStop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABusStop.swift; sourceTree = "<group>"; };
-		B2E7A1052F00000100A1F001 /* FavoriteStop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteStop.swift; sourceTree = "<group>"; };
-		B2E7A1072F00000100A1F001 /* FavoriteStopsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteStopsStore.swift; sourceTree = "<group>"; };
 		906AA4CB29745534000841BD /* DistanceUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceUnit.swift; sourceTree = "<group>"; };
 		906AA4CD29745974000841BD /* MTABus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTABus.swift; sourceTree = "<group>"; };
 		906AA4D129745B65000841BD /* BusesAtStopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusesAtStopView.swift; sourceTree = "<group>"; };
@@ -91,6 +89,8 @@
 		A1D5C0022EB0000100A7F001 /* AdsStarter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsStarter.swift; sourceTree = "<group>"; };
 		B2E7A1012F00000100A1F001 /* ShowNearbyBusesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowNearbyBusesIntent.swift; sourceTree = "<group>"; };
 		B2E7A1032F00000100A1F001 /* NYCBusShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NYCBusShortcuts.swift; sourceTree = "<group>"; };
+		B2E7A1052F00000100A1F001 /* FavoriteStop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteStop.swift; sourceTree = "<group>"; };
+		B2E7A1072F00000100A1F001 /* FavoriteStopsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteStopsStore.swift; sourceTree = "<group>"; };
 		B2E7A1112F00000100A1F001 /* BusStopEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopEntity.swift; sourceTree = "<group>"; };
 		B2E7A1132F00000100A1F001 /* OpenStopIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenStopIntent.swift; sourceTree = "<group>"; };
 		B2E7A1152F00000100A1F001 /* NextBusesAtStopIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextBusesAtStopIntent.swift; sourceTree = "<group>"; };
@@ -219,6 +219,15 @@
 			path = AdMob;
 			sourceTree = "<group>";
 		};
+		9A1B2C3D4E5F60718293A503 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				9A1B2C3D4E5F60718293A501 /* NYCBusNearby.xcconfig */,
+				9A1B2C3D4E5F60718293A502 /* Secrets.example.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
 		B2E7A1002F00000100A1F001 /* AppIntents */ = {
 			isa = PBXGroup;
 			children = (
@@ -230,15 +239,6 @@
 				B2E7A1012F00000100A1F001 /* ShowNearbyBusesIntent.swift */,
 			);
 			path = AppIntents;
-			sourceTree = "<group>";
-		};
-		9A1B2C3D4E5F60718293A503 /* Config */ = {
-			isa = PBXGroup;
-			children = (
-				9A1B2C3D4E5F60718293A501 /* NYCBusNearby.xcconfig */,
-				9A1B2C3D4E5F60718293A502 /* Secrets.example.xcconfig */,
-			);
-			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -522,7 +522,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = NYCBusNearby/NYCBusNearby.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"NYCBusNearby/Preview Content\"";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
@@ -564,7 +564,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = NYCBusNearby/NYCBusNearby.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"NYCBusNearby/Preview Content\"";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
