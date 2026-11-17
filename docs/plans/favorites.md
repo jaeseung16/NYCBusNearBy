@@ -73,6 +73,10 @@ Step 1 doesn't change anything the user can see. It ships to TestFlight together
      `defaults read com.resonance.NYCBusNearby` (by domain) uses a different domain. The app
      reads that domain only as a fallback, and its saves don't show there. Use `-string` when
      writing JSON.
+   - **Since the App Group move** (`docs/plans/icloud-sync.md`, Step 1), favorites live in the
+     App Group plist instead:
+     `xcrun simctl spawn booted defaults read "$(xcrun simctl get_app_container booted com.resonance.NYCBusNearby groups | awk '$1 == "group.com.resonance.NYCBusNearby" {print $2}')/Library/Preferences/group.com.resonance.NYCBusNearby.plist"`.
+     The first `load()` moves any favorites left in the app's own plist there.
    - If decoding fails: log it, copy the raw value to `favoriteStops.unreadable`, and return `[]`.
      The user's favorites are never silently lost.
    - Later, an App Group is `UserDefaults(suiteName:)`, and iCloud sync goes behind this same type.
